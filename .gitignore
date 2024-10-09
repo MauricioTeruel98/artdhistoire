@@ -5,6 +5,7 @@
 /public/storage
 /storage/*.key
 /vendor
+!vendor/tcg/voyager
 .env
 .env.backup
 .env.production
