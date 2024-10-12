@@ -8,6 +8,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\VideoController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\NewsletterController;
+use App\Http\Controllers\SubscriptionController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Socialite\Facades\Socialite;
 use App\Models\User;
@@ -39,15 +40,33 @@ Route::get('/tutorial', [HomeController::class, 'tutorial'])->name('tutorial');
 
 Route::post('/contact', [ContactController::class, 'submit']);
 
+Route::get('/subscription-required', function () {
+    return view('pages.subscription.required');
+})->name('subscription.required');
+
+
+/**
+ * RUTAS DE SUSCRIPCION
+ */
+
+Route::post('/subscription/trial', [SubscriptionController::class, 'createTrialSubscription'])->name('subscription.trial');
+
+Route::post('/subscription/create', [SubscriptionController::class, 'create'])->name('subscription.create');
+Route::get('/subscription/success', [SubscriptionController::class, 'success'])->name('subscription.success');
+Route::get('/subscription/cancel', [SubscriptionController::class, 'cancel'])->name('subscription.cancel');
+Route::post('/stripe/webhook', [SubscriptionController::class, 'handleStripeWebhook']);
+
 
 // Ruta protegida para usuarios autenticados
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
 
-    Route::get('/interactive/pdf/{id}', [InteractiveController::class, 'showPdf'])->name('interactive.pdf');
-
     Route::post('/video/reorder', [VideoController::class, 'reorder'])->name('videos.reorder');
+});
+
+Route::middleware(['auth', 'subscription'])->group(function () {
+    Route::get('/interactive/pdf/{id}', [InteractiveController::class, 'showPdf'])->name('interactive.pdf');
 });
 
 Route::group(['prefix' => 'admin'], function () {
@@ -56,7 +75,7 @@ Route::group(['prefix' => 'admin'], function () {
     Route::get('videoonline/{videoonline_id}/videos/create', [VideoItemController::class, 'create'])->name('videoonline.videos.create');
     Route::post('videoonline/{videoonline_id}/videos', [VideoItemController::class, 'store'])->name('videoonline.videos.store');
 
-     
+
     Route::get('archives', [App\Http\Controllers\ArchiveController::class, 'index'])->name('voyager.archives.index');
     Route::post('archives', [App\Http\Controllers\ArchiveController::class, 'store'])->name('voyager.archives.store');
     Route::delete('archives/{archive}', [App\Http\Controllers\ArchiveController::class, 'destroy'])->name('voyager.archives.destroy');
