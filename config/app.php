@@ -83,12 +83,12 @@ return [
     |
     */
 
-    'locale' => 'en',
-
-    'locales' => [
-        'en',
-        'fr',
+    'available_locales' => [
+        'en' => 'English',
+        'fr' => 'Français',
     ],
+    'locale' => 'en',
+    'fallback_locale' => 'en',
 
     /*
     |--------------------------------------------------------------------------

@@ -7,6 +7,7 @@ use App\Http\Controllers\VideoItemController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\VideoController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\SubscriptionController;
 use Illuminate\Support\Facades\Route;
@@ -26,6 +27,8 @@ use Illuminate\Support\Facades\Auth;
 */
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
+
+Route::get('language/{locale}', [LanguageController::class, 'switch'])->name('language.switch');
 
 Route::get('/interactive/index', [InteractiveController::class, 'index'])->name('interactive.index');
 Route::get('/interactive', [InteractiveController::class, 'pilote'])->name('interactive.pilote');
@@ -74,10 +77,15 @@ Route::group(['prefix' => 'admin'], function () {
 
     Route::get('videoonline/{videoonline_id}/videos/create', [VideoItemController::class, 'create'])->name('videoonline.videos.create');
     Route::post('videoonline/{videoonline_id}/videos', [VideoItemController::class, 'store'])->name('videoonline.videos.store');
+    Route::get('videos/{id}/edit/edit', [VideoItemController::class, 'edit'])->name('videoonline.videos.edit.edit');
+    Route::put('videos/{id}', [VideoItemController::class, 'update'])->name('videoonline.videos.update');
+    Route::delete('videos/{id}/destroy', [VideoItemController::class, 'destroy'])->name('videoonline.videos.destroy');
 
 
     Route::get('archives', [App\Http\Controllers\ArchiveController::class, 'index'])->name('voyager.archives.index');
     Route::post('archives', [App\Http\Controllers\ArchiveController::class, 'store'])->name('voyager.archives.store');
+    Route::get('archives/{archive}/edit/edit', [App\Http\Controllers\ArchiveController::class, 'edit'])->name('voyager.archives.edit.edit');
+    Route::put('archives/{archive}', [App\Http\Controllers\ArchiveController::class, 'update'])->name('voyager.archives.update');
     Route::delete('archives/{archive}', [App\Http\Controllers\ArchiveController::class, 'destroy'])->name('voyager.archives.destroy');
 });
 

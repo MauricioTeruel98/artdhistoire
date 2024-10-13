@@ -19,6 +19,8 @@ class Video extends Model
         'imagen',
         'video',
         'order',
+        'title_fr',
+        'text_fr',
     ];
 
     public function videoOnline()

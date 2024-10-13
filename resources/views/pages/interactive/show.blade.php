@@ -79,12 +79,14 @@
 @section('content')
     @include('partials.slider')
     <div class="container mt-4">
-        <h1 class="mb-4">{{ $interactive->name }}</h1>
+        <h1 class="mb-4">
+            {{ app()->getLocale() == 'fr' ? $interactive->name_fr : $interactive->name }}
+        </h1>
 
         @foreach ($interactive->posts as $index => $post)
             <section class="my-5">
-                <h2>{{ $index + 1 }}. {{ $post->title }}</h2>
-                <h3 class="section-title">{{ $post->excerpt }}</h3>
+                <h2>{{ $index + 1 }}. {{ app()->getLocale() == 'fr' ? $post->title_fr : $post->title }}</h2>
+                <h3 class="section-title">{{ app()->getLocale() == 'fr' ? $post->excerpt_fr : $post->excerpt }}</h3>
                 <div class="row">
                     <div class="col-md-4">
                         <div class="image-container">
@@ -113,7 +115,7 @@
                                 <div class="topic">
                                     <div class="topic-item">
                                         @php
-                                            $route = $archive->route;
+                                            $route = app()->getLocale() == 'fr' ? $archive->route_fr : $archive->route;
                                         @endphp
                                         <a href="{{ route('interactive.pdf', ['id' => $archive->id]) }}">
                                             @if ($archive->type == 'nonDisponible')
@@ -175,7 +177,7 @@
                                                 </svg>
                                             @endif
                                         </a>
-                                        <span>{{ $archive->title }}</span>
+                                        <span>{{ app()->getLocale() == 'fr' ? $archive->title_fr : $archive->title }}</span>
                                     </div>
                                 </div>
                             @endforeach

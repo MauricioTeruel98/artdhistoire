@@ -16,6 +16,8 @@ class Archive extends Model
         'icon',
         'type',
         'title',
+        'title_fr',
+        'route_fr',
     ];
     
     public function post()

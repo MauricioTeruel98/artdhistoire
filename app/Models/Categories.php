@@ -13,6 +13,9 @@ class Categories extends Model
     protected $fillable = [
         'parent_id',
         'name',
+        'name_fr',
+        'slug',
+        'slug_fr',
     ];
 
     public function posts()

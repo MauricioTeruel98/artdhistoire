@@ -72,35 +72,34 @@
 @section('content')
     @include('partials.slider')
     <div class="container mt-4">
-        <h1 class="text-center mb-4">Accédez à LISA via la vidéo ou via la librairie</h1>
+        <h1 class="text-center mb-4">{{ app()->getLocale() == 'fr' ? 'Accédez à LISA via la vidéo ou via la librairie' : 'Access LISA via the video or the library' }}</h1>
 
         <div class="row mb-4">
             <div class="col-md-6">
-                <h2>Vidéo interactive</h2>
+                <h2>{{ app()->getLocale() == 'fr' ? 'Vidéo interactive' : 'Interactive video' }}</h2>
                 <ul>
-                    <li>Visionnez la vidéo (Chapitre 4 de la conférence Manet et Seurat)</li>
-                    <li>Cliquez sur les pop-up en haut à gauche pour ouvrir les articles interactifs de LISA. Pour cette
-                        version pilote, les fiches grises sont désactivées</li>
+                    <li>{{ app()->getLocale() == 'fr' ? 'Visionnez la vidéo (Chapitre 4 de la conférence Manet et Seurat)' : 'Watch the video (Chapter 4 of the Manet and Seurat conference)' }}</li>
+                    <li>{{ app()->getLocale() == 'fr' ? 'Cliquez sur les pop-up en haut à gauche pour ouvrir les articles interactifs de LISA. Pour cette version pilote, les fiches grises sont désactivées' : 'Click on the pop-ups on the top left to open the LISA interactive articles. For this pilot version, the gray cards are disabled' }}</li>
                 </ul>
             </div>
             <div class="col-md-6">
-                <h2>Librairie interactive</h2>
+                <h2>{{ app()->getLocale() == 'fr' ? 'Librairie interactive' : 'Interactive library' }}</h2>
                 <ul>
-                    <li>Cliquez sur un icône fiche pour accéder à l'article LISA, renseigné par son code couleur</li>
-                    <li>Cliquez sur l'horloge en haut à droite de l'article pour revenir à la vidéo</li>
+                    <li>{{ app()->getLocale() == 'fr' ? "Cliquez sur un icône fiche pour accéder à l'article LISA, renseigné par son code couleur" : "Click on a color code icon to access the LISA article, filled in with its color code" }}</li>
+                    <li>{{ app()->getLocale() == 'fr' ? "Cliquez sur l'horloge en haut à droite de l'article pour revenir à la vidéo" : "Click on the clock in the top right of the article to return to the video" }}</li>
                 </ul>
             </div>
         </div>
 
         <div class="text-center mb-4">
-            <a class="btn btn-principal" href="{{ route('tutorial') }}">Tutoriel de navigation ➤</a>
+            <a class="btn btn-principal" href="{{ route('tutorial') }}">{{ app()->getLocale() == 'fr' ? 'Tutoriel de navigation ➤' : 'Navigation tutorial ➤' }}</a>
         </div>
 
         @if($pilote && $pilote->posts)
             @foreach ($pilote->posts as $index => $post)
                 <section class="my-5">
-                    <h2>{{ $index + 1 }}. {{ $post->title }}</h2>
-                    <h3 class="section-title">{{ $post->excerpt }}</h3>
+                    <h2>{{ $index + 1 }}. {{ app()->getLocale() == 'fr' ? $post->title_fr : $post->title }}</h2>
+                    <h3 class="section-title">{{ app()->getLocale() == 'fr' ? $post->excerpt_fr : $post->excerpt }}</h3>
                     <div class="row">
                         <div class="col-md-4">
                             <div class="image-container">
@@ -122,7 +121,7 @@
                                     <div class="topic">
                                         <div class="topic-item">
                                             @php
-                                                $route = $archive->route;
+                                                $route = app()->getLocale() == 'fr' ? $archive->route_fr : $archive->route;
                                             @endphp
                                             <a href="{{ route('interactive.pdf', ['id' => $archive->id]) }}">
                                                 @if ($archive->type == 'nonDisponible')
@@ -180,7 +179,7 @@
                                                 </svg>
                                             @endif
                                             </a>
-                                            <span>{{ $archive->title }}</span>
+                                            <span>{{ app()->getLocale() == 'fr' ? $archive->title_fr : $archive->title }}</span>
                                         </div>
                                     </div>
                                 @endforeach

@@ -102,17 +102,17 @@
         <div class="container mt-4">
             <div class="row">
                 <div class="col-md-6 header text-end">
-                    <h1 class="baskeville-italic">{{ $videoOnline->title }}</h1>
-                    <h2 class="h5 baskeville-italic">{{ $videoOnline->subtitle }}</h2>
+                    <h1 class="baskeville-italic">{{ app()->getLocale() == 'fr' ? $videoOnline->title_fr : $videoOnline->title }}</h1>
+                    <h2 class="h5 baskeville-italic">{{ app()->getLocale() == 'fr' ? $videoOnline->subtitle_fr : $videoOnline->subtitle }}</h2>
                 </div>
                 <div class="col-md-6 text-start">
-                    {!! $videoOnline->text !!}
+                    {!! app()->getLocale() == 'fr' ? $videoOnline->text_fr : $videoOnline->text !!}
                 </div>
             </div>
 
             <div class="row mt-4">
                 <div class="col-12">
-                    {{ $videoOnline->text_secondary }}
+                    {!! app()->getLocale() == 'fr' ? $videoOnline->text_secondary_fr : $videoOnline->text_secondary !!}
                 </div>
             </div>
 
@@ -128,7 +128,7 @@
                                 @if (Str::contains(strtolower($video['iframe']), '<iframe'))
                                     <div class="video-container-iframe">
                                         {!! $video['iframe'] !!}
-                                        <div class="video-title">{{ $video['title'] }}</div>
+                                        <div class="video-title">{{ app()->getLocale() == 'fr' ? $video['title_fr'] : $video['title'] }}</div>
                                     </div>
                                 @else
                                     <a href="{{ $video['iframe'] }}" target="_blank">
@@ -136,7 +136,7 @@
                                             <img src="{{ $video['imagen'] }}" alt="Vidéo éducative" class="w-100">
                                             <div class="video-overlay">
                                                 <div class="play-button text-white">▶</div>
-                                                <div class="video-title">{{ $video['title'] }}</div>
+                                                <div class="video-title">{{ app()->getLocale() == 'fr' ? $video['title_fr'] : $video['title'] }}</div>
                                             </div>
                                         </div>
                                     </a>
@@ -144,15 +144,14 @@
                             @elseif ($video['video'])
                                 <div class="video-container">
                                     <video controls class="w-100">
-                                        <source src="{{ $video['video'] }}" type="video/mp4">
-                                        Tu navegador no soporta el elemento de video.
+                                        <source src="{{ $video['video'] }}" type="video/mp4"> {{ app()->getLocale() == 'fr' ? 'Tu navegador no soporta el elemento de video.' : 'Your browser does not support the video element.' }}
                                     </video>
-                                    <div class="video-title">{{ $video['title'] }}</div>
+                                    <div class="video-title">{{ app()->getLocale() == 'fr' ? $video['title_fr'] : $video['title'] }}</div>
                                 </div>
                             @endif
                         </div>
                         <div class="col-md-6">
-                            {!! $video['text'] !!}
+                            {!! app()->getLocale() == 'fr' ? $video['text_fr'] : $video['text'] !!}
                         </div>
                     </div>
                 </div>
@@ -167,22 +166,22 @@
                                     stroke-linejoin="round" class="me-2">
                                     <polyline points="15 18 9 12 15 6"></polyline>
                                 </svg>
-                                <span>{{ $previousVideo->title }}</span>
+                                <span>{{ app()->getLocale() == 'fr' ? $previousVideo->title_fr : $previousVideo->title }}</span>
                             </div>
                         </a>
                     @endif
                 </div>
                 <div class="col-md-2 text-center">
-                    <a href="" class="btn btn-outline-secondary btn-sm">Bibliographie</a>
+                    <a href="" class="btn btn-outline-secondary btn-sm">{{ app()->getLocale() == 'fr' ? 'Bibliographie' : 'Bibliography' }}</a>
                 </div>
                 <div class="col-md-2 text-center">
-                    <a href="" class="btn btn-outline-secondary btn-sm">Liste des illustrations</a>
+                    <a href="" class="btn btn-outline-secondary btn-sm">{{ app()->getLocale() == 'fr' ? 'Liste des illustrations' : 'List of illustrations' }}</a>
                 </div>
                 <div class="col-md-3 text-end">
                     @if ($nextVideo)
                         <a href="{{ route('video.show', $nextVideo->id) }}" class="text-decoration-none text-dark">
                             <div class="d-flex align-items-center justify-content-end">
-                                <span>{{ $nextVideo->title }}</span>
+                                <span>{{ app()->getLocale() == 'fr' ? $nextVideo->title_fr : $nextVideo->title }}</span>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                     stroke-linejoin="round" class="ms-2">
@@ -195,8 +194,8 @@
             </div>
             <div class="row mt-3">
                 <div class="col-12 text-center">
-                    <h2 class="mb-3">{{ $videoOnline->title }}</h2>
-                    <a href="{{ route('video.show', $videoOnline->id) }}" class="btn btn-primary">découvrir</a>
+                    <h2 class="mb-3">{{ app()->getLocale() == 'fr' ? $videoOnline->title_fr : $videoOnline->title }}</h2>
+                    <a href="{{ route('video.show', $videoOnline->id) }}" class="btn btn-primary">{{ app()->getLocale() == 'fr' ? 'découvrir' : 'discover' }}</a>
                 </div>
             </div>
         </div>
