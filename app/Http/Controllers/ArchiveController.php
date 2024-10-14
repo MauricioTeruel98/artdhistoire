@@ -13,8 +13,8 @@ class ArchiveController extends Controller
     public function index(Request $request)
     {
         $post_id = $request->query('post_id');
-        $post = Post::findOrFail($post_id);
-        $archives = $post->archives;
+        $post = Post::orderBy('order', 'DESC')->findOrFail($post_id);
+        $archives = $post->archives()->orderBy('order', 'ASC')->get();
 
         return Voyager::view('voyager::archives.index', compact('post', 'archives'));
     }
@@ -94,5 +94,21 @@ class ArchiveController extends Controller
 
         return redirect()->route('voyager.archives.index', ['post_id' => $post_id])
             ->with('success', 'Archivo eliminado correctamente.');
+    }
+
+    public function reorder(Request $request)
+    {
+        $archives = Archive::all();
+
+        foreach ($archives as $archive) {
+            $id = $archive->id;
+            foreach ($request->order as $order => $item) {
+                if ($id == $item) {
+                    $archive->update(['order' => $order]);
+                }
+            }
+        }
+
+        return response('Actualizado Successfully.', 200);
     }
 }

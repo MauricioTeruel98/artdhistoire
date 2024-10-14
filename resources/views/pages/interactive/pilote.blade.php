@@ -103,10 +103,17 @@
                     <div class="row">
                         <div class="col-md-4">
                             <div class="image-container">
-                                <a href="{{$post->hihaho}}" target="_blank">
+                                <div
+                                style="position: relative !important; padding-bottom: 56.25% !important; height: 0px !important; overflow: hidden !important; max-width: 100% !important;">
+                                <iframe src="{{ $post->hihaho }}" frameborder="0" webkitallowfullscreen="true"
+                                    mozallowfullscreen="true" allowfullscreen="true"
+                                    allow="autoplay; fullscreen; clipboard-read; clipboard-write"
+                                    style="position: absolute !important; top: 0px !important; left: 0px !important; width: 100% !important; height: 100% !important;"></iframe>
+                            </div>
+                                {{-- <a href="{{$post->hihaho}}" target="_blank">
                                     <img src="/storage/{{ $post->image }}" alt="Impressionist painting" class="w-100 h-100">
                                     <div class="play-button"></div>
-                                </a>
+                                </a> --}}
                             </div>
                         </div>
                         <div class="col-md-8">

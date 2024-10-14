@@ -112,7 +112,7 @@
 
             <div class="row mt-4">
                 <div class="col-12">
-                    {!! app()->getLocale() == 'fr' ? $videoOnline->text_secondary_fr : $videoOnline->text_secondary !!}
+                    {!! app()->getLocale() == 'fr' ? $videoOnline->texto_secondary_fr : $videoOnline->texto_secondary !!}
                 </div>
             </div>
 
@@ -156,7 +156,7 @@
                     </div>
                 </div>
             @endforeach
-            <div class="row align-items-center">
+            <div class="row align-items-center mt-5">
                 <div class="col-md-3">
                     @if ($previousVideo)
                         <a href="{{ route('video.show', $previousVideo->id) }}" class="text-decoration-none text-dark">

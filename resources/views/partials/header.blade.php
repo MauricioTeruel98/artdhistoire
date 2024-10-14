@@ -31,7 +31,8 @@
                         @endphp
 
                         @foreach ($sagas as $saga)
-                            <li><a class="dropdown-item" href="/interactive/{{ $saga->id }}">{{ $saga->name }}</a>
+                            <li><a class="dropdown-item"
+                                    href="/interactive/{{ $saga->id }}">{{ app()->getLocale() == 'fr' ? $saga->name_fr : $saga->name }}</a>
                             </li>
                         @endforeach
                     </ul>
@@ -50,7 +51,7 @@
                         @endphp
                         @foreach ($videos as $video)
                             <li><a class="dropdown-item"
-                                    href="/video-online/{{ $video->id }}">{{ $video->title }}</a></li>
+                                    href="/video-online/{{ $video->id }}">{{ app()->getLocale() == 'fr' ? $video->title_fr : $video->title }}</a></li>
                         @endforeach
                     </ul>
                 </li>

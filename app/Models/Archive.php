@@ -18,6 +18,7 @@ class Archive extends Model
         'title',
         'title_fr',
         'route_fr',
+        'order'
     ];
     
     public function post()

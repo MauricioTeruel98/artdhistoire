@@ -37,11 +37,6 @@
             margin-left: 5px;
         }
 
-        .topic-list {
-            list-style-type: none;
-            padding-left: 0;
-        }
-
         .topic-item {
             margin-bottom: 0.5rem;
         }
@@ -56,10 +51,16 @@
             display: inline-block;
             margin-right: 0.5rem;
         }
+        .topic-list {
+            list-style-type: none;
+            padding-left: 0;
+            display: flex;
+            flex-direction: column; // Cambiado de flex-wrap a flex-direction: column
+        }
 
         .topic {
-            width: 33.33%;
-            padding: 0px 7px;
+            width: 100%; // Cambiado de 33.33% a 100%
+            padding: 5px 0; // Ajustado el padding
             font-size: 14px !important;
         }
 
@@ -97,6 +98,7 @@
                                     allow="autoplay; fullscreen; clipboard-read; clipboard-write"
                                     style="position: absolute !important; top: 0px !important; left: 0px !important; width: 100% !important; height: 100% !important;"></iframe>
                             </div>
+
                             {{-- <a href="{{ $post->hihaho }}" target="_blank">
                                 <img src="/storage/{{ $post->image }}" alt="Impressionist painting" class="w-100 h-100">
                                 <div class="play-button"></div>
@@ -108,6 +110,7 @@
                             @php
                                 $archives = DB::table('archives')
                                     ->where('post_id', $post->id)
+                                    ->orderBy('order', 'ASC')
                                     ->get();
                             @endphp
 
