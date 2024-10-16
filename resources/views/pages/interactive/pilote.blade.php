@@ -5,23 +5,6 @@
 @section('header')
 
     <style>
-        .custom-card {
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .topic-item {
-            font-size: 0.9rem;
-            margin: 20px auto;
-        }
-
-        .topic-icon {
-            width: 16px;
-            height: 16px;
-            margin-right: 5px;
-        }
-
         .section-title {
             font-size: 1.5rem;
             margin-bottom: 1rem;
@@ -54,10 +37,36 @@
             margin-left: 5px;
         }
 
+        .topic-item {
+            margin-bottom: 0.5rem;
+        }
+
+        .topic-item span {
+            font-size: 12px;
+        }
+
+        .topic-icon {
+            width: 20px;
+            height: 20px;
+            display: inline-block;
+            margin-right: 0.5rem;
+        }
+
+        .topic-list {
+            list-style-type: none;
+            padding-left: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
         .topic {
-            width: 33.33%;
-            padding: 0px 7px;
+            width: 100%;
+            padding: 5px 0;
             font-size: 14px !important;
+        }
+
+        iframe .pushfooter {
+            height: 0px !important;
         }
 
         @media screen and (max-width: 768px) {
