@@ -2,21 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Archive;
+use App\Models\ArchivesEn;
 use Illuminate\Http\Request;
 use TCG\Voyager\Models\Post;
 use TCG\Voyager\Facades\Voyager;
 use Illuminate\Support\Facades\Storage;
 
-class ArchiveController extends Controller
+class ArchivesEnController extends Controller
 {
     public function index(Request $request)
     {
         $post_id = $request->query('post_id');
         $post = Post::orderBy('order', 'DESC')->findOrFail($post_id);
-        $archives = $post->archives()->orderBy('order', 'ASC')->get();
+        $archives = $post->archivesEn()->orderBy('order', 'ASC')->get();
 
-        return Voyager::view('voyager::archives.index', compact('post', 'archives'));
+        return Voyager::view('voyager::archives-en.index', compact('post', 'archives'));
     }
 
     public function store(Request $request)
@@ -29,9 +29,9 @@ class ArchiveController extends Controller
         ]);
 
         $file = $request->file('file');
-        $path = $file->store('archives', 'public');
+        $path = $file->store('archives-en', 'public');
 
-        Archive::create([
+        ArchivesEn::create([
             'post_id' => $request->post_id,
             'title' => $request->title,
             'route' => $path,
@@ -41,17 +41,19 @@ class ArchiveController extends Controller
         return redirect()->back()->with('success', 'Archivos subidos correctamente.');
     }
 
-    public function edit(Archive $archive)
+    public function edit(ArchivesEn $archive)
     {
         $post = $archive->post;
-        return Voyager::view('voyager::archives.edit', compact('archive', 'post'));
+        return Voyager::view('voyager::archives-en.edit', compact('archive', 'post'));
     }
 
-    public function update(Request $request, Archive $archive)
+    public function update(Request $request, ArchivesEn $archive)
     {
         $request->validate([
             'title' => 'required|string|max:255',
+            'title_fr' => 'required|string|max:255',
             'file' => 'nullable|file|mimes:pdf',
+            'file_fr' => 'nullable|file|mimes:pdf',
             'type' => 'required|string|in:nonDisponible,contexto,teoria,bio,social',
         ]);
 
@@ -73,11 +75,11 @@ class ArchiveController extends Controller
 
         $archive->save();
 
-        return redirect()->route('voyager.archives.index', ['post_id' => $archive->post_id])
+        return redirect()->route('voyager.archives.en.index', ['post_id' => $archive->post_id])
             ->with('success', 'Archivo actualizado correctamente.');
     }
 
-    public function destroy(Archive $archive)
+    public function destroy(ArchivesEn $archive)
     {
         $post_id = $archive->post_id;
 
@@ -92,13 +94,13 @@ class ArchiveController extends Controller
 
         $archive->delete();
 
-        return redirect()->route('voyager.archives.index', ['post_id' => $post_id])
+        return redirect()->route('voyager.archives.en.index', ['post_id' => $post_id])
             ->with('success', 'Archivo eliminado correctamente.');
     }
 
     public function reorder(Request $request)
     {
-        $archives = Archive::all();
+        $archives = ArchivesEn::all();
 
         foreach ($archives as $archive) {
             $id = $archive->id;
