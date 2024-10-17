@@ -94,7 +94,7 @@
                         <div class="image-container">
                             <div
                                 style="position: relative !important; padding-bottom: 56.25% !important; height: 0px !important; overflow: hidden !important; max-width: 100% !important;">
-                                <iframe src="{{ $post->hihaho }}" frameborder="0" webkitallowfullscreen="true"
+                                <iframe src="{{ app()->getLocale() == 'fr'? $post->hihaho : $post->hihaho_en }}" frameborder="0" webkitallowfullscreen="true"
                                     mozallowfullscreen="true" allowfullscreen="true"
                                     allow="autoplay; fullscreen; clipboard-read; clipboard-write"
                                     style="position: absolute !important; top: 0px !important; left: 0px !important; width: 100% !important; height: 100% !important;"></iframe>
