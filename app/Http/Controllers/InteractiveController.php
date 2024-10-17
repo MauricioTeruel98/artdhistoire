@@ -41,7 +41,7 @@ class InteractiveController extends Controller
     public function pilote()
     {
         $slider = Slider::all();
-        $pilote = Categories::where('slug', 'demonstration-pilote-lisa-art-histoire')->with('posts')->first();
+        $pilote = Categories::where('is_pilote', 1)->with('posts')->orderBy('created_at', 'DESC')->first();
         return view('pages.interactive.pilote', compact('slider', 'pilote'));
     }
 }

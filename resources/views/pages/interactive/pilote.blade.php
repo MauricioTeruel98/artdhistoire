@@ -65,6 +65,25 @@
             font-size: 14px !important;
         }
 
+        .topic-list {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .topic-item {
+            margin-bottom: 0.5rem;
+        }
+
+        .topic-item span {
+            font-size: 12px;
+        }
+
+        .topic {
+            padding: 5px 0;
+            font-size: 14px;
+        }
+
+
         iframe .pushfooter {
             height: 0px !important;
         }
@@ -130,16 +149,20 @@
                                 @php
                                     $archives = DB::table('archives')
                                         ->where('post_id', $post->id)
+                                        ->orderBy('order', 'ASC')
                                         ->get();
                                 @endphp
 
-                                @foreach ($archives as $archive)
-                                    <div class="topic">
-                                        <div class="topic-item">
-                                            @php
-                                                $route = app()->getLocale() == 'fr' ? $archive->route_fr : $archive->route;
-                                            @endphp
-                                            <a href="{{ route('interactive.pdf', ['id' => $archive->id]) }}">
+                                <div class="row">
+                                    @foreach ($archives as $archive_index => $archive)
+                                        @if ($archive_index % 10 == 0)
+                                            {{-- Nueva columna cada 10 ítems --}}
+                                            <div class="col-md-4">
+                                        @endif
+
+                                        <div class="topic">
+                                            <div class="topic-item">
+                                                <a href="{{ route('interactive.pdf', ['id' => $archive->id]) }}">
                                                 @if ($archive->type == 'nonDisponible')
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                     viewBox="0 0 24 24" fill="currentColor"
@@ -196,9 +219,20 @@
                                             @endif
                                             </a>
                                             <span>{{ app()->getLocale() == 'fr' ? $archive->title_fr : $archive->title }}</span>
+                                            </div>
                                         </div>
-                                    </div>
-                                @endforeach
+
+                                        @if ($archive_index % 10 == 9 || $archive_index == $archives->count() - 1)
+                                            {{-- Cierra la columna al llegar a 10 o al final de la lista --}}
+                                </div>
+                        @endif
+
+                        @if ($archive_index % 30 == 29 && $archive_index != $archives->count() - 1)
+                            {{-- Nueva fila cada 30 ítems --}}
+                    </div>
+                    <div class="row">
+        @endif
+        @endforeach
                             </div>
                         </div>
                     </div>
