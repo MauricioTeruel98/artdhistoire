@@ -39,4 +39,12 @@ class VideoController extends Controller
         }
         return response()->json(['success' => true]);
     }
+
+    public function showIlustrations(Request $request)
+    {
+
+        $videoOnline = VideoOnline::where('id', $request->id)->firstOrFail();
+
+        return view('pages.online.ilustraciones', compact('videoOnline'));
+    }
 }

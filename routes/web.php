@@ -36,6 +36,7 @@ Route::get('/interactive/{id}', [InteractiveController::class, 'show'])->name('i
 
 Route::get('/videos-online', [VideoController::class, 'index'])->name('videos.index');
 Route::get('/video-online/{id}', [VideoController::class, 'show'])->name('video.show');
+Route::get('/video-online/{id}/ilustrations', [VideoController::class, 'showIlustrations'])->name('video.show.ilustrations');
 
 Route::get('/about', [HomeController::class, 'contact'])->name('contact');
 
