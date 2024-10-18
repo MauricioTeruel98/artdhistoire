@@ -205,7 +205,7 @@
                                                         </svg>
                                                     @endif
                                                 </a>
-                                                <span>{{ app()->getLocale() == 'fr' ? $archive->title_fr : $archive->title }}</span>
+                                                <span>{{ $archive->title }}</span>
                                             </div>
                                         </div>
 
@@ -231,7 +231,7 @@
                 ->get();
         @endphp
 
-        @foreach ($archives as $archive_index => $archive)
+        @foreach ($archivesEn as $archive_index => $archive)
             @if ($archive_index % 10 == 0)
                 {{-- Nueva columna cada 10 ítems --}}
                 <div class="col-md-4">
@@ -293,16 +293,16 @@
                             </svg>
                         @endif
                     </a>
-                    <span>{{ app()->getLocale() == 'fr' ? $archive->title_fr : $archive->title }}</span>
+                    <span>{{ $archive->title }}</span>
                 </div>
             </div>
 
-            @if ($archive_index % 10 == 9 || $archive_index == $archives->count() - 1)
+            @if ($archivesEn->count() > 0 && ($archive_index % 10 == 9 || $archive_index == $archivesEn->count() - 1))
                 {{-- Cierra la columna al llegar a 10 o al final de la lista --}}
     </div>
     @endif
 
-    @if ($archive_index % 30 == 29 && $archive_index != $archives->count() - 1)
+    @if ($archivesEn->count() > 0 && $archive_index % 30 == 29 && $archive_index != $archivesEn->count() - 1)
         {{-- Nueva fila cada 30 ítems --}}
         </div>
         <div class="row">
