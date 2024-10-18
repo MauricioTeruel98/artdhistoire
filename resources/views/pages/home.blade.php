@@ -56,7 +56,7 @@
                 <div class="col-md-4 mb-4">
                     <a href="#" class="video-link" data-video-id="{{ $video->id }}" data-index="{{ $index }}">
                         <div class="position-relative" style="padding-bottom: 75%;">
-                            <img src="/storage/{{$video->home_image}}" alt="Art piece"
+                            <img src="/storage/{{$video->home_image}}" alt="{{$video->title}}"
                                 class="position-absolute w-100 h-100 object-fit-cover">
                             <div class="position-absolute w-100 h-100 d-flex align-items-center justify-content-center">
                                 <h2 class="text-white text-center">
