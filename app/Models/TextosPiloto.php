@@ -18,6 +18,7 @@ class TextosPiloto extends Model
         'title_en',
         'text_1_en',
         'text_2_en',
+        'order'
     ];
     
     public function post()
