@@ -129,7 +129,7 @@ class VideoItemController extends Controller
 
             $video->delete();
 
-            return redirect('/admin/videosonline/' . $videoonline_id . '/edit')
+            return redirect()->back()
                 ->with('success', 'Video eliminado correctamente.');
         } catch (\Exception $e) {
             Log::error('Error al eliminar el video: ' . $e->getMessage());
