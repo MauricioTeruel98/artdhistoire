@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Categories;
 use App\Models\Slider;
 use App\Models\Archive;
+use App\Models\TextosPiloto;
 use Illuminate\Http\Request;
 use TCG\Voyager\Models\Post;
 use Illuminate\Support\Facades\Auth;
@@ -40,8 +41,9 @@ class InteractiveController extends Controller
 
     public function pilote()
     {
+        $textosPiloto = TextosPiloto::orderBy('order', 'DESC')->first();
         $slider = Slider::all();
-        $pilote = Categories::where('name', 'pilote')->with('posts')->first();
-        return view('pages.interactive.pilote', compact('slider', 'pilote'));
+        $pilote = Categories::where('is_pilote', 1)->with('posts')->orderBy('created_at', 'DESC')->first();
+        return view('pages.interactive.pilote', compact('slider', 'pilote', 'textosPiloto'));
     }
 }

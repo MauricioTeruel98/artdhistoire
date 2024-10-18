@@ -12,12 +12,8 @@
                 <!-- First item -->
                 <li class="nav-item dropdown">
                     <a class="nav-link" href="/" id="newsDropdown" role="button">
-                        Nos actualité
+                        {{ app()->getLocale() == 'fr' ? 'Nos actualités' : 'News' }}
                     </a>
-                    {{-- <ul class="dropdown-menu" aria-labelledby="newsDropdown">
-                        <li><a class="dropdown-item" href="#">Latest News</a></li>
-                        <li><a class="dropdown-item" href="#">Popular Articles</a></li>
-                    </ul> --}}
                 </li>
 
                 <div class="divider"></div> <!-- Vertical divider -->
@@ -25,39 +21,29 @@
                 <!-- Second item -->
                 <li class="nav-item dropdown">
                     <a class="nav-link" href="/interactive/index" id="lisaDropdown" role="button">
-                        LISA Interactive Videos
+                        {{ app()->getLocale() == 'fr' ? 'Vidéos interactives LISA' : 'LISA Interactive Videos' }}
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="lisaDropdown">
-                        <li><a class="dropdown-item" href="/interactive">Pilote</a></li>
+                        <li><a class="dropdown-item"
+                                href="/interactive">{{ app()->getLocale() == 'fr' ? 'Pilote' : 'Pilot' }}</a></li>
                         @php
                             $sagas = DB::table('categories')->where('name', '!=', 'pilote')->get();
                         @endphp
 
                         @foreach ($sagas as $saga)
-                            <li><a class="dropdown-item" href="/interactive/{{ $saga->id }}">{{ $saga->name }}</a></li>
+                            <li><a class="dropdown-item"
+                                    href="/interactive/{{ $saga->id }}">{{ app()->getLocale() == 'fr' ? $saga->name_fr : $saga->name }}</a>
+                            </li>
                         @endforeach
                     </ul>
                 </li>
 
                 <div class="divider"></div> <!-- Vertical divider -->
 
-                <!-- Third item -->
-                {{-- <li class="nav-item dropdown">
-                    <a class="nav-link" href="#" id="programsDropdown" role="button">
-                        Programs
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="programsDropdown">
-                        <li><a class="dropdown-item" href="#">Programs A-Z</a></li>
-                        <li><a class="dropdown-item" href="#">Upcoming Programs</a></li>
-                    </ul>
-                </li> --}}
-
-                {{-- <div class="divider"></div> --}}
-
                 <!-- Fourth item -->
                 <li class="nav-item dropdown">
                     <a class="nav-link" href="/videos-online" id="onlineVideosDropdown" role="button">
-                        Online Videos
+                        {{ app()->getLocale() == 'fr' ? 'Vidéos en ligne' : 'Online Videos' }}
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="onlineVideosDropdown">
                         @php
@@ -65,7 +51,7 @@
                         @endphp
                         @foreach ($videos as $video)
                             <li><a class="dropdown-item"
-                                    href="/video-online/{{ $video->id }}">{{ $video->title }}</a></li>
+                                    href="/video-online/{{ $video->id }}">{{ app()->getLocale() == 'fr' ? $video->title_fr : $video->title }}</a></li>
                         @endforeach
                     </ul>
                 </li>
@@ -75,12 +61,8 @@
                 <!-- Fifth item -->
                 <li class="nav-item dropdown">
                     <a class="nav-link" href="/about" id="aboutDropdown" role="button">
-                        About Us
+                        {{ app()->getLocale() == 'fr' ? 'À propos de nous' : 'About Us' }}
                     </a>
-                    {{-- <ul class="dropdown-menu" aria-labelledby="aboutDropdown">
-                        <li><a class="dropdown-item" href="#">Our Team</a></li>
-                        <li><a class="dropdown-item" href="#">Contact</a></li>
-                    </ul> --}}
                 </li>
 
                 <!-- Bell icon -->
@@ -89,6 +71,31 @@
                         <i class="bi bi-bell bell-icon"></i> <!-- Bootstrap Icon for bell -->
                     </a>
                 </li>
+
+                <div class="language-selector dropdown">
+                    <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button"
+                        id="languageDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        @if (app()->getLocale() == 'fr')
+                            <span class="flag-icon flag-icon-fr"></span> FR
+                        @else
+                            <span class="flag-icon flag-icon-gb"></span> EN
+                        @endif
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="languageDropdown">
+                        <li>
+                            <a class="dropdown-item {{ app()->getLocale() == 'fr' ? 'active' : '' }}"
+                                href="{{ route('language.switch', 'fr') }}">
+                                <span class="flag-icon flag-icon-fr"></span> FR
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item {{ app()->getLocale() == 'en' ? 'active' : '' }}"
+                                href="{{ route('language.switch', 'en') }}">
+                                <span class="flag-icon flag-icon-gb"></span> EN
+                            </a>
+                        </li>
+                    </ul>
+                </div>
 
                 @php
                     $user = Auth::user();
@@ -103,14 +110,16 @@
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
 
-                            <li><a class="dropdown-item" href="/profile">Profile</a></li>
+                            <li><a class="dropdown-item"
+                                    href="/profile">{{ app()->getLocale() == 'fr' ? 'Profil' : 'Profile' }}</a></li>
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
                             <li>
                                 <form action="{{ route('logout') }}" method="POST">
                                     @csrf
-                                    <button class="dropdown-item">Log Out</button>
+                                    <button
+                                        class="dropdown-item">{{ app()->getLocale() == 'fr' ? 'Déconnexion' : 'Log Out' }}</button>
                                 </form>
                             </li>
 
@@ -128,7 +137,7 @@
                                 <path d="M12 10m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" />
                                 <path d="M6.168 18.849a4 4 0 0 1 3.832 -2.849h4a4 4 0 0 1 3.834 2.855" />
                             </svg>
-                            Se conecté
+                            {{ app()->getLocale() == 'fr' ? 'Se connecter' : 'Login' }}
                         </a>
                     </li>
                 @endif

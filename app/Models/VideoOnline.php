@@ -15,7 +15,12 @@ class VideoOnline extends Model
         'title',
         'subtitle',
         'text',
-        'text_secondary',
+        'texto_secondary',
+        'title_fr',
+        'subtitle_fr',
+        'text_fr',
+        'texto_secondary_fr',
+        'bio'
     ];
 
     public function videos()

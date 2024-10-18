@@ -10,7 +10,7 @@ class VideoController extends Controller
 {
     public function index()
     {
-        $videosOnline = VideoOnline::orderBy('order', 'DESC')->get();
+        $videosOnline = VideoOnline::all();
         return view('pages.online.index', compact('videosOnline'));
     }
 
@@ -38,5 +38,13 @@ class VideoController extends Controller
             Video::where('id', $id)->update(['order' => $index + 1]);
         }
         return response()->json(['success' => true]);
+    }
+
+    public function showIlustrations(Request $request)
+    {
+
+        $videoOnline = VideoOnline::where('id', $request->id)->firstOrFail();
+
+        return view('pages.online.ilustraciones', compact('videoOnline'));
     }
 }

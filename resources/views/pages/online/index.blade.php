@@ -48,8 +48,8 @@
                         <div class="card text-white rounded-0">
                             <img src="/storage/{{$videoOnline->image}}" class="card-img rounded-0" alt="Le Réalisme au XIXe">
                             <div class="card-img-overlay rounded-0">
-                                <div class="badge badge-danger">Conférence n°{{ $index + 1 }}</div>
-                                <h5 class="card-title baskeville-italic">{{ $videoOnline->title }}</h5>
+                                <div class="badge badge-danger">{{ app()->getLocale() == 'fr' ? 'Conférence n°' : 'Conference n°' }}{{ $index + 1 }}</div>
+                                <h5 class="card-title baskeville-italic">{{ app()->getLocale() == 'fr' ? $videoOnline->title_fr : $videoOnline->title }}</h5>
                             </div>
                         </div>
                     </a>

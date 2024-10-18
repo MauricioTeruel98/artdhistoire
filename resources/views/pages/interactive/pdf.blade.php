@@ -24,7 +24,7 @@
     <div class="container mt-5">
         <div class="row justify-content-center">
             <div class="col-md-12">
-                <h2 class="mb-4">{{ $archive->title }}</h2>
+                <h2 class="mb-4">{{ app()->getLocale() == 'fr' ? $archive->title_fr : $archive->title }}</h2>
                 <div id="pdf-viewer"></div>
             </div>
         </div>

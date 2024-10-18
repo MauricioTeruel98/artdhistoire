@@ -7,7 +7,9 @@ use App\Http\Controllers\VideoItemController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\VideoController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\NewsletterController;
+use App\Http\Controllers\SubscriptionController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Socialite\Facades\Socialite;
 use App\Models\User;
@@ -26,12 +28,15 @@ use Illuminate\Support\Facades\Auth;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
+Route::get('language/{locale}', [LanguageController::class, 'switch'])->name('language.switch');
+
 Route::get('/interactive/index', [InteractiveController::class, 'index'])->name('interactive.index');
 Route::get('/interactive', [InteractiveController::class, 'pilote'])->name('interactive.pilote');
 Route::get('/interactive/{id}', [InteractiveController::class, 'show'])->name('interactive.show');
 
 Route::get('/videos-online', [VideoController::class, 'index'])->name('videos.index');
 Route::get('/video-online/{id}', [VideoController::class, 'show'])->name('video.show');
+Route::get('/video-online/{id}/ilustrations', [VideoController::class, 'showIlustrations'])->name('video.show.ilustrations');
 
 Route::get('/about', [HomeController::class, 'contact'])->name('contact');
 
@@ -39,15 +44,33 @@ Route::get('/tutorial', [HomeController::class, 'tutorial'])->name('tutorial');
 
 Route::post('/contact', [ContactController::class, 'submit']);
 
+Route::get('/subscription-required', function () {
+    return view('pages.subscription.required');
+})->name('subscription.required');
+
+
+/**
+ * RUTAS DE SUSCRIPCION
+ */
+
+Route::post('/subscription/trial', [SubscriptionController::class, 'createTrialSubscription'])->name('subscription.trial');
+
+Route::post('/subscription/create', [SubscriptionController::class, 'create'])->name('subscription.create');
+Route::get('/subscription/success', [SubscriptionController::class, 'success'])->name('subscription.success');
+Route::get('/subscription/cancel', [SubscriptionController::class, 'cancel'])->name('subscription.cancel');
+Route::post('/stripe/webhook', [SubscriptionController::class, 'handleStripeWebhook']);
+
 
 // Ruta protegida para usuarios autenticados
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
 
-    Route::get('/interactive/pdf/{id}', [InteractiveController::class, 'showPdf'])->name('interactive.pdf');
-
     Route::post('/video/reorder', [VideoController::class, 'reorder'])->name('videos.reorder');
+});
+
+Route::middleware(['auth', 'subscription'])->group(function () {
+    Route::get('/interactive/pdf/{id}', [InteractiveController::class, 'showPdf'])->name('interactive.pdf');
 });
 
 Route::group(['prefix' => 'admin'], function () {
@@ -55,11 +78,24 @@ Route::group(['prefix' => 'admin'], function () {
 
     Route::get('videoonline/{videoonline_id}/videos/create', [VideoItemController::class, 'create'])->name('videoonline.videos.create');
     Route::post('videoonline/{videoonline_id}/videos', [VideoItemController::class, 'store'])->name('videoonline.videos.store');
+    Route::get('videos/{id}/edit/edit', [VideoItemController::class, 'edit'])->name('videoonline.videos.edit.edit');
+    Route::put('videos/{id}', [VideoItemController::class, 'update'])->name('videoonline.videos.update');
+    Route::delete('videos/{id}/destroy', [VideoItemController::class, 'destroy'])->name('videoonline.videos.destroy');
 
-     
+
     Route::get('archives', [App\Http\Controllers\ArchiveController::class, 'index'])->name('voyager.archives.index');
+    Route::post('archives/reorder', [App\Http\Controllers\ArchiveController::class, 'reorder'])->name('archives.reorder');
     Route::post('archives', [App\Http\Controllers\ArchiveController::class, 'store'])->name('voyager.archives.store');
-    Route::delete('archives/{archive}', [App\Http\Controllers\ArchiveController::class, 'destroy'])->name('voyager.archives.destroy');
+    Route::get('archives/{archive}/edit/edit', [App\Http\Controllers\ArchiveController::class, 'edit'])->name('voyager.archives.edit.edit');
+    Route::put('archives/{archive}', [App\Http\Controllers\ArchiveController::class, 'update'])->name('voyager.archives.update');
+    Route::delete('archives/{archive}/delete', [App\Http\Controllers\ArchiveController::class, 'destroy'])->name('voyager.archives.destroy.destroy');
+
+    Route::get('archives-en', [App\Http\Controllers\ArchivesEnController::class, 'index'])->name('voyager.archives.en.index');
+    Route::post('archives-en/reorder', [App\Http\Controllers\ArchivesEnController::class, 'reorder'])->name('archives.en.reorder');
+    Route::post('archives-en', [App\Http\Controllers\ArchivesEnController::class, 'store'])->name('voyager.archives.en.store');
+    Route::get('archives-en/{archive}/edit/edit', [App\Http\Controllers\ArchivesEnController::class, 'edit'])->name('voyager.archives.en.edit.edit');
+    Route::put('archives-en/{archive}', [App\Http\Controllers\ArchivesEnController::class, 'update'])->name('voyager.archives.en.update');
+    Route::delete('archives-en/{archive}/delete', [App\Http\Controllers\ArchivesEnController::class, 'destroy'])->name('voyager.archives.en.destroy.destroy');
 });
 
 /**

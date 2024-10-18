@@ -6,8 +6,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use TCG\Voyager\Models\Post;
 
-class Archive extends Model
+class ArchivesEn extends Model
 {
+    protected $table = 'archives_en';
+
     use HasFactory;
 
     protected $fillable = [
@@ -16,8 +18,6 @@ class Archive extends Model
         'icon',
         'type',
         'title',
-        'title_fr',
-        'route_fr',
         'order'
     ];
     

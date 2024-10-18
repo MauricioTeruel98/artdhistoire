@@ -288,6 +288,87 @@
             cursor: pointer;
             z-index: 999;
         }
+
+        .language-selector .btn {
+            background-color: #f8f9fa;
+            border-color: #dee2e6;
+            color: #495057;
+            padding: 0.25rem 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .language-selector .dropdown-menu {
+            min-width: 5rem;
+            padding: 0.5rem 0;
+        }
+
+        .language-selector .dropdown-item {
+            padding: 0.25rem 1rem;
+        }
+
+        .language-selector .dropdown-item.active {
+            background-color: #e9ecef;
+            color: #212529;
+        }
+
+        .flag-icon {
+            display: inline-block;
+            width: 1em;
+            height: 1em;
+            vertical-align: middle;
+            margin-right: 0.25rem;
+            background-size: contain;
+            background-position: 50%;
+            background-repeat: no-repeat;
+        }
+
+        .flag-icon-fr {
+            background-image: url('path/to/french-flag.svg');
+        }
+
+        .flag-icon-gb {
+            background-image: url('path/to/british-flag.svg');
+        }
+
+        @media (max-width: 991px) {
+            .navbar-nav {
+                text-align: center;
+            }
+
+            .nav-item {
+                padding: 10px 0;
+            }
+
+            .divider {
+                display: none;
+            }
+
+            .language-selector {
+                margin-top: 15px;
+                text-align: center;
+            }
+
+            .dropdown-menu {
+                text-align: center;
+            }
+
+            .profile .profile-pic {
+                margin: 0 auto;
+                display: block;
+            }
+
+            .navbar-toggler {
+                border: none;
+            }
+
+            .navbar-toggler:focus {
+                box-shadow: none;
+            }
+
+            .navbar-brand {
+                margin-right: auto;
+            }
+        }
     </style>
 </head>
 

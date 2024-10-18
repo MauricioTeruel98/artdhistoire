@@ -33,24 +33,22 @@
 
     <div class="container mx-auto py-5">
         <header class="text-center mb-5">
-            <h1 class="text-4xl font-bold mb-2">LISA</h1>
+            <h1 class="text-4xl font-bold mb-2">
+                {{ app()->getLocale() == 'fr' ? 'LISA' : 'LISA' }}
+            </h1>
             <p class="text-lg mb-4">
-                Un portail combinant vidéos et anthologie
+                {{ app()->getLocale() == 'fr' ? 'Un portail combinant vidéos et anthologie' : 'A portal combining videos and anthology' }}
                 <br>
-                La pérennité et l'irréfutabilité en un clic
+                {{ app()->getLocale() == 'fr' ? 'La pérennité et l\'irréfutabilité en un clic' : 'Permanence and irrefutability in one click' }}
             </p>
             <p class="mb-6">
-                LISA pour Learning Interactive Smart Art est notre nouveau portail d'histoire dédié aux arts du XIXe.
+                {{ app()->getLocale() == 'fr' ? 'LISA pour Learning Interactive Smart Art est notre nouveau portail d\'histoire dédié aux arts du XIXe.' : 'LISA for Learning Interactive Smart Art is our new portal dedicated to the XIXth century arts history.' }}
             </p>
             <p class="mb-6">
-                Les vidéos d'Art d'Histoire sont désormais interactives : apparaissent à l'écran des centaines de pop-up
-                cliquables
-                donnant accès aux fiches de l'encyclopédie LISA. Chacune de ces fiches est intégralement validée par des
-                sources
-                primaires lesquelles, numérisées, sont accessibles en quelques clics.
+                {{ app()->getLocale() == 'fr' ? 'Les vidéos d\'Art d\'Histoire sont désormais interactives : apparaissent à l\'écran des centaines de pop-up cliquables donnant accès aux fiches de l\'encyclopédie LISA. Chacune de ces fiches est intégralement validée par des sources primaires lesquelles, numérisées, sont accessibles en quelques clics.' : 'The videos of Art d\'Histoire are now interactive: hundreds of clickable pop-ups appear on the screen giving access to the LISA encyclopedia cards. Each of these cards is fully validated by primary sources which, digitized, are accessible in just a few clicks.' }}
             </p>
             <a href="/interactive/index" class="btn btn-principal">
-                Essayez LISA
+                {{ app()->getLocale() == 'fr' ? 'Essayez LISA' : 'Try LISA' }}
             </a>
         </header>
         <div class="row">
@@ -58,11 +56,11 @@
                 <div class="col-md-4 mb-4">
                     <a href="#" class="video-link" data-video-id="{{ $video->id }}" data-index="{{ $index }}">
                         <div class="position-relative" style="padding-bottom: 75%;">
-                            <img src="/storage/{{$video->home_image}}" alt="Art piece"
+                            <img src="/storage/{{$video->home_image}}" alt="{{ app()->getLocale() == 'fr' ? $video->title_fr : $video->title }}"
                                 class="position-absolute w-100 h-100 object-fit-cover">
                             <div class="position-absolute w-100 h-100 d-flex align-items-center justify-content-center">
                                 <h2 class="text-white text-center">
-                                    {{$video->title}}
+                                    {{ app()->getLocale() == 'fr' ? $video->title_fr : $video->title }}
                                 </h2>
                             </div>
                         </div>
@@ -94,7 +92,9 @@
                                 <div class="flex-grow-1 overflow-auto" style="max-height: calc(100vh - 400px);">
                                     <p id="modalDescription"></p>
                                 </div>
-                                <a href="#" class="btn btn-link text-black align-self-start mt-4" id="watchVideoBtn">Aller à la page</a>
+                                <a href="#" class="btn btn-link text-black align-self-start mt-4" id="watchVideoBtn">
+                                    {{ app()->getLocale() == 'fr' ? 'Aller à la page' : 'Go to the page' }}
+                                </a>
                             </div>
                         </div>
                     </div>

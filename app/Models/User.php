@@ -44,4 +44,9 @@ class User extends \TCG\Voyager\Models\User
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function subscription()
+    {
+        return $this->hasOne(Subscription::class)->latest();
+    }
 }

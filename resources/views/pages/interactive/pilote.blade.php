@@ -5,23 +5,6 @@
 @section('header')
 
     <style>
-        .custom-card {
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .topic-item {
-            font-size: 0.9rem;
-            margin: 20px auto;
-        }
-
-        .topic-icon {
-            width: 16px;
-            height: 16px;
-            margin-right: 5px;
-        }
-
         .section-title {
             font-size: 1.5rem;
             margin-bottom: 1rem;
@@ -54,10 +37,55 @@
             margin-left: 5px;
         }
 
+        .topic-item {
+            margin-bottom: 0.5rem;
+        }
+
+        .topic-item span {
+            font-size: 12px;
+        }
+
+        .topic-icon {
+            width: 20px;
+            height: 20px;
+            display: inline-block;
+            margin-right: 0.5rem;
+        }
+
+        .topic-list {
+            list-style-type: none;
+            padding-left: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
         .topic {
-            width: 33.33%;
-            padding: 0px 7px;
+            width: 100%;
+            padding: 5px 0;
             font-size: 14px !important;
+        }
+
+        .topic-list {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .topic-item {
+            margin-bottom: 0.5rem;
+        }
+
+        .topic-item span {
+            font-size: 12px;
+        }
+
+        .topic {
+            padding: 5px 0;
+            font-size: 14px;
+        }
+
+
+        iframe .pushfooter {
+            height: 0px !important;
         }
 
         @media screen and (max-width: 768px) {
@@ -72,125 +100,269 @@
 @section('content')
     @include('partials.slider')
     <div class="container mt-4">
-        <h1 class="text-center mb-4">Accédez à LISA via la vidéo ou via la librairie</h1>
-
+        {{-- <h1 class="text-center mb-4">{{ app()->getLocale() == 'fr' ? 'Accédez à LISA via la vidéo ou via la librairie' : 'Access LISA via the video or the library' }}</h1> --}}
+        <h1 class="text-center mb-4">{{ app()->getLocale() == 'fr' ? $textosPiloto->title : $textosPiloto->title_en ?? '' }}
+        </h1>
         <div class="row mb-4">
             <div class="col-md-6">
-                <h2>Vidéo interactive</h2>
+                {!! app()->getLocale() == 'fr' ? $textosPiloto->text_1 : $textosPiloto->text_1_en ?? '' !!}
+                {{--
+                <h2>{{ app()->getLocale() == 'fr' ? 'Vidéo interactive' : 'Interactive video' }}</h2>
                 <ul>
-                    <li>Visionnez la vidéo (Chapitre 4 de la conférence Manet et Seurat)</li>
-                    <li>Cliquez sur les pop-up en haut à gauche pour ouvrir les articles interactifs de LISA. Pour cette
-                        version pilote, les fiches grises sont désactivées</li>
-                </ul>
+                    <li>{{ app()->getLocale() == 'fr' ? 'Visionnez la vidéo (Chapitre 4 de la conférence Manet et Seurat)' : 'Watch the video (Chapter 4 of the Manet and Seurat conference)' }}</li>
+                    <li>{{ app()->getLocale() == 'fr' ? 'Cliquez sur les pop-up en haut à gauche pour ouvrir les articles interactifs de LISA. Pour cette version pilote, les fiches grises sont désactivées' : 'Click on the pop-ups on the top left to open the LISA interactive articles. For this pilot version, the gray cards are disabled' }}</li>
+                </ul> --}}
             </div>
             <div class="col-md-6">
-                <h2>Librairie interactive</h2>
+
+                {!! app()->getLocale() == 'fr' ? $textosPiloto->text_2 : $textosPiloto->text_2_en ?? '' !!}
+
+                {{-- <h2>{{ app()->getLocale() == 'fr' ? 'Librairie interactive' : 'Interactive library' }}</h2>
                 <ul>
-                    <li>Cliquez sur un icône fiche pour accéder à l'article LISA, renseigné par son code couleur</li>
-                    <li>Cliquez sur l'horloge en haut à droite de l'article pour revenir à la vidéo</li>
-                </ul>
+                    <li>{{ app()->getLocale() == 'fr' ? "Cliquez sur un icône fiche pour accéder à l'article LISA, renseigné par son code couleur" : "Click on a color code icon to access the LISA article, filled in with its color code" }}</li>
+                    <li>{{ app()->getLocale() == 'fr' ? "Cliquez sur l'horloge en haut à droite de l'article pour revenir à la vidéo" : "Click on the clock in the top right of the article to return to the video" }}</li>
+                </ul> --}}
             </div>
         </div>
 
         <div class="text-center mb-4">
-            <a class="btn btn-principal" href="{{ route('tutorial') }}">Tutoriel de navigation ➤</a>
+            <a class="btn btn-principal"
+                href="{{ route('tutorial') }}">{{ app()->getLocale() == 'fr' ? 'Tutoriel de navigation ➤' : 'Navigation tutorial ➤' }}</a>
         </div>
 
-        @if($pilote && $pilote->posts)
+        @if ($pilote && $pilote->posts)
             @foreach ($pilote->posts as $index => $post)
                 <section class="my-5">
-                    <h2>{{ $index + 1 }}. {{ $post->title }}</h2>
-                    <h3 class="section-title">{{ $post->excerpt }}</h3>
+                    <h2>{{ $index + 1 }}. {{ app()->getLocale() == 'fr' ? $post->title_fr : $post->title }}</h2>
+                    <h3 class="section-title">{{ app()->getLocale() == 'fr' ? $post->excerpt_fr : $post->excerpt }}</h3>
                     <div class="row">
                         <div class="col-md-4">
                             <div class="image-container">
-                                <a href="{{$post->hihaho}}" target="_blank">
-                                    <img src="/storage/{{ $post->image }}" alt="Impressionist painting" class="w-100 h-100">
-                                    <div class="play-button"></div>
-                                </a>
+                                <div
+                                    style="position: relative !important; padding-bottom: 56.25% !important; height: 0px !important; overflow: hidden !important; max-width: 100% !important;">
+                                    <iframe src="{{ app()->getLocale() == 'fr' ? $post->hihaho : $post->hihaho_en }}"
+                                        frameborder="0" webkitallowfullscreen="true" mozallowfullscreen="true"
+                                        allowfullscreen="true" allow="autoplay; fullscreen; clipboard-read; clipboard-write"
+                                        style="position: absolute !important; top: 0px !important; left: 0px !important; width: 100% !important; height: 100% !important;"></iframe>
+                                </div>
+
+                                {{-- <a href="{{ $post->hihaho }}" target="_blank">
+                                <img src="/storage/{{ $post->image }}" alt="Impressionist painting" class="w-100 h-100">
+                                <div class="play-button"></div>
+                            </a> --}}
                             </div>
                         </div>
                         <div class="col-md-8">
-                            <div class="d-flex flex-wrap topic-list">
-                                @php
-                                    $archives = DB::table('archives')
-                                        ->where('post_id', $post->id)
-                                        ->get();
-                                @endphp
+                            @if (app()->getLocale() == 'fr')
+                                <div class="d-flex flex-wrap topic-list">
+                                    @php
+                                        $archives = DB::table('archives')
+                                            ->where('post_id', $post->id)
+                                            ->orderBy('order', 'ASC')
+                                            ->get();
+                                    @endphp
 
-                                @foreach ($archives as $archive)
-                                    <div class="topic">
-                                        <div class="topic-item">
-                                            @php
-                                                $route = $archive->route;
-                                            @endphp
-                                            <a href="{{ route('interactive.pdf', ['id' => $archive->id]) }}">
-                                                @if ($archive->type == 'nonDisponible')
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                    viewBox="0 0 24 24" fill="currentColor"
-                                                    class="icon icon-tabler icons-tabler-filled icon-tabler-file">
-                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                                    <path
-                                                        d="M12 2l.117 .007a1 1 0 0 1 .876 .876l.007 .117v4l.005 .15a2 2 0 0 0 1.838 1.844l.157 .006h4l.117 .007a1 1 0 0 1 .876 .876l.007 .117v9a3 3 0 0 1 -2.824 2.995l-.176 .005h-10a3 3 0 0 1 -2.995 -2.824l-.005 -.176v-14a3 3 0 0 1 2.824 -2.995l.176 -.005h5z" />
-                                                    <path d="M19 7h-4l-.001 -4.001z" />
-                                                </svg>
-                                            @elseif ($archive->type == 'contexto')
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                                    style="color: #5471f1;" stroke-linecap="round" stroke-linejoin="round"
-                                                    class="icon icon-tabler icons-tabler-outline icon-tabler-photo">
-                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                                    <path d="M15 8h.01" />
-                                                    <path
-                                                        d="M3 6a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v12a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3v-12z" />
-                                                    <path d="M3 16l5 -5c.928 -.893 2.072 -.893 3 0l5 5" />
-                                                    <path d="M14 14l1 -1c.928 -.893 2.072 -.893 3 0l3 3" />
-                                                </svg>
-                                            @elseif($archive->type == 'teoria')
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                                    style="color: #ffb102;" stroke-linecap="round" stroke-linejoin="round"
-                                                    class="icon icon-tabler icons-tabler-outline icon-tabler-flask">
-                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                                    <path d="M9 3l6 0" />
-                                                    <path d="M10 9l4 0" />
-                                                    <path d="M10 3v6l-4 11a.7 .7 0 0 0 .5 1h11a.7 .7 0 0 0 .5 -1l-4 -11v-6" />
-                                                </svg>
-                                            @elseif ($archive->type == 'bio')
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                                    style="color: #ee1c6b;" stroke-linecap="round" stroke-linejoin="round"
-                                                    class="icon icon-tabler icons-tabler-outline icon-tabler-pencil">
-                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                                    <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
-                                                    <path d="M13.5 6.5l4 4" />
-                                                </svg>
-                                            @elseif ($archive->type == 'social')
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                    style="color: #4bc538;" viewBox="0 0 24 24" fill="none"
-                                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                                    stroke-linejoin="round"
-                                                    class="icon icon-tabler icons-tabler-outline icon-tabler-world">
-                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                                    <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" />
-                                                    <path d="M3.6 9h16.8" />
-                                                    <path d="M3.6 15h16.8" />
-                                                    <path d="M11.5 3a17 17 0 0 0 0 18" />
-                                                    <path d="M12.5 3a17 17 0 0 1 0 18" />
-                                                </svg>
+                                    <div class="row">
+                                        @foreach ($archives as $archive_index => $archive)
+                                            @if ($archive_index % 10 == 0)
+                                                {{-- Nueva columna cada 10 ítems --}}
+                                                <div class="col-md-4">
                                             @endif
-                                            </a>
-                                            <span>{{ $archive->title }}</span>
-                                        </div>
+
+                                            <div class="topic">
+                                                <div class="topic-item">
+                                                    <a href="{{ route('interactive.pdf', ['id' => $archive->id]) }}">
+                                                        @if ($archive->type == 'nonDisponible')
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                                                height="24" viewBox="0 0 24 24" fill="currentColor"
+                                                                style="color: grey;"
+                                                                class="icon icon-tabler icons-tabler-filled icon-tabler-file">
+                                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                                <path
+                                                                    d="M12 2l.117 .007a1 1 0 0 1 .876 .876l.007 .117v4l.005 .15a2 2 0 0 0 1.838 1.844l.157 .006h4l.117 .007a1 1 0 0 1 .876 .876l.007 .117v9a3 3 0 0 1 -2.824 2.995l-.176 .005h-10a3 3 0 0 1 -2.995 -2.824l-.005 -.176v-14a3 3 0 0 1 2.824 -2.995l.176 -.005h5z" />
+                                                                <path d="M19 7h-4l-.001 -4.001z" />
+                                                            </svg>
+                                                        @elseif ($archive->type == 'contexto')
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                                                height="24" viewBox="0 0 24 24" fill="none"
+                                                                stroke="currentColor" stroke-width="2"
+                                                                style="color: #5471f1;" stroke-linecap="round"
+                                                                stroke-linejoin="round"
+                                                                class="icon icon-tabler icons-tabler-outline icon-tabler-photo">
+                                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                                <path d="M15 8h.01" />
+                                                                <path
+                                                                    d="M3 6a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v12a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3v-12z" />
+                                                                <path d="M3 16l5 -5c.928 -.893 2.072 -.893 3 0l5 5" />
+                                                                <path d="M14 14l1 -1c.928 -.893 2.072 -.893 3 0l3 3" />
+                                                            </svg>
+                                                        @elseif($archive->type == 'teoria')
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                                                height="24" viewBox="0 0 24 24" fill="none"
+                                                                stroke="currentColor" stroke-width="2"
+                                                                style="color: #ffb102;" stroke-linecap="round"
+                                                                stroke-linejoin="round"
+                                                                class="icon icon-tabler icons-tabler-outline icon-tabler-flask">
+                                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                                <path d="M9 3l6 0" />
+                                                                <path d="M10 9l4 0" />
+                                                                <path
+                                                                    d="M10 3v6l-4 11a.7 .7 0 0 0 .5 1h11a.7 .7 0 0 0 .5 -1l-4 -11v-6" />
+                                                            </svg>
+                                                        @elseif ($archive->type == 'bio')
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                                                height="24" viewBox="0 0 24 24" fill="none"
+                                                                stroke="currentColor" stroke-width="2"
+                                                                style="color: #ee1c6b;" stroke-linecap="round"
+                                                                stroke-linejoin="round"
+                                                                class="icon icon-tabler icons-tabler-outline icon-tabler-pencil">
+                                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                                <path
+                                                                    d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+                                                                <path d="M13.5 6.5l4 4" />
+                                                            </svg>
+                                                        @elseif ($archive->type == 'social')
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                                                height="24" style="color: #4bc538;" viewBox="0 0 24 24"
+                                                                fill="none" stroke="currentColor" stroke-width="2"
+                                                                stroke-linecap="round" stroke-linejoin="round"
+                                                                class="icon icon-tabler icons-tabler-outline icon-tabler-world">
+                                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                                <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" />
+                                                                <path d="M3.6 9h16.8" />
+                                                                <path d="M3.6 15h16.8" />
+                                                                <path d="M11.5 3a17 17 0 0 0 0 18" />
+                                                                <path d="M12.5 3a17 17 0 0 1 0 18" />
+                                                            </svg>
+                                                        @endif
+                                                    </a>
+                                                    <span>{{ $archive->title }}</span>
+                                                </div>
+                                            </div>
+
+                                            @if ($archive_index % 10 == 9 || $archive_index == $archives->count() - 1)
+                                                {{-- Cierra la columna al llegar a 10 o al final de la lista --}}
                                     </div>
-                                @endforeach
-                            </div>
+                            @endif
+
+                            @if ($archive_index % 30 == 29 && $archive_index != $archives->count() - 1)
+                                {{-- Nueva fila cada 30 ítems --}}
                         </div>
-                    </div>
-                </section>
-            @endforeach
-        @else
-            <p>No se encontraron posts para la categoría pilote.</p>
-        @endif
+                        <div class="row">
+            @endif
+        @endforeach
+    </div>
+    </div>
+@else
+    <div class="d-flex flex-wrap topic-list">
+        @php
+            $archivesEn = DB::table('archives_en')
+                ->where('post_id', $post->id)
+                ->orderBy('order', 'ASC')
+                ->get();
+        @endphp
+
+        @foreach ($archivesEn as $archive_index => $archive)
+            @if ($archive_index % 10 == 0)
+                {{-- Nueva columna cada 10 ítems --}}
+                <div class="col-md-4">
+            @endif
+
+            <div class="topic">
+                <div class="topic-item">
+                    <a href="{{ route('interactive.pdf', ['id' => $archive->id]) }}">
+                        @if ($archive->type == 'nonDisponible')
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="currentColor" style="color: grey;"
+                                class="icon icon-tabler icons-tabler-filled icon-tabler-file">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                <path
+                                    d="M12 2l.117 .007a1 1 0 0 1 .876 .876l.007 .117v4l.005 .15a2 2 0 0 0 1.838 1.844l.157 .006h4l.117 .007a1 1 0 0 1 .876 .876l.007 .117v9a3 3 0 0 1 -2.824 2.995l-.176 .005h-10a3 3 0 0 1 -2.995 -2.824l-.005 -.176v-14a3 3 0 0 1 2.824 -2.995l.176 -.005h5z" />
+                                <path d="M19 7h-4l-.001 -4.001z" />
+                            </svg>
+                        @elseif ($archive->type == 'contexto')
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" style="color: #5471f1;"
+                                stroke-linecap="round" stroke-linejoin="round"
+                                class="icon icon-tabler icons-tabler-outline icon-tabler-photo">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                <path d="M15 8h.01" />
+                                <path d="M3 6a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v12a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3v-12z" />
+                                <path d="M3 16l5 -5c.928 -.893 2.072 -.893 3 0l5 5" />
+                                <path d="M14 14l1 -1c.928 -.893 2.072 -.893 3 0l3 3" />
+                            </svg>
+                        @elseif($archive->type == 'teoria')
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" style="color: #ffb102;"
+                                stroke-linecap="round" stroke-linejoin="round"
+                                class="icon icon-tabler icons-tabler-outline icon-tabler-flask">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                <path d="M9 3l6 0" />
+                                <path d="M10 9l4 0" />
+                                <path d="M10 3v6l-4 11a.7 .7 0 0 0 .5 1h11a.7 .7 0 0 0 .5 -1l-4 -11v-6" />
+                            </svg>
+                        @elseif ($archive->type == 'bio')
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" style="color: #ee1c6b;"
+                                stroke-linecap="round" stroke-linejoin="round"
+                                class="icon icon-tabler icons-tabler-outline icon-tabler-pencil">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+                                <path d="M13.5 6.5l4 4" />
+                            </svg>
+                        @elseif ($archive->type == 'social')
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                style="color: #4bc538;" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                class="icon icon-tabler icons-tabler-outline icon-tabler-world">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" />
+                                <path d="M3.6 9h16.8" />
+                                <path d="M3.6 15h16.8" />
+                                <path d="M11.5 3a17 17 0 0 0 0 18" />
+                                <path d="M12.5 3a17 17 0 0 1 0 18" />
+                            </svg>
+                        @endif
+                    </a>
+                    <span>{{ $archive->title }}</span>
+                </div>
+            </div>
+
+            @if ($archivesEn->count() > 0 && ($archive_index % 10 == 9 || $archive_index == $archivesEn->count() - 1))
+                {{-- Cierra la columna al llegar a 10 o al final de la lista --}}
+    </div>
+    @endif
+
+    @if ($archivesEn->count() > 0 && $archive_index % 30 == 29 && $archive_index != $archivesEn->count() - 1)
+        {{-- Nueva fila cada 30 ítems --}}
+        </div>
+        <div class="row">
+    @endif
+    @endforeach
+    </div>
+    @endif
+
+    {{-- <ul class="topic-list">
+                            <li class="topic-item"><span class="topic-icon bg-primary"></span>Les pavillons Courbet, 1855 et
+                                1867</li>
+                            <li class="topic-item"><span class="topic-icon bg-danger"></span>Les mariages des
+                                impressionnistes
+                            </li>
+                            <li class="topic-item"><span class="topic-icon bg-primary"></span>Manet, chef de fil absent</li>
+                            <li class="topic-item"><span class="topic-icon bg-warning"></span>Mélange optique, théorie
+                                divisionniste</li>
+                            <li class="topic-item"><span class="topic-icon bg-primary"></span>Les portraits mondains de
+                                Trouville, Courbet</li>
+                            <li class="topic-item"><span class="topic-icon bg-danger"></span>Courbet - Monet, naissance
+                                d'une
+                                amitié</li>
+                        </ul> --}}
+    </div>
+    </div>
+    </section>
+    @endforeach
+@else
+    <p>No se encontraron posts para la categoría pilote.</p>
+    @endif
     </div>
 @endsection

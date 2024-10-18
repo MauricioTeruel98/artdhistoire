@@ -48,11 +48,11 @@
                                 {{ session('pdf_message') }}
                             </div>
                         @endif
-                        <h2 class="text-center mb-4 fw-bold">Login</h2>
+                        <h2 class="text-center mb-4 fw-bold">{{ app()->getLocale() == 'fr' ? 'Connexion' : 'Login' }}</h2>
                         <form action="{{ route('login') }}" method="POST">
                             @csrf
                             <div class="mb-3">
-                                <label for="email" class="form-label">Email</label>
+                                <label for="email" class="form-label">{{ app()->getLocale() == 'fr' ? 'Email' : 'Email' }}</label>
                                 <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email') }}" required>
                                 @error('email')
                                     <div class="invalid-feedback">
@@ -62,7 +62,7 @@
                             </div>
 
                             <div class="mb-3">
-                                <label for="password" class="form-label">Password</label>
+                                <label for="password" class="form-label">{{ app()->getLocale() == 'fr' ? 'Mot de passe' : 'Password' }}</label>
                                 <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password" required>
                                 @error('password')
                                     <div class="invalid-feedback">
@@ -71,21 +71,21 @@
                                 @enderror
                             </div>
 
-                            <button type="submit" class="btn btn-primary w-100 mb-3">Login</button>
+                            <button type="submit" class="btn btn-primary w-100 mb-3">{{ app()->getLocale() == 'fr' ? 'Se connecter' : 'Login' }}</button>
                         </form>
 
                         <div class="text-center">
-                            <p>Or login with:</p>
+                            <p>{{ app()->getLocale() == 'fr' ? 'Ou connectez-vous avec :' : 'Or login with:' }}</p>
                             <a href="{{ url('login/google') }}" class="btn social-btn btn-google my-2">
-                                <i class="fab fa-google me-2"></i>Login with Google
+                                <i class="fab fa-google me-2"></i>{{ app()->getLocale() == 'fr' ? 'Se connecter avec Google' : 'Login with Google' }}
                             </a>
                             <a href="{{ url('login/facebook') }}" class="btn social-btn btn-facebook">
-                                <i class="fab fa-facebook-f me-2"></i>Login with Facebook
+                                <i class="fab fa-facebook-f me-2"></i>{{ app()->getLocale() == 'fr' ? 'Se connecter avec Facebook' : 'Login with Facebook' }}
                             </a>
                         </div>
 
                         <div class="text-center mt-3">
-                            <a href="{{ route('register') }}" class="text-decoration-none">Don't have an account? Register here</a>
+                            <a href="{{ route('register') }}" class="text-decoration-none">{{ app()->getLocale() == 'fr' ? "Vous n'avez pas de compte ? Inscrivez-vous ici" : "Don't have an account? Register here" }}</a>
                         </div>
                     </div>
                 </div>
