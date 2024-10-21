@@ -10,6 +10,7 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\SubscriptionController;
+use App\Http\Controllers\VideoEnItemController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Socialite\Facades\Socialite;
 use App\Models\User;
@@ -65,8 +66,6 @@ Route::post('/stripe/webhook', [SubscriptionController::class, 'handleStripeWebh
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
-
-    Route::post('/video/reorder', [VideoController::class, 'reorder'])->name('videos.reorder');
 });
 
 Route::middleware(['auth', 'subscription'])->group(function () {
@@ -81,6 +80,15 @@ Route::group(['prefix' => 'admin'], function () {
     Route::get('videos/{id}/edit/edit', [VideoItemController::class, 'edit'])->name('videoonline.videos.edit.edit');
     Route::put('videos/{id}', [VideoItemController::class, 'update'])->name('videoonline.videos.update');
     Route::delete('videos/{id}/destroy', [VideoItemController::class, 'destroy'])->name('videoonline.videos.destroy');
+    Route::post('video/reorder', [VideoItemController::class, 'reorder'])->name('videos.reorder');
+
+
+    Route::get('videoonline-en/{videoonline_id}/videos/create', [VideoEnItemController::class, 'create'])->name('videoonline.en.videos.create');
+    Route::post('videoonline-en/{videoonline_id}/videos', [VideoEnItemController::class, 'store'])->name('videoonline.en.videos.store');
+    Route::get('videos-en/{id}/edit/edit', [VideoEnItemController::class, 'edit'])->name('videoonline.en.videos.edit.edit');
+    Route::put('videos-en/{id}', [VideoEnItemController::class, 'update'])->name('videoonline.en.videos.update');
+    Route::delete('videos-en/{id}/destroy', [VideoEnItemController::class, 'destroy'])->name('videoonline.en.videos.destroy');
+    Route::post('video-en/reorder', [VideoEnItemController::class, 'reorder'])->name('videos.en.reorder');
 
 
     Route::get('archives', [App\Http\Controllers\ArchiveController::class, 'index'])->name('voyager.archives.index');

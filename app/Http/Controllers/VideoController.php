@@ -31,15 +31,6 @@ class VideoController extends Controller
         return view('pages.online.show', compact('videoOnline', 'previousVideo', 'nextVideo'));
     }
 
-    public function reorder(Request $request)
-    {
-        $videoIds = $request->input('order');
-        foreach ($videoIds as $index => $id) {
-            Video::where('id', $id)->update(['order' => $index + 1]);
-        }
-        return response()->json(['success' => true]);
-    }
-
     public function showIlustrations(Request $request)
     {
 

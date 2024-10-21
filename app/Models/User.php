@@ -23,6 +23,7 @@ class User extends \TCG\Voyager\Models\User
         'password',
         'google_id',
         'facebook_id',
+        'ip_address_id',
     ];
 
     /**
