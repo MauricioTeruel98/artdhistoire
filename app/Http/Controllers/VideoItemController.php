@@ -80,6 +80,7 @@ class VideoItemController extends Controller
                 'imagen' => 'nullable|image',
                 'video' => 'nullable|file|mimetypes:video/*',
             ]);
+            
 
             $video = Video::findOrFail($id);
             $video->title = $request->title;
