@@ -66,7 +66,7 @@
 
         .video-title {
             position: absolute;
-            bottom: 0;
+            bottom: -33px;
             left: 0;
             right: 0;
             background-color: {{ $videoOnline->color }};
@@ -82,7 +82,7 @@
 
             padding-top: 56.25%;
             /* 16:9 Aspect Ratio (9 / 16 = 0.5625) */
-            overflow: hidden;
+            /* overflow: hidden; */
         }
 
         .video-container-iframe iframe {
@@ -174,14 +174,14 @@
                         <div class="col-md-6">
                             @if ($video['iframe'])
                                 @if (Str::contains(strtolower($video['iframe']), '<iframe'))
-                                    <div class="video-container-iframe">
+                                    <div class="video-container-iframe" style="margin-bottom: 50px;">
                                         {!! $video['iframe'] !!}
                                         <div class="video-title">
                                             {{ app()->getLocale() == 'fr' ? $video['title_fr'] : $video['title'] }}</div>
                                     </div>
                                 @else
                                     <a href="{{ $video['iframe'] }}" target="_blank">
-                                        <div class="video-container">
+                                        <div class="video-container" style="margin-bottom: 50px;">
                                             <img src="{{ $video['imagen'] }}" alt="Vidéo éducative" class="w-100">
                                             <div class="video-overlay">
                                                 <div class="play-button text-white">▶</div>
@@ -193,7 +193,7 @@
                                     </a>
                                 @endif
                             @elseif ($video['video'])
-                                <div class="video-container">
+                                <div class="video-container" style="margin-bottom: 50px;">
                                     <video controls class="w-100">
                                         <source src="{{ $video['video'] }}" type="video/mp4">
                                         {{ app()->getLocale() == 'fr' ? 'Tu navegador no soporta el elemento de video.' : 'Your browser does not support the video element.' }}

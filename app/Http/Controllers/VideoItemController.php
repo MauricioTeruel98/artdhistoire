@@ -21,10 +21,10 @@ class VideoItemController extends Controller
     {
         try {
             $request->validate([
-                'title' => 'required|string|max:255',
-                'title_fr' => 'required|string|max:255',
-                'text' => 'required|string',
-                'text_fr' => 'required|string',
+                'title' => 'nullable|string|max:255',
+                'title_fr' => 'nullable|string|max:255',
+                'text' => 'nullable|string',
+                'text_fr' => 'nullable|string',
                 'iframe' => 'nullable|string',
                 'imagen' => 'nullable|image',
                 'video' => 'nullable|file|mimetypes:video/*',
@@ -40,12 +40,12 @@ class VideoItemController extends Controller
 
             if ($request->hasFile('imagen')) {
                 $imagePath = $request->file('imagen')->store('videos/images', 'public');
-                $video->imagen = Storage::url($imagePath);
+                $video->imagen = Storage::url($imagePath); // Asegúrate de que la URL sea accesible
             }
 
             if ($request->hasFile('video')) {
                 $videoPath = $request->file('video')->store('videos/videos', 'public');
-                $video->video = Storage::url($videoPath);
+                $video->video = Storage::url($videoPath); // Asegúrate de que la URL sea accesible
             }
 
             $video->save();
@@ -72,14 +72,15 @@ class VideoItemController extends Controller
     {
         try {
             $request->validate([
-                'title' => 'required|string|max:255',
-                'title_fr' => 'required|string|max:255',
-                'text' => 'required|string',
-                'text_fr' => 'required|string',
+                'title' => 'nullable|string|max:255',
+                'title_fr' => 'nullable|string|max:255',
+                'text' => 'nullable|string',
+                'text_fr' => 'nullable|string',
                 'iframe' => 'nullable|string',
                 'imagen' => 'nullable|image',
                 'video' => 'nullable|file|mimetypes:video/*',
             ]);
+            
 
             $video = Video::findOrFail($id);
             $video->title = $request->title;
@@ -93,7 +94,7 @@ class VideoItemController extends Controller
                     Storage::disk('public')->delete(str_replace('/storage/', '', $video->imagen));
                 }
                 $imagePath = $request->file('imagen')->store('videos/images', 'public');
-                $video->imagen = Storage::url($imagePath);
+                $video->imagen = Storage::url($imagePath); // Asegúrate de que la URL sea accesible
             }
 
             if ($request->hasFile('video')) {
@@ -101,7 +102,7 @@ class VideoItemController extends Controller
                     Storage::disk('public')->delete(str_replace('/storage/', '', $video->video));
                 }
                 $videoPath = $request->file('video')->store('videos/videos', 'public');
-                $video->video = Storage::url($videoPath);
+                $video->video = Storage::url($videoPath); // Asegúrate de que la URL sea accesible
             }
 
             $video->save();
@@ -129,7 +130,7 @@ class VideoItemController extends Controller
 
             $video->delete();
 
-            return redirect('/admin/videosonline/' . $videoonline_id . '/edit')
+            return redirect()->back()
                 ->with('success', 'Video eliminado correctamente.');
         } catch (\Exception $e) {
             Log::error('Error al eliminar el video: ' . $e->getMessage());
