@@ -70,7 +70,7 @@ Route::middleware('auth')->group(function () {
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
 });
 
-Route::middleware(['auth', 'subscription', 'whitelist'])->group(function () {
+Route::middleware(['auth', 'subscription'])->group(function () {
     Route::get('/interactive/pdf/{id}', [InteractiveController::class, 'showPdf'])->name('interactive.pdf');
 });
 

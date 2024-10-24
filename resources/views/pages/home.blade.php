@@ -155,7 +155,47 @@
             border-color: #ccc;
         }
 
+        .video-link {
+            position: relative;
+            display: block;
+            overflow: hidden;
+        }
+
+        .video-link img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .video-overlay {
+            position: absolute;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            /* Color negro con opacidad del 50% */
+            color: white;
+            text-align: center;
+            padding: 10px;
+            opacity: 0;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            transform: translateY(100%);
+        }
+
+        .video-link:hover .video-overlay {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
         @media (max-width: 768px) {
+            #searchForm {
+                flex-direction: column;
+            }
+
             .img-modal {
                 padding: 50px;
             }
@@ -204,8 +244,7 @@
                             <button type="button" id="listAllBtn" class="btn btn-secondary">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    class="icon icon-tabler icons-tabler-outline icon-tabler-list">
+                                    stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-list">
                                     <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                     <path d="M9 6l11 0" />
                                     <path d="M9 12l11 0" />
@@ -221,7 +260,8 @@
                         <!-- Resultados de la búsqueda -->
                         <div id="searchResults">
                             @if ($pdfs->isNotEmpty())
-                                <h3>{{ app()->getLocale() == 'fr' ? 'Résultats de la recherche :' : 'Search results:' }}</h3>
+                                <h3>{{ app()->getLocale() == 'fr' ? 'Résultats de la recherche :' : 'Search results:' }}
+                                </h3>
                                 <ul class="list-group mb-4">
                                     @foreach ($pdfs as $pdf)
                                         <li class="list-group-item">
@@ -233,7 +273,8 @@
                                 </ul>
                                 {{ $pdfs->links('vendor.pagination.simple-bootstrap-5') }}
                             @else
-                                <p>{{ app()->getLocale() == 'fr' ? 'Aucun résultat n\'a été trouvé pour "' . request('search') . '".' : 'No results found for "' . request('search') . '".' }}</p>
+                                <p>{{ app()->getLocale() == 'fr' ? 'Aucun résultat n\'a été trouvé pour "' . request('search') . '".' : 'No results found for "' . request('search') . '".' }}
+                                </p>
                             @endif
                         </div>
                     </div>
@@ -248,7 +289,7 @@
             </a>
         </header>
 
-        <div class="row">
+        <div class="row" style="justify-content: center;">
             @foreach ($videos as $index => $video)
                 <div class="col-md-4 mb-4">
                     <a href="#" class="video-link" data-video-id="{{ $video->id }}"
@@ -257,10 +298,8 @@
                             <img src="/storage/{{ $video->home_image }}"
                                 alt="{{ app()->getLocale() == 'fr' ? $video->title_fr : $video->title }}"
                                 class="position-absolute w-100 h-100 object-fit-cover">
-                            <div class="position-absolute w-100 h-100 d-flex align-items-center justify-content-center">
-                                <h2 class="text-white text-center">
-                                    {{ app()->getLocale() == 'fr' ? $video->title_fr : $video->title }}
-                                </h2>
+                            <div class="video-overlay">
+                                <h2>{{ app()->getLocale() == 'fr' ? $video->title_fr : $video->title }}</h2>
                             </div>
                         </div>
                     </a>

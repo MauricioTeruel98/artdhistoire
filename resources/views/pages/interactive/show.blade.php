@@ -38,7 +38,7 @@
         }
 
         .topic-item {
-            margin-bottom: 0.5rem;
+            margin-bottom: 0rem;
         }
 
         .topic-item span {
@@ -72,10 +72,6 @@
         .topic-list {
             list-style-type: none;
             padding-left: 0;
-        }
-
-        .topic-item {
-            margin-bottom: 0.5rem;
         }
 
         .topic-item span {

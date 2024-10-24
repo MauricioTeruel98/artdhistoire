@@ -71,7 +71,7 @@
         }
 
         .topic-item {
-            margin-bottom: 0.5rem;
+            margin-bottom: 0rem;
         }
 
         .topic-item span {
@@ -136,7 +136,7 @@
                     <h2>{{ $index + 1 }}. {{ app()->getLocale() == 'fr' ? $post->title_fr : $post->title }}</h2>
                     <h3 class="section-title">{{ app()->getLocale() == 'fr' ? $post->excerpt_fr : $post->excerpt }}</h3>
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-5">
                             <div class="image-container">
                                 <div
                                     style="position: relative !important; padding-bottom: 56.25% !important; height: 0px !important; overflow: hidden !important; max-width: 100% !important;">
@@ -152,7 +152,7 @@
                             </a> --}}
                             </div>
                         </div>
-                        <div class="col-md-8">
+                        <div class="col-md-7">
                             @if (app()->getLocale() == 'fr')
                                 <div class="d-flex flex-wrap topic-list">
                                     @php

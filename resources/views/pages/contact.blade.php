@@ -44,13 +44,31 @@
             font-weight: bold;
         }
 
-        h1{
+        h1 {
             font-weight: bold;
         }
 
-        .green-font{
+        .green-font {
             color: #204007 !important;
             font-weight: bold;
+        }
+
+        .btn-download {
+            display: inline-block;
+            background-color: white;
+            color: black;
+            border: 2px solid black;
+            padding: 15px 30px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+
+        .btn-download:hover {
+            background-color: #f0f0f0;
         }
     </style>
 
@@ -62,12 +80,24 @@
             <div class="col-md-6">
                 {!! app()->getLocale() == 'fr' ? $textos->texto_about_first : $textos->texto_about_first_en !!}
 
+                {{-- Boton libro blanco --}}
+
+                @php
+                    $livreBlanc = json_decode(Voyager::setting('site.livre_blanc'), true);
+                    $downloadLink = $livreBlanc[0]['download_link'] ?? '#';
+                @endphp
+                <a href="/storage/{{ $downloadLink }}" target="_blank" class="btn-download">
+                    {{ app()->getLocale() == 'fr' ? 'Télécharger le livre blanc' : 'Download the white book' }}
+                </a>
+
                 <h3 class="mt-5 mb-3">{{ app()->getLocale() == 'fr' ? 'Nous contacter' : 'Contact us' }}</h3>
                 <form>
-                    <input type="text" class="form-control" placeholder="{{ app()->getLocale() == 'fr' ? 'Nom *' : 'Name *' }}" required>
+                    <input type="text" class="form-control"
+                        placeholder="{{ app()->getLocale() == 'fr' ? 'Nom *' : 'Name *' }}" required>
                     <input type="email" class="form-control" placeholder="Email *" required>
                     <textarea class="form-control" rows="3" placeholder="{{ app()->getLocale() == 'fr' ? 'Message' : 'Message' }}"></textarea>
-                    <button type="submit" class="btn btn-outline-secondary">{{ app()->getLocale() == 'fr' ? 'Envoyer' : 'Send' }}</button>
+                    <button type="submit"
+                        class="btn btn-outline-secondary">{{ app()->getLocale() == 'fr' ? 'Envoyer' : 'Send' }}</button>
                 </form>
             </div>
 
