@@ -212,6 +212,8 @@
         }
     </style>
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css">
+
     <style>
         #overlay {
             position: fixed;
@@ -320,14 +322,6 @@
             background-size: contain;
             background-position: 50%;
             background-repeat: no-repeat;
-        }
-
-        .flag-icon-fr {
-            background-image: url('path/to/french-flag.svg');
-        }
-
-        .flag-icon-gb {
-            background-image: url('path/to/british-flag.svg');
         }
 
         @media (max-width: 991px) {

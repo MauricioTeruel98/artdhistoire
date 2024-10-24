@@ -56,7 +56,7 @@
                                         @endif
                                     </div>
 
-                                    <button type="submit" class="btn btn-primary btn-block">{{ app()->getLocale() == 'fr' ? 'Mettre à jour les données' : 'Update Data' }}</button>
+                                    <button type="submit" class="btn btn-outline-secondary btn-block">{{ app()->getLocale() == 'fr' ? 'Mettre à jour les données' : 'Update Data' }}</button>
                                 </form>
                             </div>
 
@@ -74,7 +74,7 @@
                                     <p>{{ app()->getLocale() == 'fr' ? 'Vous n\'avez aucun abonnement actif.' : 'You don\'t have any active subscription.' }}</p>
                                     <form action="{{ route('subscription.trial') }}" method="POST">
                                         @csrf
-                                        <button type="submit" class="btn btn-primary">{{ app()->getLocale() == 'fr' ? 'Activer l\'abonnement d\'essai (7 jours)' : 'Activate trial subscription (7 days)' }}</button>
+                                        <button type="submit" class="btn btn-outline-secondary">{{ app()->getLocale() == 'fr' ? 'Activer l\'abonnement d\'essai (7 jours)' : 'Activate trial subscription (7 days)' }}</button>
                                     </form>
                                 @endif
                             </div>
@@ -83,7 +83,7 @@
                 </div>
 
                 <div class="text-center mt-4">
-                    <a href="{{ route('home') }}" class="btn btn-secondary">{{ app()->getLocale() == 'fr' ? 'Retour à l\'accueil' : 'Back to Home' }}</a>
+                    <a href="{{ route('home') }}" class="btn btn-outline-secondary">{{ app()->getLocale() == 'fr' ? 'Retour à l\'accueil' : 'Back to Home' }}</a>
                 </div>
             </div>
         </div>

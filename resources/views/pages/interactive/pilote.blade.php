@@ -126,7 +126,7 @@
         </div>
 
         <div class="text-center mb-4">
-            <a class="btn btn-principal"
+            <a class="btn btn-outline-secondary"
                 href="{{ route('tutorial') }}">{{ app()->getLocale() == 'fr' ? 'Tutoriel de navigation ➤' : 'Navigation tutorial ➤' }}</a>
         </div>
 
