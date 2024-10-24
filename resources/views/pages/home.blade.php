@@ -386,7 +386,8 @@
                             resultsHtml += '</ul>';
                             resultsHtml += response.links;
                         } else {
-                            resultsHtml = `<p>No se encontraron resultados para "${searchQuery}".</p>`;
+                            resultsHtml =
+                            `<p>Aucun résultat n\'a été trouvé pour "${searchQuery}".</p>`;
                         }
                         $('#searchResults').html(resultsHtml);
                     }
@@ -430,9 +431,11 @@
 
             function updateModal(index) {
                 const video = videos[index];
+                const locale = '{{ app()->getLocale() }}'; // Obtener el idioma actual
                 modalImage.src = `/storage/${video.home_image}`;
-                modalTitle.textContent = video.title;
-                modalDescription.innerHTML = video.text || 'No description available.';
+                modalTitle.textContent = locale === 'fr' ? video.title_fr : video.title;
+                modalDescription.innerHTML = locale === 'fr' ? (video.text_fr || 'Pas de description disponible.') :
+                    (video.text || 'No description available.');
                 watchVideoBtn.href = `/video-online/${video.id}`;
                 currentIndex = index;
             }
