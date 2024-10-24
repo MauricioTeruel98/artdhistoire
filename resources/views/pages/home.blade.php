@@ -220,7 +220,7 @@
                 <h2 class="accordion-header" id="headingOne">
                     <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne"
                         aria-expanded="true" aria-controls="collapseOne">
-                        {{ app()->getLocale() == 'fr' ? 'Recherche de PDF' : 'Search PDFs' }}
+                        {{ app()->getLocale() == 'fr' ? 'Recherche de contenu' : 'Search for content' }}
                     </button>
                 </h2>
                 <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne"
@@ -228,7 +228,7 @@
                     <div class="accordion-body">
                         <!-- Formulario de búsqueda -->
                         <form id="searchForm" class="mb-4">
-                            <input type="text" name="search" id="searchInput" placeholder="Buscar PDF"
+                            <input type="text" name="search" id="searchInput" placeholder="{{ app()->getLocale() == 'fr' ? 'Recherche de contenu' : 'Search for content' }}"
                                 class="form-control">
                             <button type="submit" class="btn btn-primary">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -361,11 +361,13 @@
         </div>
     </div>
 
+    
+
     <script>
         $(document).ready(function() {
-            function fetchPdfs(searchQuery = '', page = 1) {
+            function fetchContent(searchQuery = '', page = 1) {
                 $.ajax({
-                    url: '{{ route('search.pdfs') }}',
+                    url: '{{ route('search.content') }}',
                     method: 'GET',
                     data: {
                         search: searchQuery,
@@ -375,42 +377,41 @@
                         let resultsHtml = '';
                         if (response.data.length > 0) {
                             resultsHtml +=
-                                '<h3>Resultados de la búsqueda:</h3><ul class="list-group mb-4">';
-                            response.data.forEach(function(pdf) {
+                                '<h3>Résultats de la recherche :</h3><ul class="list-group mb-4">';
+                            response.data.forEach(function(item) {
                                 resultsHtml += `<li class="list-group-item">
-                                    <a href="/interactive/pdf/${pdf.id}">
-                                        ${pdf.title}
+                                    <a href="/interactive/pdf/${item.id}">
+                                        ${item.title || item.title_fr || item.name || item.name_fr} <span class="badge bg-secondary">${item.type}</span>
                                     </a>
                                 </li>`;
                             });
                             resultsHtml += '</ul>';
-                            resultsHtml += response.links;
+                            resultsHtml += response.links; // Añadir los enlaces de paginación
                         } else {
                             resultsHtml =
-                            `<p>Aucun résultat n\'a été trouvé pour "${searchQuery}".</p>`;
+                            `<p>Aucun résultat trouvé pour "${searchQuery}".</p>`;
                         }
                         $('#searchResults').html(resultsHtml);
                     }
                 });
             }
-
+    
             $('#searchForm').on('submit', function(e) {
                 e.preventDefault();
                 const searchQuery = $('#searchInput').val();
-                fetchPdfs(searchQuery);
+                fetchContent(searchQuery);
             });
-
+    
             $('#listAllBtn').on('click', function() {
-                fetchPdfs();
+                fetchContent();
             });
-
-            // Delegar el evento de clic en los enlaces de paginación
+    
             $(document).on('click', '.pagination a', function(e) {
                 e.preventDefault();
                 const url = $(this).attr('href');
                 const page = url.split('page=')[1];
                 const searchQuery = $('#searchInput').val();
-                fetchPdfs(searchQuery, page);
+                fetchContent(searchQuery, page);
             });
         });
     </script>

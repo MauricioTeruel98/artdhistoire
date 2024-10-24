@@ -46,6 +46,7 @@ Route::get('/tutorial', [HomeController::class, 'tutorial'])->name('tutorial');
 Route::post('/contact', [ContactController::class, 'submit']);
 
 Route::get('/search-pdfs', [HomeController::class, 'searchPdfs'])->name('search.pdfs');
+Route::get('/search-content', [HomeController::class, 'searchContent'])->name('search.content');
 
 Route::get('/subscription-required', function () {
     return view('pages.subscription.required');

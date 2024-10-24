@@ -4,10 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Models\Archive;
 use App\Models\ArchivesEn;
+use App\Models\Categories;
 use App\Models\Slider;
 use App\Models\TextosGenerales;
 use App\Models\VideoOnline;
+use App\Models\Video;
+use App\Models\VideoEn;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use TCG\Voyager\Models\Post;
 
 class HomeController extends Controller
 {
@@ -45,6 +50,72 @@ class HomeController extends Controller
             'links' => (string) $pdfs->links('vendor.pagination.simple-bootstrap-5')
         ]);
     }
+
+    public function searchContent(Request $request)
+{
+    $searchQuery = $request->input('search');
+    $locale = app()->getLocale();
+    $perPage = 10; // Número de resultados por página
+
+    // Realizar las consultas asegurando que todas tengan las mismas columnas
+    $sagas = Categories::select('id', 'name as title', 'name_fr as title_fr', DB::raw('"category" as type'))
+        ->where('name', 'like', '%' . $searchQuery . '%')
+        ->orWhere('name_fr', 'like', '%' . $searchQuery . '%');
+
+    $interactive = Post::select('id', 'title', 'title_fr', DB::raw('"post" as type'))
+        ->where('title', 'like', '%' . $searchQuery . '%')
+        ->orWhere('title_fr', 'like', '%' . $searchQuery . '%');
+
+    if ($locale == 'fr') {
+        $pdfs = Archive::select('id', 'title', DB::raw('NULL as title_fr'), DB::raw('"pdf" as type'))
+            ->where('title', 'like', '%' . $searchQuery . '%');
+        $videos = Video::select('id', 'title', DB::raw('NULL as title_fr'), DB::raw('"video" as type'))
+            ->where('title', 'like', '%' . $searchQuery . '%');
+    } else {
+        $pdfs = ArchivesEn::select('id', 'title', DB::raw('NULL as title_fr'), DB::raw('"pdf" as type'))
+            ->where('title', 'like', '%' . $searchQuery . '%');
+        $videos = VideoEn::select('id', 'title', DB::raw('NULL as title_fr'), DB::raw('"video" as type'))
+            ->where('title', 'like', '%' . $searchQuery . '%');
+    }
+
+    $videosOnline = VideoOnline::select('id', 'title', 'title_fr', DB::raw('"video_online" as type'))
+        ->where('title', 'like', '%' . $searchQuery . '%')
+        ->orWhere('title_fr', 'like', '%' . $searchQuery . '%');
+
+    // Combinar los resultados y paginar
+    $results = $pdfs->union($videos)
+        ->union($videosOnline)
+        ->union($interactive)
+        ->union($sagas)
+        ->paginate($perPage);
+
+    // Mapear los tipos a nombres personalizados
+    $results->getCollection()->transform(function ($item) {
+        switch ($item->type) {
+            case 'category':
+                $item->type = app()->getLocale() == 'fr' ? 'Saga' : 'Saga';
+                break;
+            case 'post':
+                $item->type = app()->getLocale() == 'fr' ? 'Interactivo' : 'Interactive';
+                break;
+            case 'pdf':
+                $item->type = app()->getLocale() == 'fr' ? 'PDF' : 'PDF';
+                break;
+            case 'video':
+                $item->type = app()->getLocale() == 'fr' ? 'Video' : 'Video';
+                break;
+            case 'video_online':
+                $item->type = app()->getLocale() == 'fr' ? 'Video Online' : 'Video Online';
+                break;
+        }
+        return $item;
+    });
+
+    return response()->json([
+        'data' => $results->items(),
+        'links' => (string) $results->links('vendor.pagination.simple-bootstrap-5')
+    ]);
+}
 
     public function contact()
     {
