@@ -13,14 +13,30 @@ class CheckSubscriptionOrWhitelist
     {
         $user = $request->user();
         $ipAddress = IpHelper::getPublicIp();
+        $categoryId = $request->route('id'); // Asumiendo que el ID de la categoría está en la ruta
 
-        // Verificar si el usuario está suscripto o si la IP está en la whitelist
-        if (($user && $user->subscription && $user->subscription->isActive()) || 
-            Whitelist::where('ip_address', $ipAddress)->exists()) {
+        // Verificar si la IP está en la lista blanca
+        if (Whitelist::where('ip_address', $ipAddress)->exists()) {
             return $next($request);
         }
 
-        // Si no cumple ninguna de las condiciones, redirigir
-        return redirect()->route('subscription.required')->with('error', 'Acceso denegado. Necesitas una suscripción activa o estar en la whitelist.');
+        // Verificar si el usuario está autenticado y tiene una suscripción activa para esta categoría
+        if ($user) {
+            $hasActiveSubscription = $user->subscriptions()
+                ->where('status', 'active')
+                ->whereHas('categories', function ($query) use ($categoryId) {
+                    $query->where('categories.id', $categoryId);
+                })
+                ->where('end_date', '>', now())
+                ->exists();
+
+            if ($hasActiveSubscription) {
+                return $next($request);
+            }
+        }
+
+        // Si no tiene suscripción, redirigir a la página de suscripción requerida
+        return redirect()->route('subscription.required', ['category_id' => $categoryId])
+            ->with('error', 'Acceso denegado. Necesitas una suscripción activa para esta saga.');
     }
 }

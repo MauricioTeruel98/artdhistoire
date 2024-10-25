@@ -104,23 +104,20 @@
                 <h2>{{ $index + 1 }}. {{ app()->getLocale() == 'fr' ? $post->title_fr : $post->title }}</h2>
                 <h3 class="section-title">{{ app()->getLocale() == 'fr' ? $post->excerpt_fr : $post->excerpt }}</h3>
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-5">
                         <div class="image-container">
-                            <div
-                                style="position: relative !important; padding-bottom: 56.25% !important; height: 0px !important; overflow: hidden !important; max-width: 100% !important;">
-                                <iframe src="{{ app()->getLocale() == 'fr' ? $post->hihaho : $post->hihaho_en }}"
-                                    frameborder="0" webkitallowfullscreen="true" mozallowfullscreen="true"
-                                    allowfullscreen="true" allow="autoplay; fullscreen; clipboard-read; clipboard-write"
-                                    style="position: absolute !important; top: 0px !important; left: 0px !important; width: 100% !important; height: 100% !important;"></iframe>
-                            </div>
-
-                            {{-- <a href="{{ $post->hihaho }}" target="_blank">
-                                <img src="/storage/{{ $post->image }}" alt="Impressionist painting" class="w-100 h-100">
+                            <div class="video-wrapper" data-video-url="{{ app()->getLocale() == 'fr' ? $post->hihaho : $post->hihaho_en }}">
+                                <img src="/storage/{{ $post->image }}" alt="Imagen de portada" class="cover-image w-100 h-100">
                                 <div class="play-button"></div>
-                            </a> --}}
+                                <div class="iframe-container" style="display: none;">
+                                    <iframe src="" frameborder="0" webkitallowfullscreen="true" mozallowfullscreen="true"
+                                        allowfullscreen="true" allow="autoplay; fullscreen; clipboard-read; clipboard-write"
+                                        style="position: absolute !important; top: 0px !important; left: 0px !important; width: 100% !important; height: 100% !important;"></iframe>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-md-8">
+                    <div class="col-md-7">
                         @if (app()->getLocale() == 'fr')
                             <div class="d-flex flex-wrap topic-list">
                                 @php
@@ -327,4 +324,25 @@
     </section>
     @endforeach
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const videoWrappers = document.querySelectorAll('.video-wrapper');
+            
+            videoWrappers.forEach(wrapper => {
+                const playButton = wrapper.querySelector('.play-button');
+                const coverImage = wrapper.querySelector('.cover-image');
+                const iframeContainer = wrapper.querySelector('.iframe-container');
+                const iframe = wrapper.querySelector('iframe');
+                const videoUrl = wrapper.dataset.videoUrl;
+                
+                playButton.addEventListener('click', function() {
+                    coverImage.style.display = 'none';
+                    playButton.style.display = 'none';
+                    iframeContainer.style.display = 'block';
+                    iframe.src = videoUrl;
+                });
+            });
+        });
+        </script>
 @endsection

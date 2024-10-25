@@ -3,7 +3,6 @@
 @section('title', "Art d'Histoire | Abonnement Requis")
 
 @section('header')
-
     <style>
         @font-face {
             font-family: 'Futura';
@@ -19,41 +18,81 @@
             font-style: normal;
         }
 
-
-        /* Ahora puedes usar la fuente en tu CSS */
         body {
             font-family: 'Futura', sans-serif !important;
-            /* Aplica la fuente a todo el cuerpo de la página */
             color: rgb(117, 117, 117) !important;
         }
 
         .baskeville-italic {
             font-family: 'Baskeville Italic', sans-serif !important;
         }
-    </style>
 
+        .card {
+            border: 1px solid #ddd;
+            padding: 2rem;
+        }
+
+        .display-4 {
+            font-size: 3rem;
+            font-weight: bold;
+        }
+
+        .btn-primary,
+        .btn-info,
+        .btn-success {
+            border: none;
+            font-size: 1.2rem;
+            padding: 0.8rem 2rem;
+        }
+
+        .btn-primary {
+            background-color: #0000FF;
+        }
+
+        .btn-primary:hover {
+            background-color: #0000cc;
+        }
+
+        .btn-success {
+            background-color: #28a745;
+        }
+
+        .btn-success:hover {
+            background-color: #218838;
+        }
+
+        .text-muted {
+            font-size: 0.9rem;
+        }
+    </style>
 @endsection
 
 @section('content')
-    <div class="container mt-5">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card">
-                    <div class="card-header">{{ app()->getLocale() == 'fr' ? 'Abonnement Requis' : 'Subscription Required' }}
-                    </div>
-                    <div class="card-body">
-                        <h2 class="mb-4">{{ app()->getLocale() == 'fr' ? 'Accès Restreint' : 'Access Restricted' }}</h2>
-                        <p>{{ app()->getLocale() == 'fr' ? 'Pour accéder à ce contenu, vous avez besoin d\'un abonnement actif.' : 'To access this content, you need an active subscription.' }}
-                        </p>
-                        <p>{{ app()->getLocale() == 'fr' ? 'Choisissez l\'une de nos options d\'abonnement pour profiter de tout le contenu :' : 'Choose one of our subscription options to enjoy all the content:' }}
-                        </p>
-                        <div class="mt-4">
-                            <a href="{{ route('interactive.index') }}"
-                                class="btn btn-primary">{{ app()->getLocale() == 'fr' ? 'Voir les Plans d\'Abonnement' : 'View Subscription Plans' }}</a>
-                        </div>
-                    </div>
-                </div>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <h2 class="text-center mb-4">{{ app()->getLocale() == 'fr' ? 'Abonnement Requis' : 'Subscription Required' }}</h2>
+            <div class="card text-center p-4">
+                <h5 class="font-weight-normal">{{ $category->name }}</h5>
+                <div class="display-4 my-3">€ <strong>49</strong></div>
+                <p class="mb-3">{{ app()->getLocale() == 'fr' ? 'Accès complet pour un an' : 'Full access for one year' }}</p>
+                <form action="{{ route('subscription.create') }}" method="POST" class="mb-2">
+                    @csrf
+                    <input type="hidden" name="category_id" value="{{ $category->id }}">
+                    <button type="submit" name="payment_method" value="stripe" class="btn btn-primary btn-lg mb-2">{{ app()->getLocale() == 'fr' ? 'Payer avec Stripe' : 'Pay with Stripe' }}</button>
+                    <button type="submit" name="payment_method" value="paypal" class="btn btn-info btn-lg mb-2">{{ app()->getLocale() == 'fr' ? 'Payer avec PayPal' : 'Pay with PayPal' }}</button>
+                </form>
+                @auth
+                    <form action="{{ route('subscription.trial') }}" method="POST">
+                        @csrf
+                        <input type="hidden" name="category_id" value="{{ $category->id }}">
+                        <button type="submit" class="btn btn-success btn-lg">{{ app()->getLocale() == 'fr' ? 'Essai gratuit (7 jours)' : 'Free trial (7 days)' }}</button>
+                    </form>
+                @else
+                    <a href="{{ route('login') }}" class="btn btn-secondary btn-lg">{{ app()->getLocale() == 'fr' ? 'Connectez-vous pour l\'essai gratuit' : 'Login for free trial' }}</a>
+                @endauth
             </div>
         </div>
     </div>
+</div>
 @endsection

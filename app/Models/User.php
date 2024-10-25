@@ -50,4 +50,9 @@ class User extends \TCG\Voyager\Models\User
     {
         return $this->hasOne(Subscription::class)->latest();
     }
+
+    public function subscriptions()
+    {
+        return $this->hasMany(Subscription::class);
+    }
 }

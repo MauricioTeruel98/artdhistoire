@@ -11,6 +11,7 @@ use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\VideoEnItemController;
+use App\Models\Categories;
 use Illuminate\Support\Facades\Route;
 use Laravel\Socialite\Facades\Socialite;
 use App\Models\User;
@@ -48,9 +49,16 @@ Route::post('/contact', [ContactController::class, 'submit']);
 Route::get('/search-pdfs', [HomeController::class, 'searchPdfs'])->name('search.pdfs');
 Route::get('/search-content', [HomeController::class, 'searchContent'])->name('search.content');
 
-Route::get('/subscription-required', function () {
-    return view('pages.subscription.required');
+Route::get('/subscription-required/{category_id}', function ($category_id) {
+    $category = Categories::findOrFail($category_id);
+    return view('pages.subscription.required', compact('category'));
 })->name('subscription.required');
+
+
+Route::middleware(['auth'])->group(function () {
+    Route::post('/subscription/trial', [SubscriptionController::class, 'createTrialSubscription'])->name('subscription.trial');
+    // ... otras rutas que requieran autenticación ...
+});
 
 
 /**
@@ -71,7 +79,11 @@ Route::middleware('auth')->group(function () {
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
 });
 
+Route::get('/interactive/index', [InteractiveController::class, 'index'])->name('interactive.index');
+Route::get('/interactive', [InteractiveController::class, 'pilote'])->name('interactive.pilote');
+
 Route::middleware(['auth', 'subscriptionOrWhitelist'])->group(function () {
+    Route::get('/interactive/{id}', [InteractiveController::class, 'show'])->name('interactive.show');
     Route::get('/interactive/pdf/{id}', [InteractiveController::class, 'showPdf'])->name('interactive.pdf');
 });
 

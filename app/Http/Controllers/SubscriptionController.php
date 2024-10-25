@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Categories;
 use App\Models\Subscription;
 use Illuminate\Http\Request;
 use Srmklive\PayPal\Facades\PayPal;
@@ -12,41 +13,57 @@ class SubscriptionController extends Controller
 {
     public function create(Request $request)
     {
+        $category = Categories::findOrFail($request->input('category_id'));
         $paymentMethod = $request->input('payment_method');
 
         if ($paymentMethod === 'stripe') {
-            return $this->createStripeCheckoutSession($request);
+            return $this->createStripeCheckoutSession($request, $category);
         } elseif ($paymentMethod === 'paypal') {
-            return $this->subscribeWithPayPal($request);
+            return $this->subscribeWithPayPal($request, $category);
         }
 
         return redirect()->back()->with('error', 'Método de pago no válido.');
     }
 
-
     public function createTrialSubscription(Request $request)
     {
-        $user = $request->user();
+        $user = auth()->user();
 
-        // Verificar si el usuario ya tiene una suscripción activa
-        if ($user->subscription && $user->subscription->isActive()) {
-            return redirect()->back()->with('error', 'Ya tienes una suscripción activa.');
+        if (!$user) {
+            return redirect()->route('login')->with('error', 'Debes iniciar sesión para activar una suscripción de prueba.');
+        }
+
+        $categoryId = $request->input('category_id');
+        $category = Categories::findOrFail($categoryId);
+
+        // Verificar si el usuario ya tiene una suscripción activa para esta categoría
+        $existingSubscription = $user->subscriptions()
+            ->where('status', 'active')
+            ->whereHas('categories', function ($query) use ($categoryId) {
+                $query->where('categories.id', $categoryId);
+            })
+            ->first();
+
+        if ($existingSubscription) {
+            return redirect()->back()->with('error', 'Ya tienes una suscripción activa para esta saga.');
         }
 
         // Crear una nueva suscripción de prueba
-        Subscription::create([
+        $subscription = Subscription::create([
             'user_id' => $user->id,
-            'payment_method' => 'trial',
+            'amount' => 0, // Es gratis
             'start_date' => now(),
             'end_date' => now()->addDays(7), // Prueba de 7 días
+            'status' => 'active',
         ]);
 
-        return redirect()->back()->with('success', 'Suscripción de prueba activada por 7 días.');
+        $subscription->categories()->attach($category);
+
+        return redirect()->route('home')->with('success', 'Suscripción de prueba activada por 7 días para ' . $category->name);
     }
 
-    private function createStripeCheckoutSession(Request $request)
+    private function createStripeCheckoutSession(Request $request, Categories $category)
     {
-        // Asegúrate de que la clave API esté configurada correctamente
         Stripe::setApiKey(config('services.stripe.secret'));
 
         try {
@@ -56,231 +73,77 @@ class SubscriptionController extends Controller
                     'price_data' => [
                         'currency' => 'eur',
                         'product_data' => [
-                            'name' => 'Suscripción La Saga des impressionnistes',
+                            'name' => 'Suscripción anual a ' . $category->name,
                         ],
-                        'unit_amount' => 4900, // 49 euros en centavos
+                        'unit_amount' => 4900,
                     ],
                     'quantity' => 1,
                 ]],
                 'mode' => 'payment',
-                'success_url' => route('subscription.success') . '?session_id={CHECKOUT_SESSION_ID}',
+                'success_url' => route('subscription.success') . '?session_id={CHECKOUT_SESSION_ID}&category_id=' . $category->id,
                 'cancel_url' => route('subscription.cancel'),
             ]);
 
             return redirect($session->url);
         } catch (\Exception $e) {
-            // Registra el error para debugging
             \Log::error('Error de Stripe: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Hubo un problema al procesar el pago con Stripe. Por favor, inténtalo de nuevo.');
         }
     }
 
-    public function subscribeWithStripe(Request $request)
-    {
-        $user = $request->user();
-        $paymentMethod = $request->payment_method;
-
-        $user->createOrGetStripeCustomer();
-        $user->addPaymentMethod($paymentMethod);
-
-        $user->newSubscription('default', 'plan-id')->create($paymentMethod);
-
-        // Guardar la suscripción en la base de datos
-        Subscription::create([
-            'user_id' => $user->id,
-            'payment_method' => 'stripe',
-            'stripe_subscription_id' => $user->subscription('default')->stripe_id,
-            'start_date' => now(),
-            'end_date' => now()->addMonth(), // Esto depende de tu plan
-        ]);
-
-        return redirect()->route('dashboard')->with('success', 'Suscripción exitosa con Stripe!');
-    }
-
-    public function subscribeWithPayPal(Request $request)
+    public function subscribeWithPayPal(Request $request, Categories $category)
     {
         try {
             $provider = PayPal::setProvider();
             $provider->setApiCredentials(config('paypal'));
-
             $token = $provider->getAccessToken();
-
-            dd($token);
-
-            if (!$token || !isset($token['access_token'])) {
-                throw new \Exception('No se pudo obtener el token de acceso de PayPal');
-            }
-
             $provider->setAccessToken($token['access_token']);
 
-            // Configurar los datos de la suscripción
-            $subscriptionData = [
-                'plan_id' => 'your-paypal-plan-id', // Asegúrate de que este ID de plan sea correcto
-                'start_time' => now()->toIso8601String(),
-                'subscriber' => [
-                    'name' => [
-                        'given_name' => $request->user()->name,
-                        'surname' => '',
-                    ],
-                    'email_address' => $request->user()->email,
+            $order = $provider->createOrder([
+                'intent' => 'CAPTURE',
+                'purchase_units' => [
+                    [
+                        'amount' => [
+                            'currency_code' => 'EUR',
+                            'value' => '49.00'
+                        ],
+                        'description' => 'Suscripción anual a ' . $category->name,
+                    ]
                 ],
                 'application_context' => [
-                    'brand_name' => 'Tu Marca',
-                    'locale' => 'es-ES', // Cambiado a español de España
-                    'shipping_preference' => 'NO_SHIPPING',
-                    'user_action' => 'SUBSCRIBE_NOW',
-                    'return_url' => route('subscription.success'),
+                    'return_url' => route('subscription.success') . '?category_id=' . $category->id,
                     'cancel_url' => route('subscription.cancel'),
-                ],
-            ];
-
-            // Crear suscripción en PayPal
-            $response = $provider->createSubscription($subscriptionData);
-
-            if (!isset($response['id'])) {
-                throw new \Exception('No se pudo crear la suscripción con PayPal.');
-            }
-
-            // Guardar el ID de la suscripción de PayPal
-            $paypalSubscriptionId = $response['id'];
-
-            // Guardar la suscripción en la base de datos
-            Subscription::create([
-                'user_id' => $request->user()->id,
-                'payment_method' => 'paypal',
-                'paypal_subscription_id' => $paypalSubscriptionId,
-                'start_date' => now(),
-                'end_date' => now()->addMonth(), // Suponiendo que es una suscripción mensual
+                ]
             ]);
 
-            // Redirigir al usuario a la URL de aprobación de PayPal
-            foreach ($response['links'] as $link) {
-                if ($link['rel'] === 'approve') {
-                    return redirect()->away($link['href']);
-                }
-            }
+            return redirect($order['links'][1]['href']);
         } catch (\Exception $e) {
             \Log::error('Error de PayPal: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Hubo un problema al procesar el pago con PayPal. Por favor, inténtalo de nuevo.');
         }
-
-        return redirect()->route('home')->with('success', 'Suscripción creada. Por favor, confirma en PayPal.');
     }
 
     public function success(Request $request)
     {
-        $sessionId = $request->get('session_id');
+        $user = auth()->user();
+        $categoryId = $request->get('category_id');
+        $category = Categories::findOrFail($categoryId);
 
-        if ($sessionId) {
-            // Pago con Stripe
-            Stripe::setApiKey(config('services.stripe.secret'));
-            $session = Session::retrieve($sessionId);
+        $subscription = Subscription::create([
+            'user_id' => $user->id,
+            'amount' => 49.00,
+            'start_date' => now(),
+            'end_date' => now()->addYear(),
+            'status' => 'active',
+        ]);
 
-            if ($session->payment_status === 'paid') {
-                $user = auth()->user();
-                Subscription::create([
-                    'user_id' => $user->id,
-                    'payment_method' => 'stripe',
-                    'stripe_subscription_id' => $session->subscription,
-                    'start_date' => now(),
-                    'end_date' => now()->addMonth(),
-                ]);
+        $subscription->categories()->attach($category);
 
-                return redirect()->route('home')->with('success', '¡Suscripción exitosa con Stripe!');
-            }
-        } else {
-            // Pago con PayPal
-            $subscription = Subscription::where('user_id', auth()->id())
-                ->where('payment_method', 'paypal')
-                ->latest()
-                ->first();
-
-            if ($subscription) {
-                return redirect()->route('home')->with('success', '¡Suscripción exitosa con PayPal!');
-            }
-        }
-
-        return redirect()->route('home')->with('error', 'No se pudo confirmar la suscripción.');
+        return redirect()->route('home')->with('success', '¡Suscripción exitosa a ' . $category->name . '!');
     }
 
     public function cancel()
     {
         return redirect()->route('home')->with('info', 'La suscripción ha sido cancelada.');
-    }
-
-    public function handleStripeWebhook(Request $request)
-    {
-        Stripe::setApiKey(config('services.stripe.secret'));
-        $endpoint_secret = config('services.stripe.webhook_secret');
-
-        $payload = $request->getContent();
-        $sig_header = $request->header('Stripe-Signature');
-
-        try {
-            $event = Webhook::constructEvent($payload, $sig_header, $endpoint_secret);
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 400);
-        }
-
-        switch ($event->type) {
-            case 'customer.subscription.created':
-            case 'customer.subscription.updated':
-            case 'customer.subscription.deleted':
-                $subscription = $event->data->object;
-                $this->updateSubscriptionStatus($subscription);
-                break;
-        }
-
-        return response()->json(['status' => 'success']);
-    }
-
-    private function updateSubscriptionStatus($stripeSubscription)
-    {
-        $subscription = Subscription::where('stripe_subscription_id', $stripeSubscription->id)->first();
-
-        if ($subscription) {
-            $subscription->status = $stripeSubscription->status;
-            $subscription->end_date = \Carbon\Carbon::createFromTimestamp($stripeSubscription->current_period_end);
-            $subscription->save();
-        }
-    }
-
-    public function handlePayPalWebhook(Request $request)
-    {
-        $provider = PayPal::setProvider();
-        $provider->setApiCredentials(config('paypal'));
-
-        $payload = json_decode($request->getContent(), true);
-
-        try {
-            if ($provider->verifyWebHook($payload)) {
-                $event = $payload['event_type'];
-                $resource = $payload['resource'];
-
-                switch ($event) {
-                    case 'BILLING.SUBSCRIPTION.CREATED':
-                    case 'BILLING.SUBSCRIPTION.UPDATED':
-                    case 'BILLING.SUBSCRIPTION.CANCELLED':
-                        $this->updatePayPalSubscriptionStatus($resource);
-                        break;
-                }
-            }
-        } catch (\Exception $e) {
-            \Log::error('Error en PayPal Webhook: ' . $e->getMessage());
-            return response()->json(['error' => $e->getMessage()], 400);
-        }
-
-        return response()->json(['status' => 'success']);
-    }
-
-    private function updatePayPalSubscriptionStatus($paypalSubscription)
-    {
-        $subscription = Subscription::where('paypal_subscription_id', $paypalSubscription['id'])->first();
-
-        if ($subscription) {
-            $subscription->status = $paypalSubscription['status'];
-            $subscription->end_date = \Carbon\Carbon::parse($paypalSubscription['billing_info']['next_billing_time']);
-            $subscription->save();
-        }
     }
 }

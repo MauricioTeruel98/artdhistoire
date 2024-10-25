@@ -12,28 +12,44 @@ use Illuminate\Support\Facades\Auth;
 
 class InteractiveController extends Controller
 {
-    public function index()
+    public function __construct()
     {
-        $slider  = Slider::all();
-        return view('pages.interactive.index', compact('slider'));
+        $this->middleware('subscriptionOrWhitelist')->only(['show', 'showPdf']);
     }
 
-    public function show(Request $request)
+    public function index()
     {
-        $interactive = Categories::where('id',$request->id)->with('posts')->first();
-        $slider  = Slider::all();
-        
+        $slider = Slider::all();
+        $user = Auth::user();
+        $subscribedCategoryIds = [];
+
+        if ($user) {
+            $subscribedCategoryIds = $user->subscriptions()
+                ->where('status', 'active')
+                ->where('end_date', '>', now())
+                ->with('categories')
+                ->get()
+                ->pluck('categories')
+                ->flatten()
+                ->pluck('id')
+                ->unique()
+                ->toArray();
+        }
+
+        $categories = Categories::whereNotIn('id', $subscribedCategoryIds)->get();
+
+        return view('pages.interactive.index', compact('slider', 'categories'));
+    }
+    public function show(Request $request, $id)
+    {
+        $interactive = Categories::where('id', $id)->with('posts')->firstOrFail();
+        $slider = Slider::all();
+
         return view('pages.interactive.show', compact('interactive', 'slider'));
     }
 
     public function showPdf($id)
     {
-        // Verifica si el usuario está autenticado
-        if (!Auth::check()) {
-            dd('Redirigiendo a login'); // Añade esta línea
-            return redirect()->route('login')->with('pdf_message', 'Se requiere iniciar sesión para ver este contenido PDF.');
-        }
-
         $archive = Archive::findOrFail($id);
         $slider = Slider::all();
         return view('pages.interactive.pdf', compact('archive', 'slider'));
