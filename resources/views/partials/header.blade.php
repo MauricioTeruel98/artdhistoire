@@ -51,7 +51,8 @@
                         @endphp
                         @foreach ($videos as $video)
                             <li><a class="dropdown-item"
-                                    href="/video-online/{{ $video->id }}">{{ app()->getLocale() == 'fr' ? $video->title_fr : $video->title }}</a></li>
+                                    href="/video-online/{{ $video->id }}">{{ app()->getLocale() == 'fr' ? $video->title_fr : $video->title }}</a>
+                            </li>
                         @endforeach
                     </ul>
                 </li>
@@ -70,6 +71,12 @@
                     <a href="#" class="nav-link">
                         <i class="bi bi-bell bell-icon"></i> <!-- Bootstrap Icon for bell -->
                     </a>
+                </li>
+
+                <li>
+                    <button class="btn btn-sm btn-outline-secondary me-2" type="button" id="searchToggle">
+                        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-search"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg>
+                    </button>
                 </li>
 
                 <div class="language-selector dropdown">
@@ -145,3 +152,69 @@
         </div>
     </div>
 </nav>
+
+<div id="searchBar" class="bg-light py-3" style="display: none;">
+    <div class="container">
+        <form id="searchForm">
+            <div class="input-group">
+                <input type="text" class="form-control" id="searchInput" placeholder="{{ app()->getLocale() == 'fr' ? 'Recherche de contenu' : 'Search for content' }}">
+                <button class="btn btn-outline-secondary" type="submit">
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-search"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg>
+                </button>
+            </div>
+        </form>
+        <div id="searchResults" class="mt-3"></div>
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function() {
+        $('#searchToggle').on('click', function() {
+            $('#searchBar').slideToggle();
+        });
+
+        function fetchContent(searchQuery = '', page = 1) {
+            $.ajax({
+                url: '{{ route('search.content') }}',
+                method: 'GET',
+                data: {
+                    search: searchQuery,
+                    page: page
+                },
+                success: function(response) {
+                    let resultsHtml = '';
+                    if (response.data.length > 0) {
+                        resultsHtml += '<h6>{{ app()->getLocale() == 'fr' ? 'Résultats de la recherche :' : 'Search results:' }}</h6><ul class="list-group">';
+                        response.data.forEach(function(item) {
+                            resultsHtml += `<li class="list-group-item">
+                                <a href="/interactive/pdf/${item.id}">
+                                    ${item.title || item.title_fr || item.name || item.name_fr} <span class="badge bg-secondary">${item.type}</span>
+                                </a>
+                            </li>`;
+                        });
+                        resultsHtml += '</ul>';
+                        resultsHtml += response.links;
+                    } else {
+                        resultsHtml = `<p>{{ app()->getLocale() == 'fr' ? 'Aucun résultat trouvé pour' : 'No results found for' }} "${searchQuery}".</p>`;
+                    }
+                    $('#searchResults').html(resultsHtml);
+                }
+            });
+        }
+
+        $('#searchForm').on('submit', function(e) {
+            e.preventDefault();
+            const searchQuery = $('#searchInput').val();
+            fetchContent(searchQuery);
+        });
+
+        $(document).on('click', '.pagination a', function(e) {
+            e.preventDefault();
+            const url = $(this).attr('href');
+            const page = url.split('page=')[1];
+            const searchQuery = $('#searchInput').val();
+            fetchContent(searchQuery, page);
+        });
+    });
+</script>

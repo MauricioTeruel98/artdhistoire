@@ -215,7 +215,7 @@
     <div class="container mx-auto py-5">
 
         <!-- Acordeón para el filtro de búsqueda -->
-        <div class="accordion my-4" id="searchAccordion">
+        {{--<div class="accordion my-4" id="searchAccordion">
             <div class="accordion-item">
                 <h2 class="accordion-header" id="headingOne">
                     <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne"
@@ -280,11 +280,11 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div>--}}
 
         <header class="text-center mb-5">
             {!! app()->getLocale() == 'fr' ? $textos->texto_home : $textos->texto_home_en !!}
-            <a href="/interactive/index" class="btn btn-outline-secondary">
+            <a href="/interactive" class="btn btn-outline-secondary">
                 {{ app()->getLocale() == 'fr' ? 'Essayez LISA' : 'Try LISA' }}
             </a>
         </header>
