@@ -27,4 +27,9 @@ class VideoOnline extends Model
     {
         return $this->hasMany(Video::class, 'videoonline_id');
     }
+
+    public function videosEn()
+    {
+        return $this->hasMany(VideoEn::class, 'videoonline_id');
+    }
 }

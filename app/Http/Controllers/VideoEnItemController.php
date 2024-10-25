@@ -2,19 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Video;
+use App\Models\VideoEn;
 use App\Models\VideoOnline;
 use Illuminate\Http\Request;
 use TCG\Voyager\Facades\Voyager;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
-class VideoItemController extends Controller
+class VideoEnItemController extends Controller
 {
     public function create($videoonline_id)
     {
         $videoOnline = VideoOnline::findOrFail($videoonline_id);
-        return Voyager::view('voyager::videos.create', compact('videoOnline'));
+        return Voyager::view('voyager::videos-en.create', compact('videoOnline'));
     }
 
     public function store(Request $request, $videoonline_id)
@@ -28,19 +28,19 @@ class VideoItemController extends Controller
                 'video' => 'nullable|file|mimetypes:video/*',
             ]);
 
-            $video = new Video();
-            $video->title = $request->title;    
+            $video = new VideoEn();
+            $video->title = $request->title;
             $video->iframe = $request->iframe;
             $video->text = $request->text;
             $video->videoonline_id = $videoonline_id;
 
             if ($request->hasFile('imagen')) {
-                $imagePath = $request->file('imagen')->store('videos/images', 'public');
+                $imagePath = $request->file('imagen')->store('videos-en/images', 'public');
                 $video->imagen = Storage::url($imagePath); // Asegúrate de que la URL sea accesible
             }
 
             if ($request->hasFile('video')) {
-                $videoPath = $request->file('video')->store('videos/videos', 'public');
+                $videoPath = $request->file('video')->store('videos-en/videos', 'public');
                 $video->video = Storage::url($videoPath); // Asegúrate de que la URL sea accesible
             }
 
@@ -59,9 +59,9 @@ class VideoItemController extends Controller
 
     public function edit($id)
     {
-        $video = Video::findOrFail($id);
+        $video = VideoEn::findOrFail($id);
         $videoOnline = $video->videoOnline;
-        return Voyager::view('voyager::videos.edit', compact('video', 'videoOnline'));
+        return Voyager::view('voyager::videos-en.edit', compact('video', 'videoOnline'));
     }
 
     public function update(Request $request, $id)
@@ -76,7 +76,7 @@ class VideoItemController extends Controller
             ]);
             
 
-            $video = Video::findOrFail($id);
+            $video = VideoEn::findOrFail($id);
             $video->title = $request->title;
             $video->iframe = $request->iframe;
             $video->text = $request->text;
@@ -85,7 +85,7 @@ class VideoItemController extends Controller
                 if ($video->imagen) {
                     Storage::disk('public')->delete(str_replace('/storage/', '', $video->imagen));
                 }
-                $imagePath = $request->file('imagen')->store('videos/images', 'public');
+                $imagePath = $request->file('imagen')->store('videos-en/images', 'public');
                 $video->imagen = Storage::url($imagePath); // Asegúrate de que la URL sea accesible
             }
 
@@ -93,7 +93,7 @@ class VideoItemController extends Controller
                 if ($video->video) {
                     Storage::disk('public')->delete(str_replace('/storage/', '', $video->video));
                 }
-                $videoPath = $request->file('video')->store('videos/videos', 'public');
+                $videoPath = $request->file('video')->store('videos-en/videos', 'public');
                 $video->video = Storage::url($videoPath); // Asegúrate de que la URL sea accesible
             }
 
@@ -111,7 +111,7 @@ class VideoItemController extends Controller
     {
         $videoIds = $request->input('order');
         foreach ($videoIds as $index => $id) {
-            Video::where('id', $id)->update(['order' => $index + 1]);
+            VideoEn::where('id', $id)->update(['order' => $index + 1]);
         }
         return response()->json(['success' => true]);
     }
@@ -119,7 +119,7 @@ class VideoItemController extends Controller
     public function destroy($id)
     {
         try {
-            $video = Video::findOrFail($id);
+            $video = VideoEn::findOrFail($id);
             $videoonline_id = $video->videoonline_id;
 
             if ($video->imagen) {

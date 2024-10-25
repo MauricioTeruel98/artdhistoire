@@ -14,5 +14,6 @@ class Whitelist extends Model
         'ip_address',
         'name',
         'email',
+        'user_id',
     ];
 }

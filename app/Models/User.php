@@ -23,6 +23,7 @@ class User extends \TCG\Voyager\Models\User
         'password',
         'google_id',
         'facebook_id',
+        'ip_address_id',
     ];
 
     /**
@@ -48,5 +49,10 @@ class User extends \TCG\Voyager\Models\User
     public function subscription()
     {
         return $this->hasOne(Subscription::class)->latest();
+    }
+
+    public function subscriptions()
+    {
+        return $this->hasMany(Subscription::class);
     }
 }

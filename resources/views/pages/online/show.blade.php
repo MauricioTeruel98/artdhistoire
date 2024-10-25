@@ -119,7 +119,7 @@
             border-left: 3px solid {{ $videoOnline->color }};
         }
 
-        .bio-content{
+        .bio-content {
             transition: all 0.3s ease-in-out
         }
     </style>
@@ -164,51 +164,112 @@
                 </div>
             </div>
 
-            @php
-                $sortedVideos = collect($videoOnline->videos)->sortBy('order');
-            @endphp
+            @if (app()->getLocale() == 'fr')
 
-            @foreach ($sortedVideos as $video)
-                <div class="row mt-4">
-                    <div class="row">
-                        <div class="col-md-6">
-                            @if ($video['iframe'])
-                                @if (Str::contains(strtolower($video['iframe']), '<iframe'))
-                                    <div class="video-container-iframe" style="margin-bottom: 50px;">
-                                        {!! $video['iframe'] !!}
-                                        <div class="video-title">
-                                            {{ app()->getLocale() == 'fr' ? $video['title_fr'] : $video['title'] }}</div>
-                                    </div>
-                                @else
-                                    <a href="{{ $video['iframe'] }}" target="_blank">
-                                        <div class="video-container" style="margin-bottom: 50px;">
-                                            <img src="{{ $video['imagen'] }}" alt="Vidéo éducative" class="w-100">
-                                            <div class="video-overlay">
-                                                <div class="play-button text-white">▶</div>
-                                                <div class="video-title">
-                                                    {{ app()->getLocale() == 'fr' ? $video['title_fr'] : $video['title'] }}
-                                                </div>
+                {{-- FRANCAIS --}}
+
+                @php
+                    $sortedVideos = collect($videoOnline->videos)->sortBy('order');
+                @endphp
+
+                @foreach ($sortedVideos as $video)
+                    <div class="row mt-4">
+                        <div class="row">
+                            <div class="col-md-6">
+                                @if ($video['iframe'])
+                                    @if (Str::contains(strtolower($video['iframe']), '<iframe'))
+                                        <div class="video-container-iframe" style="margin-bottom: 50px;">
+                                            {!! $video['iframe'] !!}
+                                            <div class="video-title">
+                                                {{ $video['title'] }}
                                             </div>
                                         </div>
-                                    </a>
+                                    @else
+                                        <a href="{{ $video['iframe'] }}" target="_blank">
+                                            <div class="video-container" style="margin-bottom: 50px;">
+                                                <img src="{{ $video['imagen'] }}" alt="Vidéo éducative" class="w-100">
+                                                <div class="video-overlay">
+                                                    <div class="play-button text-white">▶</div>
+                                                    <div class="video-title">
+                                                        {{ $video['title'] }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    @endif
+                                @elseif ($video['video'])
+                                    <div class="video-container" style="margin-bottom: 50px;">
+                                        <video controls class="w-100">
+                                            <source src="{{ $video['video'] }}" type="video/mp4">
+                                            Tu navegador no soporta el elemento de video.
+                                        </video>
+                                        <div class="video-title">
+                                            {{ $video['title'] }}</div>
+                                    </div>
                                 @endif
-                            @elseif ($video['video'])
-                                <div class="video-container" style="margin-bottom: 50px;">
-                                    <video controls class="w-100">
-                                        <source src="{{ $video['video'] }}" type="video/mp4">
-                                        {{ app()->getLocale() == 'fr' ? 'Tu navegador no soporta el elemento de video.' : 'Your browser does not support the video element.' }}
-                                    </video>
-                                    <div class="video-title">
-                                        {{ app()->getLocale() == 'fr' ? $video['title_fr'] : $video['title'] }}</div>
-                                </div>
-                            @endif
-                        </div>
-                        <div class="col-md-6">
-                            {!! app()->getLocale() == 'fr' ? $video['text_fr'] : $video['text'] !!}
+                            </div>
+                            <div class="col-md-6">
+                                {!! $video['text'] !!}
+                            </div>
                         </div>
                     </div>
-                </div>
-            @endforeach
+                @endforeach
+
+                {{-- END FRANCAIS --}}
+            @else
+                {{-- ANGLAIS --}}
+
+                @php
+                    $sortedVideosEn = collect($videoOnline->videosEn)->sortBy('order');
+                @endphp
+
+                @foreach ($sortedVideosEn as $video)
+                    <div class="row mt-4">
+                        <div class="row">
+                            <div class="col-md-6">
+                                @if ($video['iframe'])
+                                    @if (Str::contains(strtolower($video['iframe']), '<iframe'))
+                                        <div class="video-container-iframe" style="margin-bottom: 50px;">
+                                            {!! $video['iframe'] !!}
+                                            <div class="video-title">
+                                                {{ $video['title'] }}
+                                            </div>
+                                        </div>
+                                    @else
+                                        <a href="{{ $video['iframe'] }}" target="_blank">
+                                            <div class="video-container" style="margin-bottom: 50px;">
+                                                <img src="{{ $video['imagen'] }}" alt="Vidéo éducative" class="w-100">
+                                                <div class="video-overlay">
+                                                    <div class="play-button text-white">▶</div>
+                                                    <div class="video-title">
+                                                        {{ $video['title'] }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    @endif
+                                @elseif ($video['video'])
+                                    <div class="video-container" style="margin-bottom: 50px;">
+                                        <video controls class="w-100">
+                                            <source src="{{ $video['video'] }}" type="video/mp4">
+                                            Your browser does not support the video element.
+                                        </video>
+                                        <div class="video-title">
+                                            {{ $video['title'] }}</div>
+                                    </div>
+                                @endif
+                            </div>
+                            <div class="col-md-6">
+                                {!! $video['text'] !!}
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+
+                {{-- END ANGLAIS --}}
+
+            @endif
+
             <div class="row align-items-center mt-5">
                 <div class="col-md-3">
                     @if ($previousVideo)
@@ -233,7 +294,7 @@
                     </div>
                 </div>
                 <div class="col-md-2 text-center">
-                    <a href="/video-online/{{$videoOnline->id}}/ilustrations"
+                    <a href="/video-online/{{ $videoOnline->id }}/ilustrations"
                         class="btn btn-outline-secondary btn-sm">{{ app()->getLocale() == 'fr' ? 'Liste des illustrations' : 'List of illustrations' }}</a>
                 </div>
                 <div class="col-md-3 text-end">
@@ -251,7 +312,8 @@
                     @endif
                 </div>
             </div>
-           {{-- <div class="row mt-3">
+
+            {{-- <div class="row mt-3">
                 <div class="col-12 text-center">
                     <h2 class="mb-3">{{ app()->getLocale() == 'fr' ? $videoOnline->title_fr : $videoOnline->title }}</h2>
                     <a href="{{ route('video.show', $videoOnline->id) }}"

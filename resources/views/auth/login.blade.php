@@ -71,7 +71,7 @@
                                 @enderror
                             </div>
 
-                            <button type="submit" class="btn btn-primary w-100 mb-3">{{ app()->getLocale() == 'fr' ? 'Se connecter' : 'Login' }}</button>
+                            <button type="submit" class="btn btn-outline-secondary mb-3 w-100">{{ app()->getLocale() == 'fr' ? 'Se connecter' : 'Login' }}</button>
                         </form>
 
                         <div class="text-center">

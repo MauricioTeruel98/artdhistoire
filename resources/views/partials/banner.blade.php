@@ -6,8 +6,7 @@
                 <img src="{{ asset('img/logo-header.webp') }}" alt="">
             </a>
             <h2 class="title-header text-white">
-                « L'art et rien que l'art, nous avons l'art pour ne point mourir de la vérité. »
-                Friedrich Nietzsche
+                {!! app()->getLocale() == 'fr' ? $textos->texto_header : $textos->texto_header_en !!}
             </h2>
         </div>
     </div>

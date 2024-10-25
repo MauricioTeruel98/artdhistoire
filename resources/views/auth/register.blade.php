@@ -78,7 +78,7 @@
                                 <input type="password" class="form-control" name="password_confirmation" id="password_confirmation" required>
                             </div>
 
-                            <button type="submit" class="btn btn-primary w-100 mb-3">{{ app()->getLocale() == 'fr' ? 'S\'inscrire' : 'Register' }}</button>
+                            <button type="submit" class="btn btn-outline-secondary w-100 mb-3">{{ app()->getLocale() == 'fr' ? 'S\'inscrire' : 'Register' }}</button>
                         </form>
 
                         <div class="text-center">

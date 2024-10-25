@@ -66,10 +66,14 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'subscription' => \App\Http\Middleware\CheckSubscription::class,
+        'whitelist' => \App\Http\Middleware\CheckWhitelist::class,
+        'subscriptionOrWhitelist' => \App\Http\Middleware\CheckSubscriptionOrWhitelist::class,
     ];
 
     protected $routeMiddleware = [
         'subscription' => \App\Http\Middleware\CheckSubscription::class,
+        'whitelist' => \App\Http\Middleware\CheckWhitelist::class,
+        'subscriptionOrWhitelist' => \App\Http\Middleware\CheckSubscriptionOrWhitelist::class,
     ];
     
 }
