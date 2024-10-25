@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CertificateController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InteractiveController;
 use App\Http\Controllers\VideoItemController;
@@ -77,6 +78,8 @@ Route::post('/stripe/webhook', [SubscriptionController::class, 'handleStripeWebh
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::get('/certificate/upload/{category_id}', [CertificateController::class, 'showUploadForm'])->name('certificate.upload');
+    Route::post('/certificate/store', [CertificateController::class, 'store'])->name('certificate.store');
 });
 
 Route::get('/interactive/index', [InteractiveController::class, 'index'])->name('interactive.index');

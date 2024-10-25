@@ -65,7 +65,17 @@
                         <div class="img-container">
                             <img src="{{ asset('storage/' . $category->image) }}" alt="{{ $category->name }}" class="img-fluid mb-3">
                         </div>
-                        <div class="display-4 my-3">€ <strong>49</strong></div>
+                        {{-- Quiero mostrar un mensaje si el usuario es estudiante, en ambos idiomas --}}
+                        @if (Auth::user()->is_student)
+                            <p class="mt-3">
+                                <strong>
+                                    {{ app()->getLocale() == 'fr' ? 'Prix spécial pour les étudiants' : 'Special price for students' }}
+                                </strong>
+                            </p>
+                        @endif
+                        <div class="display-4 my-3">€ <strong>
+                            {{Auth::user()->is_student ? '19' : '49'}}
+                        </strong></div>
                         <p class="mb-3">
                             {{ app()->getLocale() == 'fr' ? 'Accès complet pour un an' : 'Full access for one year' }}</p>
                         <form action="{{ route('subscription.create') }}" method="POST" class="mb-2">

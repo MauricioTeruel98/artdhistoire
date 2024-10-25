@@ -31,11 +31,13 @@ class ProfileController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255',
             'avatar' => 'nullable|image',
+            'is_student' => 'boolean',
         ]);
 
         $user->name = $request->input('name');
         $user->email = $request->input('email');
         $user->settings = $request->input('settings');
+        $user->is_student = $request->has('is_student');
 
         if ($request->hasFile('avatar')) {
             // Eliminar avatar anterior si existe

@@ -47,6 +47,15 @@
                                     </div>
 
                                     <div class="form-group">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="is_student" id="is_student" value="1" {{ $user->is_student ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="is_student">
+                                                {{ app()->getLocale() == 'fr' ? 'Je suis étudiant' : 'I am a student' }}
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
                                         <label for="avatar">{{ app()->getLocale() == 'fr' ? 'Avatar' : 'Avatar' }}</label>
                                         <div class="mb-3">
                                             <input type="file" class="form-control-file" id="avatar" name="avatar">

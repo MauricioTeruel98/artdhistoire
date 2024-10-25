@@ -14,12 +14,19 @@ class SubscriptionController extends Controller
     public function create(Request $request)
     {
         $category = Categories::findOrFail($request->input('category_id'));
+        $user = auth()->user();
+
+        if ($user->is_student && !$user->validated_student) {
+            return redirect()->route('certificate.upload', ['category_id' => $category->id]);
+        }
+
         $paymentMethod = $request->input('payment_method');
+        $amount = $user->is_student && $user->validated_student ? 19.00 : 49.00;
 
         if ($paymentMethod === 'stripe') {
-            return $this->createStripeCheckoutSession($request, $category);
+            return $this->createStripeCheckoutSession($request, $category, $amount);
         } elseif ($paymentMethod === 'paypal') {
-            return $this->subscribeWithPayPal($request, $category);
+            return $this->subscribeWithPayPal($request, $category, $amount);
         }
 
         return redirect()->back()->with('error', 'Método de pago no válido.');
@@ -62,7 +69,7 @@ class SubscriptionController extends Controller
         return redirect()->route('home')->with('success', 'Suscripción de prueba activada por 7 días para ' . $category->name);
     }
 
-    private function createStripeCheckoutSession(Request $request, Categories $category)
+    private function createStripeCheckoutSession(Request $request, Categories $category, $amount)
     {
         Stripe::setApiKey(config('services.stripe.secret'));
 
@@ -75,7 +82,7 @@ class SubscriptionController extends Controller
                         'product_data' => [
                             'name' => 'Suscripción anual a ' . $category->name,
                         ],
-                        'unit_amount' => 4900,
+                        'unit_amount' => $amount * 100,
                     ],
                     'quantity' => 1,
                 ]],
@@ -91,7 +98,7 @@ class SubscriptionController extends Controller
         }
     }
 
-    public function subscribeWithPayPal(Request $request, Categories $category)
+    public function subscribeWithPayPal(Request $request, Categories $category, $amount)
     {
         try {
             $provider = PayPal::setProvider();
@@ -105,7 +112,7 @@ class SubscriptionController extends Controller
                     [
                         'amount' => [
                             'currency_code' => 'EUR',
-                            'value' => '49.00'
+                            'value' => $amount
                         ],
                         'description' => 'Suscripción anual a ' . $category->name,
                     ]
@@ -122,7 +129,6 @@ class SubscriptionController extends Controller
             return redirect()->back()->with('error', 'Hubo un problema al procesar el pago con PayPal. Por favor, inténtalo de nuevo.');
         }
     }
-
     public function success(Request $request)
     {
         $user = auth()->user();
