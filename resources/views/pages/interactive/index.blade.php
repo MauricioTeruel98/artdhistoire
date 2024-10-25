@@ -41,6 +41,15 @@
         .text-muted {
             font-size: 0.9rem;
         }
+
+        .img-container {
+            width: 100%;
+            height: 200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
     </style>
 @endsection
 
@@ -53,6 +62,9 @@
                 <div class="col-md-4 mb-4">
                     <div class="card text-center p-4">
                         <h5 class="font-weight-normal">{{ $category->name }}</h5>
+                        <div class="img-container">
+                            <img src="{{ asset('storage/' . $category->image) }}" alt="{{ $category->name }}" class="img-fluid mb-3">
+                        </div>
                         <div class="display-4 my-3">€ <strong>49</strong></div>
                         <p class="mb-3">
                             {{ app()->getLocale() == 'fr' ? 'Accès complet pour un an' : 'Full access for one year' }}</p>

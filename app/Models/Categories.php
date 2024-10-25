@@ -16,6 +16,7 @@ class Categories extends Model
         'name_fr',
         'slug',
         'slug_fr',
+        'image',
     ];
 
     public function posts()
