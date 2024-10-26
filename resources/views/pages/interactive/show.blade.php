@@ -136,7 +136,7 @@
 
                                         <div class="topic">
                                             <div class="topic-item">
-                                                <a href="{{ route('interactive.pdf', ['id' => $archive->id]) }}">
+                                                <a href="{{ route('interactive.pdf', ['id' => $archive->id, 'category_id' => $interactive->id]) }}">
                                                     @if ($archive->type == 'nonDisponible')
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="24"
                                                             height="24" viewBox="0 0 24 24" fill="currentColor"
@@ -232,7 +232,7 @@
 
             <div class="topic">
                 <div class="topic-item">
-                    <a href="{{ route('interactive.pdf', ['id' => $archive->id]) }}">
+                    <a href="{{ route('interactive.pdf', ['id' => $archive->id, 'category_id' => $interactive->id]) }}">
                         @if ($archive->type == 'nonDisponible')
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                 fill="currentColor" style="color: grey;"

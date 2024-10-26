@@ -55,6 +55,13 @@ class InteractiveController extends Controller
         return view('pages.interactive.pdf', compact('archive', 'slider'));
     }
 
+    public function showPdfPilote($id)
+    {
+        $archive = Archive::findOrFail($id);
+        $slider = Slider::all();
+        return view('pages.interactive.pdf', compact('archive', 'slider'));
+    }
+
     public function pilote()
     {
         $textosPiloto = TextosPiloto::orderBy('order', 'DESC')->first();

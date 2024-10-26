@@ -75,7 +75,13 @@
 
                 <li>
                     <button class="btn btn-sm btn-outline-secondary me-2" type="button" id="searchToggle">
-                        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-search"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-search">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                            <path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" />
+                            <path d="M21 21l-6 -6" />
+                        </svg>
                     </button>
                 </li>
 
@@ -135,9 +141,9 @@
                 @else
                     <li class="nav-item dropdown">
                         <a class="nav-link" href="/login" id="newsDropdown" role="button">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round"
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round"
                                 class="icon icon-tabler icons-tabler-outline icon-tabler-user-circle">
                                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                 <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
@@ -157,9 +163,16 @@
     <div class="container">
         <form id="searchForm">
             <div class="input-group">
-                <input type="text" class="form-control" id="searchInput" placeholder="{{ app()->getLocale() == 'fr' ? 'Recherche de contenu' : 'Search for content' }}">
+                <input type="text" class="form-control" id="searchInput"
+                    placeholder="{{ app()->getLocale() == 'fr' ? 'Recherche de contenu' : 'Search for content' }}">
                 <button class="btn btn-outline-secondary" type="submit">
-                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-search"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-search">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                        <path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" />
+                        <path d="M21 21l-6 -6" />
+                    </svg>
                 </button>
             </div>
         </form>
@@ -174,6 +187,25 @@
             $('#searchBar').slideToggle();
         });
 
+        function getItemUrl(item) {
+            console.log('Generando URL para:', item);
+            switch (item.type) {
+                case 'Saga':
+                    return `/interactive/${item.id}`;
+                case 'Interactive':
+                    return `/interactive/${item.id}`;
+                case 'PDF':
+                    return `/interactive/pdf/${item.id}`;
+                case 'Video':
+                    return `/video-online/${item.id}`;
+                case 'Video Online':
+                    return `/video-online/${item.id}`;
+                default:
+                    console.log('Tipo desconocido:', item.type);
+                    return '#';
+            }
+        }
+
         function fetchContent(searchQuery = '', page = 1) {
             $.ajax({
                 url: '{{ route('search.content') }}',
@@ -183,25 +215,45 @@
                     page: page
                 },
                 success: function(response) {
-                    let resultsHtml = '';
+                    let $resultsList = $('<ul class="list-group"></ul>');
                     if (response.data.length > 0) {
-                        resultsHtml += '<h6>{{ app()->getLocale() == 'fr' ? 'Résultats de la recherche :' : 'Search results:' }}</h6><ul class="list-group">';
                         response.data.forEach(function(item) {
-                            resultsHtml += `<li class="list-group-item">
-                                <a href="/interactive/pdf/${item.id}">
-                                    ${item.title || item.title_fr || item.name || item.name_fr} <span class="badge bg-secondary">${item.type}</span>
-                                </a>
-                            </li>`;
+                            const itemUrl = getItemUrl(item);
+                            console.log('URL generada:', itemUrl);
+                            let $listItem = $('<li class="list-group-item"></li>');
+                            let $link = $('<a></a>')
+                                .attr('href', itemUrl)
+                                .text(item.title || item.title_fr || item.name || item
+                                    .name_fr);
+                            let $badge = $('<span class="badge bg-secondary"></span>').text(
+                                item.type);
+                            $link.append($badge);
+                            $listItem.append($link);
+                            $resultsList.append($listItem);
                         });
-                        resultsHtml += '</ul>';
-                        resultsHtml += response.links;
                     } else {
-                        resultsHtml = `<p>{{ app()->getLocale() == 'fr' ? 'Aucun résultat trouvé pour' : 'No results found for' }} "${searchQuery}".</p>`;
+                        let $noResults = $('<p></p>').text(
+                            `{{ app()->getLocale() == 'fr' ? 'Aucun résultat trouvé pour' : 'No results found for' }} "${searchQuery}".`
+                        );
+                        $resultsList.append($noResults);
                     }
-                    $('#searchResults').html(resultsHtml);
+
+                    $('#searchResults').empty().append($resultsList);
+
+                    if (response.links) {
+                        $('#searchResults').append(response.links);
+                    }
+
+                    // Verificar el contenido del DOM después de la inserción
+                    console.log('Contenido del DOM después de la inserción:', $('#searchResults')
+                        .html());
                 }
             });
         }
+
+        $('#searchResults a').each(function() {
+            console.log('URL en el DOM:', $(this).attr('href'));
+        });
 
         $('#searchForm').on('submit', function(e) {
             e.preventDefault();

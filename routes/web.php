@@ -35,7 +35,7 @@ Route::get('language/{locale}', [LanguageController::class, 'switch'])->name('la
 
 Route::get('/interactive/index', [InteractiveController::class, 'index'])->name('interactive.index');
 Route::get('/interactive', [InteractiveController::class, 'pilote'])->name('interactive.pilote');
-Route::get('/interactive/{id}', [InteractiveController::class, 'show'])->name('interactive.show');
+//Route::get('/interactive/{id}', [InteractiveController::class, 'show'])->name('interactive.show');
 
 Route::get('/videos-online', [VideoController::class, 'index'])->name('videos.index');
 Route::get('/video-online/{id}', [VideoController::class, 'show'])->name('video.show');
@@ -85,9 +85,11 @@ Route::middleware('auth')->group(function () {
 Route::get('/interactive/index', [InteractiveController::class, 'index'])->name('interactive.index');
 Route::get('/interactive', [InteractiveController::class, 'pilote'])->name('interactive.pilote');
 
+Route::get('/interactive/pdf/{id}/pilote', [InteractiveController::class, 'showPdfPilote'])->name('interactive.pdf.pilote');
+
 Route::middleware(['auth', 'subscriptionOrWhitelist'])->group(function () {
     Route::get('/interactive/{id}', [InteractiveController::class, 'show'])->name('interactive.show');
-    Route::get('/interactive/pdf/{id}', [InteractiveController::class, 'showPdf'])->name('interactive.pdf');
+    Route::get('/interactive/pdf/{id}/{category_id}', [InteractiveController::class, 'showPdf'])->name('interactive.pdf');
 });
 
 Route::group(['prefix' => 'admin'], function () {

@@ -13,7 +13,11 @@ class CheckSubscriptionOrWhitelist
     {
         $user = $request->user();
         $ipAddress = IpHelper::getPublicIp();
-        $categoryId = $request->route('id'); // Asumiendo que el ID de la categoría está en la ruta
+        if ($request->route('category_id')) {
+            $categoryId = $request->route('category_id');
+        } else {
+            $categoryId = $request->route('id'); // Asumiendo que el ID de la categoría está en la ruta
+        }
 
         // Verificar si la IP está en la lista blanca
         if (Whitelist::where('ip_address', $ipAddress)->exists()) {
