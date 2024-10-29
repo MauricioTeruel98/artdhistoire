@@ -91,14 +91,24 @@
                 </a>
 
                 <h3 class="mt-5 mb-3">{{ app()->getLocale() == 'fr' ? 'Nous contacter' : 'Contact us' }}</h3>
-                <form>
+                <form id="contact-form" class="mt-3">
                     @csrf
-                    <input type="text" class="form-control" name="name"
-                        placeholder="{{ app()->getLocale() == 'fr' ? 'Nom *' : 'Name *' }}" required>
-                    <input type="email" class="form-control" name="email" placeholder="Email *" required>
-                    <textarea class="form-control" rows="3" name="message" placeholder="{{ app()->getLocale() == 'fr' ? 'Message' : 'Message' }}"></textarea>
-                    <button type="submit"
-                        class="btn btn-outline-secondary">{{ app()->getLocale() == 'fr' ? 'Envoyer' : 'Send' }}</button>
+                    <div class="mb-3">
+                        <input type="text" class="form-control bottom-border" id="name" name="name"
+                            placeholder="{{ app()->getLocale() == 'fr' ? 'Nom *' : 'Name *' }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <input type="email" class="form-control bottom-border" id="email" name="email"
+                            placeholder="Email *" required>
+                    </div>
+                    <div class="mb-3">
+                        <textarea class="form-control bottom-border" id="message" name="message" rows="3"
+                            placeholder="{{ app()->getLocale() == 'fr' ? 'Message' : 'Message' }}" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-outline-secondary">
+                        {{ app()->getLocale() == 'fr' ? 'Envoyer' : 'Send' }}
+                    </button>
+                    <div id="contact-messages"></div>
                 </form>
             </div>
 
@@ -110,46 +120,45 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const forms = document.querySelectorAll('form');
+            const contactForm = document.getElementById('contact-form');
+            const csrfToken = document.querySelector('meta[name="csrf-token"]');
 
-            forms.forEach(form => {
-                if (form.querySelector('[name="name"]')) {
-                    form.addEventListener('submit', function(e) {
-                        e.preventDefault();
+            contactForm.addEventListener('submit', function(e) {
+                e.preventDefault();
 
-                        const formData = new FormData(this);
-                        const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+                const formData = new FormData(contactForm);
 
-                        fetch('/contact', {
-                                method: 'POST',
-                                body: formData,
-                                headers: {
-                                    'X-CSRF-TOKEN': csrfToken
-                                }
-                            })
-                            .then(response => response.json())
-                            .then(data => {
-                                const messageDiv = this.querySelector('.message-response') ||
-                                    document.createElement('div');
-                                messageDiv.className = 'message-response mt-3';
-
-                                if (data.success) {
-                                    messageDiv.className += ' text-success';
-                                    this.reset();
-                                } else {
-                                    messageDiv.className += ' text-danger';
-                                }
-
-                                messageDiv.textContent = data.message;
-
-                                if (!this.querySelector('.message-response')) {
-                                    this.appendChild(messageDiv);
-                                }
-                            })
-                            .catch(error => {
-                                console.error('Error:', error);
-                            });
-                    });
+                if (csrfToken) {
+                    fetch('/contact', {
+                            method: 'POST',
+                            body: formData,
+                            headers: {
+                                'X-CSRF-TOKEN': csrfToken.getAttribute('content')
+                            }
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            const contactMessages = document.getElementById('contact-messages');
+                            if (data.success) {
+                                contactMessages.innerHTML =
+                                    '<p class="text-success mt-3">{{ app()->getLocale() == 'fr' ? 'Votre message a été envoyé avec succès!' : 'Your message has been sent successfully!' }}</p>';
+                                contactForm.reset();
+                            } else {
+                                contactMessages.innerHTML =
+                                    '<p class="text-danger mt-3">{{ app()->getLocale() == 'fr' ? 'Une erreur s\'est produite. Veuillez réessayer.' : 'An error occurred. Please try again.' }}</p>';
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            const contactMessages = document.getElementById('contact-messages');
+                            contactMessages.innerHTML =
+                                '<p class="text-danger mt-3">{{ app()->getLocale() == 'fr' ? 'Une erreur s\'est produite. Veuillez réessayer.' : 'An error occurred. Please try again.' }}</p>';
+                        });
+                } else {
+                    console.error('CSRF token not found');
+                    const contactMessages = document.getElementById('contact-messages');
+                    contactMessages.innerHTML =
+                        '<p class="text-danger mt-3">{{ app()->getLocale() == 'fr' ? 'Une erreur s\'est produite. Veuillez réessayer.' : 'An error occurred. Please try again.' }}</p>';
                 }
             });
         });
