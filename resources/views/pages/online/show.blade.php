@@ -65,10 +65,6 @@
         }
 
         .video-title {
-            position: absolute;
-            bottom: -33px;
-            left: 0;
-            right: 0;
             background-color: {{ $videoOnline->color }};
             color: white;
             padding: 5px 10px;
@@ -138,6 +134,13 @@
                 buttonText.textContent = "{{ app()->getLocale() == 'fr' ? 'Bibliographie' : 'Bibliography' }}";
             }
         }
+
+        function hideButtonPlayer(videoId) {
+            var buttonPlayer = document.getElementById("button-player-" + videoId);
+            if (buttonPlayer) {
+                buttonPlayer.style.display = "none";
+            }
+        }
     </script>
 
 @endsection
@@ -147,13 +150,13 @@
     <div class="container">
         <div class="container mt-4">
             <div class="row">
-                <div class="col-md-6 header text-end">
+                <div class="col-md-5 header text-end">
                     <h1 class="baskeville-italic">
                         {{ app()->getLocale() == 'fr' ? $videoOnline->title_fr : $videoOnline->title }}</h1>
                     <h2 class="h5 baskeville-italic">
                         {{ app()->getLocale() == 'fr' ? $videoOnline->subtitle_fr : $videoOnline->subtitle }}</h2>
                 </div>
-                <div class="col-md-6 text-start">
+                <div class="col-md-7 text-start">
                     {!! app()->getLocale() == 'fr' ? $videoOnline->text_fr : $videoOnline->text !!}
                 </div>
             </div>
@@ -172,43 +175,77 @@
                     $sortedVideos = collect($videoOnline->videos)->sortBy('order');
                 @endphp
 
-                @foreach ($sortedVideos as $video)
+                @foreach ($sortedVideos as $key => $video)
                     <div class="row mt-4">
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-5" style="margin-bottom: 50px;">
                                 @if ($video['iframe'])
                                     @if (Str::contains(strtolower($video['iframe']), '<iframe'))
-                                        <div class="video-container-iframe" style="margin-bottom: 50px;">
-                                            {!! $video['iframe'] !!}
-                                            <div class="video-title">
-                                                {{ $video['title'] }}
-                                            </div>
-                                        </div>
-                                    @else
-                                        <a href="{{ $video['iframe'] }}" target="_blank">
-                                            <div class="video-container" style="margin-bottom: 50px;">
-                                                <img src="{{ $video['imagen'] }}" alt="Vidéo éducative" class="w-100">
-                                                <div class="video-overlay">
-                                                    <div class="play-button text-white">▶</div>
-                                                    <div class="video-title">
-                                                        {{ $video['title'] }}
+                                        <div style="overflow: hidden;">
+                                            <div class="video-container-iframe">
+
+                                                <div>
+                                                    {!! $video['iframe'] !!}
+                                                </div>
+                                                <div class="position-absolute top-0 left-0" id="button-player-{{ $key }}">
+                                                    <div class="position-relative">
+                                                        <img src="{{ $video['imagen'] }}" alt="Vidéo éducative"
+                                                            class="w-100">
+                                                        <div class="video-overlay">
+                                                            <div class="play-button-link" onclick="hideButtonPlayer({{ $key }})">
+                                                                <div class="play-button text-white">▶</div>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </a>
+                                        </div>
+                                        <div class="video-title">
+                                            {{ $video['title'] }}
+                                        </div>
+                                    @else
+                                        <div style="overflow: hidden;">
+                                            <a href="{{ $video['iframe'] }}" target="_blank">
+                                                <div class="video-container">
+                                                    <img src="{{ $video['imagen'] }}" alt="Vidéo éducative" class="w-100">
+                                                    <div class="video-overlay">
+                                                        <div class="play-button text-white">▶</div>
+
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </div>
+                                        <div class="video-title">
+                                            {{ $video['title'] }}
+                                        </div>
                                     @endif
                                 @elseif ($video['video'])
-                                    <div class="video-container" style="margin-bottom: 50px;">
-                                        <video controls class="w-100">
-                                            <source src="{{ $video['video'] }}" type="video/mp4">
-                                            Tu navegador no soporta el elemento de video.
-                                        </video>
-                                        <div class="video-title">
-                                            {{ $video['title'] }}</div>
+                                    <div style="overflow: hidden;">
+                                        <div class="video-container">
+                                            <div>
+                                                <video controls class="w-100">
+                                                    <source src="{{ $video['video'] }}" type="video/mp4">
+                                                    Tu navegador no soporta el elemento de video.
+                                                </video>
+                                            </div>
+                                            <div class="position-absolute top-0 left-0" id="button-player-{{ $key }}">
+                                                <div class="position-relative">
+                                                    <img src="{{ $video['imagen'] }}" alt="Vidéo éducative" class="w-100">
+                                                    <div class="video-overlay">
+                                                        <div class="play-button-link" onclick="hideButtonPlayer({{ $key }})">
+                                                            <div class="play-button text-white">▶</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="video-title">
+                                        {{ $video['title'] }}
                                     </div>
                                 @endif
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-7">
                                 {!! $video['text'] !!}
                             </div>
                         </div>
@@ -223,47 +260,81 @@
                     $sortedVideosEn = collect($videoOnline->videosEn)->sortBy('order');
                 @endphp
 
-                @foreach ($sortedVideosEn as $video)
-                    <div class="row mt-4">
-                        <div class="row">
-                            <div class="col-md-6">
-                                @if ($video['iframe'])
-                                    @if (Str::contains(strtolower($video['iframe']), '<iframe'))
-                                        <div class="video-container-iframe" style="margin-bottom: 50px;">
-                                            {!! $video['iframe'] !!}
-                                            <div class="video-title">
-                                                {{ $video['title'] }}
+                @foreach ($sortedVideosEn as $key => $video)
+                <div class="row mt-4">
+                    <div class="row">
+                        <div class="col-md-5" style="margin-bottom: 50px;">
+                            @if ($video['iframe'])
+                                @if (Str::contains(strtolower($video['iframe']), '<iframe'))
+                                    <div style="overflow: hidden;">
+                                        <div class="video-container-iframe">
+
+                                            <div>
+                                                {!! $video['iframe'] !!}
                                             </div>
-                                        </div>
-                                    @else
-                                        <a href="{{ $video['iframe'] }}" target="_blank">
-                                            <div class="video-container" style="margin-bottom: 50px;">
-                                                <img src="{{ $video['imagen'] }}" alt="Vidéo éducative" class="w-100">
-                                                <div class="video-overlay">
-                                                    <div class="play-button text-white">▶</div>
-                                                    <div class="video-title">
-                                                        {{ $video['title'] }}
+                                            <div class="position-absolute top-0 left-0" id="button-player-{{ $key }}">
+                                                <div class="position-relative">
+                                                    <img src="{{ $video['imagen'] }}" alt="Vidéo éducative"
+                                                        class="w-100">
+                                                    <div class="video-overlay">
+                                                        <div class="play-button-link" onclick="hideButtonPlayer({{ $key }})">
+                                                            <div class="play-button text-white">▶</div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
+                                        </div>
+                                    </div>
+                                    <div class="video-title">
+                                        {{ $video['title'] }}
+                                    </div>
+                                @else
+                                    <div style="overflow: hidden;">
+                                        <a href="{{ $video['iframe'] }}" target="_blank">
+                                            <div class="video-container">
+                                                <img src="{{ $video['imagen'] }}" alt="Vidéo éducative" class="w-100">
+                                                <div class="video-overlay">
+                                                    <div class="play-button text-white">▶</div>
+
+                                                </div>
+                                            </div>
                                         </a>
-                                    @endif
-                                @elseif ($video['video'])
-                                    <div class="video-container" style="margin-bottom: 50px;">
-                                        <video controls class="w-100">
-                                            <source src="{{ $video['video'] }}" type="video/mp4">
-                                            Your browser does not support the video element.
-                                        </video>
-                                        <div class="video-title">
-                                            {{ $video['title'] }}</div>
+                                    </div>
+                                    <div class="video-title">
+                                        {{ $video['title'] }}
                                     </div>
                                 @endif
-                            </div>
-                            <div class="col-md-6">
-                                {!! $video['text'] !!}
-                            </div>
+                            @elseif ($video['video'])
+                                <div style="overflow: hidden;">
+                                    <div class="video-container">
+                                        <div>
+                                            <video controls class="w-100">
+                                                <source src="{{ $video['video'] }}" type="video/mp4">
+                                                Tu navegador no soporta el elemento de video.
+                                            </video>
+                                        </div>
+                                        <div class="position-absolute top-0 left-0" id="button-player-{{ $key }}">
+                                            <div class="position-relative">
+                                                <img src="{{ $video['imagen'] }}" alt="Vidéo éducative" class="w-100">
+                                                <div class="video-overlay">
+                                                    <div class="play-button-link" onclick="hideButtonPlayer({{ $key }})">
+                                                        <div class="play-button text-white">▶</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="video-title">
+                                    {{ $video['title'] }}
+                                </div>
+                            @endif
+                        </div>
+                        <div class="col-md-7">
+                            {!! $video['text'] !!}
                         </div>
                     </div>
+                </div>
                 @endforeach
 
                 {{-- END ANGLAIS --}}
@@ -285,12 +356,12 @@
                         </a>
                     @endif
                 </div>
-                <div class="col-md-2 text-center mb-4 mb-md-0">
+                <div class="col-md-4 text-center mb-4 mb-md-0">
                     <button id="bibliography-btn" class="btn btn-outline-secondary btn-sm" onclick="toggleBio()">
                         {{ app()->getLocale() == 'fr' ? 'Bibliographie' : 'Bibliography' }}
                     </button>
                     <div id="bio-content" class="hidden-bio">
-                        <p>{{ app()->getLocale() == 'fr' ? $videoOnline->bio : $videoOnline->bio }}</p>
+                        <p>{!! app()->getLocale() == 'fr' ? $videoOnline->bio : $videoOnline->bio !!}</p>
                     </div>
                 </div>
                 <div class="col-md-2 text-center">
@@ -302,9 +373,9 @@
                         <a href="{{ route('video.show', $nextVideo->id) }}" class="text-decoration-none text-dark">
                             <div class="d-flex align-items-center justify-content-end">
                                 <span>{{ app()->getLocale() == 'fr' ? $nextVideo->title_fr : $nextVideo->title }}</span>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round" class="ms-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round" class="ms-2">
                                     <polyline points="9 18 15 12 9 6"></polyline>
                                 </svg>
                             </div>

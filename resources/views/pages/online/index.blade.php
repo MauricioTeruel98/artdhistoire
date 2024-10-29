@@ -28,6 +28,51 @@
             object-fit: cover;
         }
 
+        .card-img-overlay {
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.7));
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            padding: 15px;
+        }
+
+        .card-title {
+            font-size: 2rem;
+            font-weight: bold;
+            color: white;
+            margin-top: auto;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .badge {
+            font-size: 1rem;
+            padding: 8px 15px;
+            border-radius: 0;
+            align-self: flex-end;
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+
+        .card-img {
+            height: 300px;
+            object-fit: cover;
+        }
+
+        .title-overlay {
+            height: 80px;
+            padding: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .card-img {
+                height: 250px;
+            }
+
+            .card-title {
+                font-size: 1.5rem;
+            }
+        }
+
         @media (max-width: 768px) {
             .card-img {
                 height: 200px;
@@ -44,12 +89,19 @@
             <!-- Tarjeta 1 -->
             @foreach ($videosOnline as $index => $videoOnline)
                 <div class="col-md-6 mb-4">
-                    <a href="/video-online/{{$videoOnline->id}}">
-                        <div class="card text-white rounded-0">
-                            <img src="/storage/{{$videoOnline->image}}" class="card-img rounded-0" alt="Le Réalisme au XIXe">
-                            <div class="card-img-overlay rounded-0">
-                                <div class="badge badge-danger">{{ app()->getLocale() == 'fr' ? 'Conférence n°' : 'Conference n°' }}{{ $index + 1 }}</div>
-                                <h5 class="card-title baskeville-italic">{{ app()->getLocale() == 'fr' ? $videoOnline->title_fr : $videoOnline->title }}</h5>
+                    <a href="/video-online/{{ $videoOnline->id }}">
+                        <div class="card text-white rounded-0 position-relative">
+                            <img src="/storage/{{ $videoOnline->home_image }}" class="card-img rounded-0"
+                                alt="Le Réalisme au XIXe">
+                            <div class="card-img-overlay rounded-0 p-0">
+                                <div class="badge badge-danger" style="background-color: {{ $videoOnline->color }};">
+                                    {{ app()->getLocale() == 'fr' ? 'Conférence n°' : 'Conference n°' }}{{ $index + 1 }}
+                                </div>
+                                <div class="position-absolute bottom-0 left-0 w-100 title-overlay"
+                                    style="background-color: {{ $videoOnline->color }}8a;">
+                                    <h5 class="card-title baskeville-italic">
+                                        {{ app()->getLocale() == 'fr' ? $videoOnline->title_fr : $videoOnline->title }}</h5>
+                                </div>
                             </div>
                         </div>
                     </a>
