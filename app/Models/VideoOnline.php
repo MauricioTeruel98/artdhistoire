@@ -20,7 +20,9 @@ class VideoOnline extends Model
         'subtitle_fr',
         'text_fr',
         'texto_secondary_fr',
-        'bio'
+        'bio',
+        'image',
+        'home_image'
     ];
 
     public function videos()

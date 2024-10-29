@@ -380,7 +380,7 @@
                 <div class="col-md-4 mb-4">
                     <a href="#" class="video-link" data-video-id="{{ $video->id }}" data-index="{{ $index }}">
                         <div class="position-relative" style="padding-bottom: 75%;">
-                            <img src="/storage/{{ $video->home_image }}"
+                            <img src="/storage/{{ $video->image }}"
                                 alt="{{ app()->getLocale() == 'fr' ? $video->title_fr : $video->title }}"
                                 class="position-absolute w-100 h-100 object-fit-cover">
                             <div class="video-overlay">
@@ -604,7 +604,7 @@
             function updateModal(index) {
                 const video = videos[index];
                 const locale = '{{ app()->getLocale() }}'; // Obtener el idioma actual
-                modalImage.src = `/storage/${video.home_image}`;
+                modalImage.src = `/storage/${video.image}`;
                 modalTitle.textContent = locale === 'fr' ? video.title_fr : video.title;
                 modalDescription.innerHTML = locale === 'fr' ? (video.text_fr || 'Pas de description disponible.') :
                     (video.text || 'No description available.');
