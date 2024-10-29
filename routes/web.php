@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CertificateController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InteractiveController;
 use App\Http\Controllers\VideoItemController;
@@ -34,7 +35,7 @@ Route::get('language/{locale}', [LanguageController::class, 'switch'])->name('la
 
 Route::get('/interactive/index', [InteractiveController::class, 'index'])->name('interactive.index');
 Route::get('/interactive', [InteractiveController::class, 'pilote'])->name('interactive.pilote');
-Route::get('/interactive/{id}', [InteractiveController::class, 'show'])->name('interactive.show');
+//Route::get('/interactive/{id}', [InteractiveController::class, 'show'])->name('interactive.show');
 
 Route::get('/videos-online', [VideoController::class, 'index'])->name('videos.index');
 Route::get('/video-online/{id}', [VideoController::class, 'show'])->name('video.show');
@@ -60,6 +61,8 @@ Route::middleware(['auth'])->group(function () {
     // ... otras rutas que requieran autenticación ...
 });
 
+Route::post('/contact', [ContactController::class, 'submit'])->name('contact.submit');
+
 
 /**
  * RUTAS DE SUSCRIPCION
@@ -77,14 +80,18 @@ Route::post('/stripe/webhook', [SubscriptionController::class, 'handleStripeWebh
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::get('/certificate/upload/{category_id}', [CertificateController::class, 'showUploadForm'])->name('certificate.upload');
+    Route::post('/certificate/store', [CertificateController::class, 'store'])->name('certificate.store');
 });
 
 Route::get('/interactive/index', [InteractiveController::class, 'index'])->name('interactive.index');
 Route::get('/interactive', [InteractiveController::class, 'pilote'])->name('interactive.pilote');
 
+Route::get('/interactive/pdf/{id}/pilote', [InteractiveController::class, 'showPdfPilote'])->name('interactive.pdf.pilote');
+Route::get('/interactive/{id}', [InteractiveController::class, 'show'])->name('interactive.show');
+
 Route::middleware(['auth', 'subscriptionOrWhitelist'])->group(function () {
-    Route::get('/interactive/{id}', [InteractiveController::class, 'show'])->name('interactive.show');
-    Route::get('/interactive/pdf/{id}', [InteractiveController::class, 'showPdf'])->name('interactive.pdf');
+    Route::get('/interactive/pdf/{id}/{category_id}', [InteractiveController::class, 'showPdf'])->name('interactive.pdf');
 });
 
 Route::group(['prefix' => 'admin'], function () {
@@ -125,6 +132,12 @@ Route::group(['prefix' => 'admin'], function () {
  * 
  * RUTAS DE AUTH
  */
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
+    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.update.password');
+});
 
 Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
 Route::post('/register', [AuthController::class, 'register']);

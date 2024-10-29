@@ -66,6 +66,15 @@
                             </div>
 
                             <div class="mb-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="is_student" id="is_student" value="1">
+                                    <label class="form-check-label" for="is_student">
+                                        {{ app()->getLocale() == 'fr' ? 'Je suis étudiant' : 'I am a student' }}
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
                                 <label for="password" class="form-label">{{ app()->getLocale() == 'fr' ? 'Mot de passe' : 'Password' }}</label>
                                 <input type="password" class="form-control @error('password') is-invalid @enderror" name="password" id="password" required>
                                 @error('password')

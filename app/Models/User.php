@@ -24,6 +24,9 @@ class User extends \TCG\Voyager\Models\User
         'google_id',
         'facebook_id',
         'ip_address_id',
+        'is_student',
+        'certificate',
+        'validated_student',
     ];
 
     /**

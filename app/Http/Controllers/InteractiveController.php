@@ -14,7 +14,7 @@ class InteractiveController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('subscriptionOrWhitelist')->only(['show', 'showPdf']);
+        $this->middleware('subscriptionOrWhitelist')->only(['showPdf']);
     }
 
     public function index()
@@ -49,6 +49,13 @@ class InteractiveController extends Controller
     }
 
     public function showPdf($id)
+    {
+        $archive = Archive::findOrFail($id);
+        $slider = Slider::all();
+        return view('pages.interactive.pdf', compact('archive', 'slider'));
+    }
+
+    public function showPdfPilote($id)
     {
         $archive = Archive::findOrFail($id);
         $slider = Slider::all();

@@ -191,7 +191,62 @@
             transform: translateY(0);
         }
 
-        @media (max-width: 768px) {
+        /* Modificar los estilos existentes del modal */
+        .img-modal {
+            padding: 0;
+            /* Eliminamos el padding de 100px */
+            height: 600px;
+            /* Altura fija para todas las imágenes */
+            width: 100%;
+            object-fit: cover;
+            /* Asegura que la imagen cubra todo el espacio */
+            display: block;
+        }
+
+        /* Ajustar los botones de navegación */
+        #prevVideo,
+        #nextVideo {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 10;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            padding: 10px;
+            margin: 0 15px;
+        }
+
+        #prevVideo {
+            left: 0;
+        }
+
+        #nextVideo {
+            right: 0;
+        }
+
+        /* Ajustar el contenedor de la imagen */
+        .modal-image-container {
+            position: relative;
+            height: 600px;
+            /* Misma altura que la imagen */
+            overflow: hidden;
+        }
+
+        /* Ajustes para el modal */
+        .modal-content {
+            min-height: 100vh;
+            /* Asegura que el contenido cubra toda la altura */
+            background: white;
+            /* Fondo blanco explícito */
+        }
+
+        .modal-body {
+            padding: 0;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        - @media (max-width: 768px) {
             #searchForm {
                 flex-direction: column;
             }
@@ -202,6 +257,37 @@
 
             .text-video {
                 padding: 50px;
+            }
+
+            .modal-image-container {
+                height: 300px;
+                /* Altura más pequeña para móvil */
+            }
+
+            .img-modal {
+                height: 300px;
+            }
+
+            .text-video {
+                padding: 20px;
+                /* Menos padding en móvil */
+                background: white;
+                /* Asegura fondo blanco */
+            }
+
+            .modal-content {
+                display: flex;
+                flex-direction: column;
+            }
+
+            .modal-body .row {
+                flex-direction: column;
+                height: auto;
+            }
+
+            .col-md-5 {
+                flex-grow: 1;
+                background: white;
             }
         }
     </style>
@@ -215,7 +301,7 @@
     <div class="container mx-auto py-5">
 
         <!-- Acordeón para el filtro de búsqueda -->
-        <div class="accordion my-4" id="searchAccordion">
+        {{-- <div class="accordion my-4" id="searchAccordion">
             <div class="accordion-item">
                 <h2 class="accordion-header" id="headingOne">
                     <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne"
@@ -280,11 +366,11 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> --}}
 
         <header class="text-center mb-5">
             {!! app()->getLocale() == 'fr' ? $textos->texto_home : $textos->texto_home_en !!}
-            <a href="/interactive/index" class="btn btn-outline-secondary">
+            <a href="/interactive" class="btn btn-outline-secondary">
                 {{ app()->getLocale() == 'fr' ? 'Essayez LISA' : 'Try LISA' }}
             </a>
         </header>
@@ -292,14 +378,14 @@
         <div class="row" style="justify-content: center;">
             @foreach ($videos as $index => $video)
                 <div class="col-md-4 mb-4">
-                    <a href="#" class="video-link" data-video-id="{{ $video->id }}"
-                        data-index="{{ $index }}">
+                    <a href="#" class="video-link" data-video-id="{{ $video->id }}" data-index="{{ $index }}">
                         <div class="position-relative" style="padding-bottom: 75%;">
                             <img src="/storage/{{ $video->home_image }}"
                                 alt="{{ app()->getLocale() == 'fr' ? $video->title_fr : $video->title }}"
                                 class="position-absolute w-100 h-100 object-fit-cover">
                             <div class="video-overlay">
-                                <h2>{{ app()->getLocale() == 'fr' ? $video->title_fr : $video->title }}</h2>
+                                <h2 class="baskeville-italic">
+                                    {{ app()->getLocale() == 'fr' ? $video->title_fr : $video->title }}</h2>
                             </div>
                         </div>
                     </a>
@@ -312,45 +398,40 @@
     <div class="modal fade" id="videoModal" tabindex="-1" aria-labelledby="videoModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-fullscreen">
             <div class="modal-content">
-                <div class="container">
-                    <div class="modal-body p-0">
+                <div class="container h-100">
+                    <div class="modal-body">
                         <button type="button" class="btn-close position-absolute top-0 end-0 m-4 z-3"
                             data-bs-dismiss="modal" aria-label="Close"></button>
                         <div class="row g-0 h-100">
-                            <div class="col-md-7 position-relative">
-                                <img src="" alt="Video thumbnail"
-                                    class="img-modal img-fluid w-100 h-100 object-cover" id="modalImage"
-                                    style="max-height: 700px; object-fit: cover;">
-                                <button
-                                    class="btn btn-link text-black position-absolute top-50 start-0 translate-middle-y fs-5"
-                                    id="prevVideo">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35"
-                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                        stroke-linecap="round" stroke-linejoin="round"
-                                        class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-left">
-                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                        <path d="M15 6l-6 6l6 6" />
-                                    </svg>
-                                </button>
-                                <button
-                                    class="btn btn-link text-black position-absolute top-50 end-0 translate-middle-y fs-5"
-                                    id="nextVideo">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35"
-                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                        stroke-linecap="round" stroke-linejoin="round"
-                                        class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right">
-                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                        <path d="M9 6l6 6l-6 6" />
-                                    </svg>
-                                </button>
+                            <div class="col-md-7 position-relative mt-5">
+                                <div class="modal-image-container">
+                                    <img src="" alt="Video thumbnail" class="img-modal" id="modalImage">
+                                    <button class="btn btn-link text-black" id="prevVideo">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round"
+                                            class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-left">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                            <path d="M15 6l-6 6l6 6" />
+                                        </svg>
+                                    </button>
+                                    <button class="btn btn-link text-black" id="nextVideo">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round"
+                                            class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                            <path d="M9 6l6 6l-6 6" />
+                                        </svg>
+                                    </button>
+                                </div>
                             </div>
                             <div class="col-md-5 d-flex flex-column text-video">
                                 <h2 id="modalTitle" class="fs-1 mb-4"></h2>
-                                <div class="flex-grow-1 overflow-auto" style="max-height: calc(100vh - 400px);">
+                                <div class="flex-grow-1">
                                     <p id="modalDescription"></p>
                                 </div>
-                                <a href="#" class="btn btn-link text-black align-self-start mt-4"
-                                    id="watchVideoBtn">
+                                <a href="#" class="btn btn-link text-black align-self-start mt-4" id="watchVideoBtn">
                                     {{ app()->getLocale() == 'fr' ? 'Aller à la page' : 'Go to the page' }}
                                 </a>
                             </div>
@@ -361,8 +442,8 @@
         </div>
     </div>
 
-    
 
+    {{--
     <script>
         $(document).ready(function() {
             function fetchContent(searchQuery = '', page = 1) {
@@ -406,6 +487,96 @@
                 fetchContent();
             });
     
+            $(document).on('click', '.pagination a', function(e) {
+                e.preventDefault();
+                const url = $(this).attr('href');
+                const page = url.split('page=')[1];
+                const searchQuery = $('#searchInput').val();
+                fetchContent(searchQuery, page);
+            });
+        });
+    </script> --}}
+
+    <script>
+        $(document).ready(function() {
+            $('#searchToggle').on('click', function() {
+                $('#searchBar').slideToggle();
+            });
+
+            function getItemUrl(item) {
+                console.log('Generando URL para:', item);
+                switch (item.type) {
+                    case 'Saga':
+                        return `/interactive/${item.id}`;
+                    case 'Interactive':
+                        return `/interactive/${item.id}`;
+                    case 'PDF':
+                        return `/interactive/pdf/${item.id}`;
+                    case 'Video':
+                        return `/video-online/${item.id}`;
+                    case 'Video Online':
+                        return `/video-online/${item.id}`;
+                    default:
+                        console.log('Tipo desconocido:', item.type);
+                        return '#';
+                }
+            }
+
+            function fetchContent(searchQuery = '', page = 1) {
+                $.ajax({
+                    url: '{{ route('search.content') }}',
+                    method: 'GET',
+                    data: {
+                        search: searchQuery,
+                        page: page
+                    },
+                    success: function(response) {
+                        let $resultsList = $('<ul class="list-group"></ul>');
+                        if (response.data.length > 0) {
+                            response.data.forEach(function(item) {
+                                const itemUrl = getItemUrl(item);
+                                console.log('URL generada:', itemUrl);
+                                let $listItem = $('<li class="list-group-item"></li>');
+                                let $link = $('<a></a>')
+                                    .attr('href', itemUrl)
+                                    .text(item.title || item.title_fr || item.name || item
+                                        .name_fr);
+                                let $badge = $('<span class="badge bg-secondary"></span>').text(
+                                    item.type);
+                                $link.append($badge);
+                                $listItem.append($link);
+                                $resultsList.append($listItem);
+                            });
+                        } else {
+                            let $noResults = $('<p></p>').text(
+                                `{{ app()->getLocale() == 'fr' ? 'Aucun résultat trouvé pour' : 'No results found for' }} "${searchQuery}".`
+                            );
+                            $resultsList.append($noResults);
+                        }
+
+                        $('#searchResults').empty().append($resultsList);
+
+                        if (response.links) {
+                            $('#searchResults').append(response.links);
+                        }
+
+                        // Verificar el contenido del DOM después de la inserción
+                        console.log('Contenido del DOM después de la inserción:', $('#searchResults')
+                            .html());
+                    }
+                });
+            }
+
+            $('#searchResults a').each(function() {
+                console.log('URL en el DOM:', $(this).attr('href'));
+            });
+
+            $('#searchForm').on('submit', function(e) {
+                e.preventDefault();
+                const searchQuery = $('#searchInput').val();
+                fetchContent(searchQuery);
+            });
+
             $(document).on('click', '.pagination a', function(e) {
                 e.preventDefault();
                 const url = $(this).attr('href');

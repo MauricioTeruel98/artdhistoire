@@ -23,15 +23,15 @@ class AuthController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'is_student' => ['nullable', 'boolean'],
         ]);
 
         User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'is_student' => $request->is_student ?? false,
         ]);
-
-        return redirect()->route('login');
     }
 
     // Muestra el formulario de login

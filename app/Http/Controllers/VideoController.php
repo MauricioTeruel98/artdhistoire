@@ -10,7 +10,7 @@ class VideoController extends Controller
 {
     public function index()
     {
-        $videosOnline = VideoOnline::all();
+        $videosOnline = VideoOnline::orderBy('order', 'DESC')->get();
         return view('pages.online.index', compact('videosOnline'));
     }
 

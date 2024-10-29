@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 
 class ProfileController extends Controller
@@ -12,7 +13,13 @@ class ProfileController extends Controller
     public function show()
     {
         $user = Auth::user();
-        return view('auth.profile', compact('user'));
+        $activeSubscriptions = $user->subscriptions()
+            ->where('status', 'active')
+            ->where('end_date', '>', now())
+            ->with('categories')
+            ->get();
+
+        return view('auth.profile', compact('user', 'activeSubscriptions'));
     }
 
     // Actualiza los datos del perfil
@@ -24,11 +31,13 @@ class ProfileController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255',
             'avatar' => 'nullable|image',
+            'is_student' => 'boolean',
         ]);
 
         $user->name = $request->input('name');
         $user->email = $request->input('email');
         $user->settings = $request->input('settings');
+        $user->is_student = $request->has('is_student');
 
         if ($request->hasFile('avatar')) {
             // Eliminar avatar anterior si existe
@@ -43,5 +52,24 @@ class ProfileController extends Controller
         $user->save();
 
         return redirect()->route('profile.show')->with('success', 'Perfil actualizado correctamente.');
+    }
+
+    public function updatePassword(Request $request)
+    {
+        $request->validate([
+            'current_password' => 'required',
+            'new_password' => 'required|string|min:8|confirmed',
+        ]);
+
+        $user = Auth::user();
+
+        if (!Hash::check($request->current_password, $user->password)) {
+            return back()->withErrors(['current_password' => 'La contraseña actual no es correcta.']);
+        }
+
+        $user->password = Hash::make($request->new_password);
+        $user->save();
+
+        return redirect()->route('profile.show')->with('success', 'Contraseña actualizada correctamente.');
     }
 }
