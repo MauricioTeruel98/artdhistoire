@@ -246,6 +246,30 @@
             overflow-y: auto;
         }
 
+        header h1{
+            font-family: 'Playfair Display', serif !important;
+            font-size: 25px !important;
+            font-weight: bold !important;
+            color: #000000 !important;
+        }
+
+        /* De header selecciona el primer elemento p, solo el primero */
+        header p:first-of-type{
+            /* Coloca estos estilos Futura Light - 17px - Gras+ Italique #0000 */
+            font-family: 'Futura Light', sans-serif !important;
+            font-style: italic !important;
+            font-size: 17px !important;
+            font-weight: bold !important;
+            color: #000000 !important;
+        }
+
+        /* A las demas etiquetas p de header aplicales estos estilos: Futura Light - 16px #757575 */
+        header p:not(:first-of-type){
+            font-family: 'Futura Light', sans-serif !important;
+            font-size: 16px !important;
+            color: #757575 !important;
+        }
+
         - @media (max-width: 768px) {
             #searchForm {
                 flex-direction: column;
@@ -384,7 +408,7 @@
                                 alt="{{ app()->getLocale() == 'fr' ? $video->title_fr : $video->title }}"
                                 class="position-absolute w-100 h-100 object-fit-cover">
                             <div class="video-overlay">
-                                <h2 class="baskeville-italic">
+                                <h2 class="linotype" style="font-size: 32px !important;">
                                     {{ app()->getLocale() == 'fr' ? $video->title_fr : $video->title }}</h2>
                             </div>
                         </div>

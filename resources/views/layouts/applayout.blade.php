@@ -25,8 +25,36 @@
 
     <style>
         @font-face {
+            font-family: 'Playfair Display';
+            src: url('../fonts/playfair/PlayfairDisplay-Regular.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'Arial';
+            src: url('../fonts/arial/ARIAL.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'Linotype';
+            src: url('../fonts/linotype/Linotype\ Didot\ italic.otf') format('opentype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        @font-face {
             font-family: 'Futura';
             src: url('../fonts/futura-2/Futura\ Book\ font.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'Futura Light';
+            src: url('../fonts/futura-2/futura\ light\ bt.ttf') format('truetype');
             font-weight: normal;
             font-style: normal;
         }
@@ -43,7 +71,27 @@
         body {
             font-family: 'Futura', sans-serif !important;
             /* Aplica la fuente a todo el cuerpo de la página */
-            color: rgb(117, 117, 117) !important;
+            color: #757575 !important;
+        }
+
+        .futura{
+            font-family: 'Futura', sans-serif !important;
+        }
+
+        .playfair-display {
+            font-family: 'Playfair Display', sans-serif !important;
+        }
+
+        .arial {
+            font-family: 'Arial', sans-serif !important;
+        }
+
+        .linotype {
+            font-family: 'Linotype', sans-serif !important;
+        }
+
+        .futura-light {
+            font-family: 'Futura Light', sans-serif !important;
         }
 
         .baskeville-italic {

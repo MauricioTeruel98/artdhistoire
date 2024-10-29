@@ -45,12 +45,11 @@
         }
 
         .badge {
-            font-size: 1rem;
+            font-size: 15px;
             padding: 8px 15px;
             border-radius: 0;
             align-self: flex-end;
-            text-transform: uppercase;
-            font-weight: 500;
+            font-weight: bold;
         }
 
         .card-img {
@@ -61,6 +60,11 @@
         .title-overlay {
             height: 80px;
             padding: 20px;
+        }
+
+        .baskeville-italic{
+            font-size: 28px !important;
+            font-weight: normal !important;
         }
 
         @media (max-width: 768px) {
@@ -94,7 +98,7 @@
                             <img src="/storage/{{ $videoOnline->home_image }}" class="card-img rounded-0"
                                 alt="Le Réalisme au XIXe">
                             <div class="card-img-overlay rounded-0 p-0">
-                                <div class="badge badge-danger" style="background-color: {{ $videoOnline->color }};">
+                                <div class="badge badge-danger arial" style="background-color: {{ $videoOnline->color }};">
                                     {{ app()->getLocale() == 'fr' ? 'Conférence n°' : 'Conference n°' }}{{ $index + 1 }}
                                 </div>
                                 <div class="position-absolute bottom-0 left-0 w-100 title-overlay"

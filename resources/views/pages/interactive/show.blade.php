@@ -83,6 +83,14 @@
             font-size: 14px;
         }
 
+        .texte h3{
+            font-size: 19px !important;
+        }
+
+        .texte p{
+            font-size: 16px !important;
+        }
+
         @media screen and (max-width: 768px) {
             .topic {
                 width: 100%;
@@ -95,14 +103,14 @@
 @section('content')
     @include('partials.slider')
     <div class="container mt-4">
-        <h1 class="mb-4">
+        <h1 class="futura-light mb-4" style="font-size: 30px !important;">
             {{ app()->getLocale() == 'fr' ? $interactive->name_fr : $interactive->name }}
         </h1>
 
         @foreach ($interactive->posts as $index => $post)
             <section class="my-5">
-                <h2>{{ $index + 1 }}. {{ app()->getLocale() == 'fr' ? $post->title_fr : $post->title }}</h2>
-                <h3 class="section-title">{{ app()->getLocale() == 'fr' ? $post->excerpt_fr : $post->excerpt }}</h3>
+                <h2 class="futura-light" style="font-size: 20px !important;">{{ $index + 1 }}. {{ app()->getLocale() == 'fr' ? $post->title_fr : $post->title }}</h2>
+                    <h3 class="section-title futura-light" style="font-size: 16px !important;">{{ app()->getLocale() == 'fr' ? $post->excerpt_fr : $post->excerpt }}</h3>
                 <div class="row">
                     <div class="col-md-5">
                         <div class="image-container">
@@ -202,7 +210,8 @@
                                                         </svg>
                                                     @endif
                                                 </a>
-                                                <span>{{ $archive->title }}</span>
+                                                <span class="futura-light" style="font-size: 12px !important;">{{ $archive->title }}</span>
+
                                             </div>
                                         </div>
 
@@ -290,7 +299,8 @@
                             </svg>
                         @endif
                     </a>
-                    <span>{{ $archive->title }}</span>
+                    <span class="futura-light" style="font-size: 12px !important;">{{ $archive->title }}</span>
+
                 </div>
             </div>
 

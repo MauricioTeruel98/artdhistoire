@@ -83,6 +83,13 @@
             font-size: 14px;
         }
 
+        .texte h3{
+            font-size: 19px !important;
+        }
+
+        .texte p{
+            font-size: 16px !important;
+        }
 
         iframe .pushfooter {
             height: 0px !important;
@@ -101,10 +108,11 @@
     @include('partials.slider')
     <div class="container mt-4">
         {{-- <h1 class="text-center mb-4">{{ app()->getLocale() == 'fr' ? 'Accédez à LISA via la vidéo ou via la librairie' : 'Access LISA via the video or the library' }}</h1> --}}
-        <h1 class="text-center mb-4">{{ app()->getLocale() == 'fr' ? $textosPiloto->title : $textosPiloto->title_en ?? '' }}
+        <h1 class="text-center mb-4" style="font-size: 22px !important; font-weight: bold !important;">
+            {{ app()->getLocale() == 'fr' ? $textosPiloto->title : $textosPiloto->title_en ?? '' }}
         </h1>
         <div class="row mb-4">
-            <div class="col-md-6">
+            <div class="col-md-6 texte">
                 {!! app()->getLocale() == 'fr' ? $textosPiloto->text_1 : $textosPiloto->text_1_en ?? '' !!}
                 {{--
                 <h2>{{ app()->getLocale() == 'fr' ? 'Vidéo interactive' : 'Interactive video' }}</h2>
@@ -113,7 +121,7 @@
                     <li>{{ app()->getLocale() == 'fr' ? 'Cliquez sur les pop-up en haut à gauche pour ouvrir les articles interactifs de LISA. Pour cette version pilote, les fiches grises sont désactivées' : 'Click on the pop-ups on the top left to open the LISA interactive articles. For this pilot version, the gray cards are disabled' }}</li>
                 </ul> --}}
             </div>
-            <div class="col-md-6">
+            <div class="col-md-6 texte">
 
                 {!! app()->getLocale() == 'fr' ? $textosPiloto->text_2 : $textosPiloto->text_2_en ?? '' !!}
 
@@ -133,8 +141,8 @@
         @if ($pilote && $pilote->posts)
             @foreach ($pilote->posts as $index => $post)
                 <section class="my-5">
-                    <h2>{{ $index + 1 }}. {{ app()->getLocale() == 'fr' ? $post->title_fr : $post->title }}</h2>
-                    <h3 class="section-title">{{ app()->getLocale() == 'fr' ? $post->excerpt_fr : $post->excerpt }}</h3>
+                    <h2 class="futura-light" style="font-size: 20px !important;">{{ $index + 1 }}. {{ app()->getLocale() == 'fr' ? $post->title_fr : $post->title }}</h2>
+                    <h3 class="section-title futura-light" style="font-size: 16px !important;">{{ app()->getLocale() == 'fr' ? $post->excerpt_fr : $post->excerpt }}</h3>
                     <div class="row">
                         <div class="col-md-5">
                             <div class="image-container" style="height: 100%;">
@@ -233,7 +241,7 @@
                                                             </svg>
                                                         @endif
                                                     </a>
-                                                    <span>{{ $archive->title }}</span>
+                                                    <span class="futura-light" style="font-size: 12px !important;">{{ $archive->title }}</span>
                                                 </div>
                                             </div>
 
@@ -321,7 +329,8 @@
                             </svg>
                         @endif
                     </a>
-                    <span>{{ $archive->title }}</span>
+                    <span class="futura-light" style="font-size: 12px !important;">{{ $archive->title }}</span>
+
                 </div>
             </div>
 

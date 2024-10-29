@@ -118,6 +118,22 @@
         .bio-content {
             transition: all 0.3s ease-in-out
         }
+
+        .texte p{
+            font-size: 20px !important;
+        }
+
+        .subtitle{
+            font-size: 19px !important;
+        }
+
+        .texte-video p{
+            font-size: 16px !important;
+        }
+
+        .texte-video{
+            font-size: 16px !important;
+        }
     </style>
 
     <script>
@@ -151,18 +167,18 @@
         <div class="container mt-4">
             <div class="row">
                 <div class="col-md-5 header text-end">
-                    <h1 class="baskeville-italic">
+                    <h1 class="baskeville-italic" style="font-size: 28px !important;">
                         {{ app()->getLocale() == 'fr' ? $videoOnline->title_fr : $videoOnline->title }}</h1>
-                    <h2 class="h5 baskeville-italic">
+                    <h2 class="baskeville-italic" style="font-size: 21px !important;">
                         {{ app()->getLocale() == 'fr' ? $videoOnline->subtitle_fr : $videoOnline->subtitle }}</h2>
                 </div>
-                <div class="col-md-7 text-start">
+                <div class="col-md-7 text-start texte futura-light">
                     {!! app()->getLocale() == 'fr' ? $videoOnline->text_fr : $videoOnline->text !!}
                 </div>
             </div>
 
             <div class="row mt-4">
-                <div class="col-12">
+                <div class="col-12 futura subtitle">
                     {!! app()->getLocale() == 'fr' ? $videoOnline->texto_secondary_fr : $videoOnline->texto_secondary !!}
                 </div>
             </div>
@@ -245,7 +261,7 @@
                                     </div>
                                 @endif
                             </div>
-                            <div class="col-md-7">
+                            <div class="col-md-7 texte-video futura-light">
                                 {!! $video['text'] !!}
                             </div>
                         </div>
@@ -330,7 +346,7 @@
                                 </div>
                             @endif
                         </div>
-                        <div class="col-md-7">
+                        <div class="col-md-7 texte-video futura-light">
                             {!! $video['text'] !!}
                         </div>
                     </div>
