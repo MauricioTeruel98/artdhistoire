@@ -86,9 +86,9 @@ Route::get('/interactive/index', [InteractiveController::class, 'index'])->name(
 Route::get('/interactive', [InteractiveController::class, 'pilote'])->name('interactive.pilote');
 
 Route::get('/interactive/pdf/{id}/pilote', [InteractiveController::class, 'showPdfPilote'])->name('interactive.pdf.pilote');
+Route::get('/interactive/{id}', [InteractiveController::class, 'show'])->name('interactive.show');
 
 Route::middleware(['auth', 'subscriptionOrWhitelist'])->group(function () {
-    Route::get('/interactive/{id}', [InteractiveController::class, 'show'])->name('interactive.show');
     Route::get('/interactive/pdf/{id}/{category_id}', [InteractiveController::class, 'showPdf'])->name('interactive.pdf');
 });
 

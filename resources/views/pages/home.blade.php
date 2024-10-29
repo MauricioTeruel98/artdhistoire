@@ -362,7 +362,7 @@
     </div>
 
     
-
+    {{--
     <script>
         $(document).ready(function() {
             function fetchContent(searchQuery = '', page = 1) {
@@ -414,7 +414,97 @@
                 fetchContent(searchQuery, page);
             });
         });
-    </script>
+    </script>--}}
+
+    <script>
+    $(document).ready(function() {
+        $('#searchToggle').on('click', function() {
+            $('#searchBar').slideToggle();
+        });
+
+        function getItemUrl(item) {
+            console.log('Generando URL para:', item);
+            switch (item.type) {
+                case 'Saga':
+                    return `/interactive/${item.id}`;
+                case 'Interactive':
+                    return `/interactive/${item.id}`;
+                case 'PDF':
+                    return `/interactive/pdf/${item.id}`;
+                case 'Video':
+                    return `/video-online/${item.id}`;
+                case 'Video Online':
+                    return `/video-online/${item.id}`;
+                default:
+                    console.log('Tipo desconocido:', item.type);
+                    return '#';
+            }
+        }
+
+        function fetchContent(searchQuery = '', page = 1) {
+            $.ajax({
+                url: '{{ route('search.content') }}',
+                method: 'GET',
+                data: {
+                    search: searchQuery,
+                    page: page
+                },
+                success: function(response) {
+                    let $resultsList = $('<ul class="list-group"></ul>');
+                    if (response.data.length > 0) {
+                        response.data.forEach(function(item) {
+                            const itemUrl = getItemUrl(item);
+                            console.log('URL generada:', itemUrl);
+                            let $listItem = $('<li class="list-group-item"></li>');
+                            let $link = $('<a></a>')
+                                .attr('href', itemUrl)
+                                .text(item.title || item.title_fr || item.name || item
+                                    .name_fr);
+                            let $badge = $('<span class="badge bg-secondary"></span>').text(
+                                item.type);
+                            $link.append($badge);
+                            $listItem.append($link);
+                            $resultsList.append($listItem);
+                        });
+                    } else {
+                        let $noResults = $('<p></p>').text(
+                            `{{ app()->getLocale() == 'fr' ? 'Aucun résultat trouvé pour' : 'No results found for' }} "${searchQuery}".`
+                        );
+                        $resultsList.append($noResults);
+                    }
+
+                    $('#searchResults').empty().append($resultsList);
+
+                    if (response.links) {
+                        $('#searchResults').append(response.links);
+                    }
+
+                    // Verificar el contenido del DOM después de la inserción
+                    console.log('Contenido del DOM después de la inserción:', $('#searchResults')
+                        .html());
+                }
+            });
+        }
+
+        $('#searchResults a').each(function() {
+            console.log('URL en el DOM:', $(this).attr('href'));
+        });
+
+        $('#searchForm').on('submit', function(e) {
+            e.preventDefault();
+            const searchQuery = $('#searchInput').val();
+            fetchContent(searchQuery);
+        });
+
+        $(document).on('click', '.pagination a', function(e) {
+            e.preventDefault();
+            const url = $(this).attr('href');
+            const page = url.split('page=')[1];
+            const searchQuery = $('#searchInput').val();
+            fetchContent(searchQuery, page);
+        });
+    });
+</script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {

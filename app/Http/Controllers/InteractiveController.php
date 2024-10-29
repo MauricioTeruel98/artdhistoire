@@ -14,7 +14,7 @@ class InteractiveController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('subscriptionOrWhitelist')->only(['show', 'showPdf']);
+        $this->middleware('subscriptionOrWhitelist')->only(['showPdf']);
     }
 
     public function index()

@@ -33,7 +33,8 @@
         }
 
         .display-4 {
-            font-size: 3rem;
+            font-size: 2rem;
+            /* Reducir el tamaño de la imagen */
             font-weight: bold;
         }
 
@@ -68,31 +69,53 @@
 @endsection
 
 @section('content')
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <h2 class="text-center mb-4">{{ app()->getLocale() == 'fr' ? 'Abonnement Requis' : 'Subscription Required' }}</h2>
-            <div class="card text-center p-4">
-                <h5 class="font-weight-normal">{{ $category->name }}</h5>
-                <div class="display-4 my-3">€ <strong>49</strong></div>
-                <p class="mb-3">{{ app()->getLocale() == 'fr' ? 'Accès complet pour un an' : 'Full access for one year' }}</p>
-                <form action="{{ route('subscription.create') }}" method="POST" class="mb-2">
-                    @csrf
-                    <input type="hidden" name="category_id" value="{{ $category->id }}">
-                    <button type="submit" name="payment_method" value="stripe" class="btn btn-primary btn-lg mb-2">{{ app()->getLocale() == 'fr' ? 'Payer avec Stripe' : 'Pay with Stripe' }}</button>
-                    <button type="submit" name="payment_method" value="paypal" class="btn btn-info btn-lg mb-2">{{ app()->getLocale() == 'fr' ? 'Payer avec PayPal' : 'Pay with PayPal' }}</button>
-                </form>
-                @auth
-                    <form action="{{ route('subscription.trial') }}" method="POST">
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <h2 class="text-center mb-4">{{ app()->getLocale() == 'fr' ? 'Abonnement Requis' : 'Subscription Required' }}
+                </h2>
+                <div class="card text-center p-4">
+                    <h5 class="font-weight-normal">{{ $category->name }}</h5>
+                    <div class="d-flex justify-content-center">
+                        <img src="{{ asset('storage/' . $category->image) }}" alt="{{ $category->name }}" class="img-fluid mb-3"
+                        style="height: 200px;
+                                width: 80%;
+                                object-fit: cover;">
+                    </div>
+                    <!-- Reducir el tamaño de la imagen -->
+                    @if (Auth::user()->is_student ?? false)
+                        <div class="display-4 my-3">€ <strong>19</strong></div>
+                        <p class="mb-3">
+                            {{ app()->getLocale() == 'fr' ? 'Accès complet pour un an' : 'Full access for one year' }}</p>
+                        <p class="mb-3">
+                            {{ app()->getLocale() == 'fr' ? 'Precio especial por ser estudiante' : 'Special price for students' }}
+                        </p>
+                    @else
+                        <div class="display-4 my-3">€ <strong>49</strong></div>
+                        <p class="mb-3">
+                            {{ app()->getLocale() == 'fr' ? 'Accès complet pour un an' : 'Full access for one year' }}</p>
+                    @endif
+                    <form action="{{ route('subscription.create') }}" method="POST" class="mb-2">
                         @csrf
                         <input type="hidden" name="category_id" value="{{ $category->id }}">
-                        <button type="submit" class="btn btn-success btn-lg">{{ app()->getLocale() == 'fr' ? 'Essai gratuit (7 jours)' : 'Free trial (7 days)' }}</button>
+                        <button type="submit" name="payment_method" value="stripe"
+                            class="btn btn-primary btn-lg mb-2">{{ app()->getLocale() == 'fr' ? 'Payer avec Stripe' : 'Pay with Stripe' }}</button>
+                        <button type="submit" name="payment_method" value="paypal"
+                            class="btn btn-info btn-lg mb-2">{{ app()->getLocale() == 'fr' ? 'Payer avec PayPal' : 'Pay with PayPal' }}</button>
                     </form>
-                @else
-                    <a href="{{ route('login') }}" class="btn btn-secondary btn-lg">{{ app()->getLocale() == 'fr' ? 'Connectez-vous pour l\'essai gratuit' : 'Login for free trial' }}</a>
-                @endauth
+                    @auth
+                        <form action="{{ route('subscription.trial') }}" method="POST">
+                            @csrf
+                            <input type="hidden" name="category_id" value="{{ $category->id }}">
+                            <button type="submit"
+                                class="btn btn-success btn-lg">{{ app()->getLocale() == 'fr' ? 'Essai gratuit (7 jours)' : 'Free trial (7 days)' }}</button>
+                        </form>
+                    @else
+                        <a href="{{ route('login') }}"
+                            class="btn btn-secondary btn-lg">{{ app()->getLocale() == 'fr' ? 'Connectez-vous pour l\'essai gratuit' : 'Login for free trial' }}</a>
+                    @endauth
+                </div>
             </div>
         </div>
     </div>
-</div>
 @endsection
