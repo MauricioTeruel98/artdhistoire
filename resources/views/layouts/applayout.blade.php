@@ -234,8 +234,10 @@
 
         .variable-width {
             widows: 100%;
+            /*
             border-top: 3px solid #1d1d1d;
             border-bottom: 3px solid #1d1d1d;
+            */
         }
 
         .variable-width img {
