@@ -61,6 +61,8 @@ Route::middleware(['auth'])->group(function () {
     // ... otras rutas que requieran autenticación ...
 });
 
+Route::post('/contact', [ContactController::class, 'submit'])->name('contact.submit');
+
 
 /**
  * RUTAS DE SUSCRIPCION

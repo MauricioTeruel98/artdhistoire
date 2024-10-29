@@ -16,13 +16,21 @@ class ContactController extends Controller
             'message' => 'required|string',
         ]);
 
-        dd($validatedData);
-
-        // Aquí puedes guardar el mensaje en la base de datos si lo deseas
-
-        // Enviar el correo electrónico
-        Mail::to('adh@artdhistoire.com')->send(new ContactFormMail($validatedData));
-
-        return response()->json(['success' => true]);
+        try {
+            Mail::to('adh@artdhistoire.com')->send(new ContactFormMail($validatedData));
+            return response()->json([
+                'success' => true,
+                'message' => app()->getLocale() == 'fr' ? 
+                    'Votre message a été envoyé avec succès!' : 
+                    'Your message has been sent successfully!'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => app()->getLocale() == 'fr' ? 
+                    'Une erreur s\'est produite. Veuillez réessayer.' : 
+                    'An error occurred. Please try again.'
+            ], 500);
+        }
     }
 }

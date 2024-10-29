@@ -92,10 +92,11 @@
 
                 <h3 class="mt-5 mb-3">{{ app()->getLocale() == 'fr' ? 'Nous contacter' : 'Contact us' }}</h3>
                 <form>
-                    <input type="text" class="form-control"
+                    @csrf
+                    <input type="text" class="form-control" name="name"
                         placeholder="{{ app()->getLocale() == 'fr' ? 'Nom *' : 'Name *' }}" required>
-                    <input type="email" class="form-control" placeholder="Email *" required>
-                    <textarea class="form-control" rows="3" placeholder="{{ app()->getLocale() == 'fr' ? 'Message' : 'Message' }}"></textarea>
+                    <input type="email" class="form-control" name="email" placeholder="Email *" required>
+                    <textarea class="form-control" rows="3" name="message" placeholder="{{ app()->getLocale() == 'fr' ? 'Message' : 'Message' }}"></textarea>
                     <button type="submit"
                         class="btn btn-outline-secondary">{{ app()->getLocale() == 'fr' ? 'Envoyer' : 'Send' }}</button>
                 </form>
@@ -106,4 +107,51 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const forms = document.querySelectorAll('form');
+
+            forms.forEach(form => {
+                if (form.querySelector('[name="name"]')) {
+                    form.addEventListener('submit', function(e) {
+                        e.preventDefault();
+
+                        const formData = new FormData(this);
+                        const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+
+                        fetch('/contact', {
+                                method: 'POST',
+                                body: formData,
+                                headers: {
+                                    'X-CSRF-TOKEN': csrfToken
+                                }
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                const messageDiv = this.querySelector('.message-response') ||
+                                    document.createElement('div');
+                                messageDiv.className = 'message-response mt-3';
+
+                                if (data.success) {
+                                    messageDiv.className += ' text-success';
+                                    this.reset();
+                                } else {
+                                    messageDiv.className += ' text-danger';
+                                }
+
+                                messageDiv.textContent = data.message;
+
+                                if (!this.querySelector('.message-response')) {
+                                    this.appendChild(messageDiv);
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                            });
+                    });
+                }
+            });
+        });
+    </script>
 @endsection
