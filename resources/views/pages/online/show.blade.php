@@ -203,6 +203,7 @@
                                                 <div>
                                                     {!! $video['iframe'] !!}
                                                 </div>
+                                                {{--
                                                 <div class="position-absolute top-0 left-0" id="button-player-{{ $key }}">
                                                     <div class="position-relative">
                                                         <img src="{{ $video['imagen'] }}" alt="Vidéo éducative"
@@ -213,7 +214,7 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div>
+                                                </div>--}}
                                             </div>
                                         </div>
                                         <div class="video-title">
@@ -244,6 +245,7 @@
                                                     Tu navegador no soporta el elemento de video.
                                                 </video>
                                             </div>
+                                            {{--
                                             <div class="position-absolute top-0 left-0" id="button-player-{{ $key }}">
                                                 <div class="position-relative">
                                                     <img src="{{ $video['imagen'] }}" alt="Vidéo éducative" class="w-100">
@@ -253,7 +255,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            </div>--}}
                                         </div>
                                     </div>
                                     <div class="video-title">
@@ -288,6 +290,7 @@
                                             <div>
                                                 {!! $video['iframe'] !!}
                                             </div>
+                                            {{--
                                             <div class="position-absolute top-0 left-0" id="button-player-{{ $key }}">
                                                 <div class="position-relative">
                                                     <img src="{{ $video['imagen'] }}" alt="Vidéo éducative"
@@ -299,6 +302,7 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                            --}}
                                         </div>
                                     </div>
                                     <div class="video-title">
@@ -329,6 +333,7 @@
                                                 Tu navegador no soporta el elemento de video.
                                             </video>
                                         </div>
+                                        {{--
                                         <div class="position-absolute top-0 left-0" id="button-player-{{ $key }}">
                                             <div class="position-relative">
                                                 <img src="{{ $video['imagen'] }}" alt="Vidéo éducative" class="w-100">
@@ -338,7 +343,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div>--}}
                                     </div>
                                 </div>
                                 <div class="video-title">

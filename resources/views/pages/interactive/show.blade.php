@@ -4,104 +4,112 @@
 
 @section('header')
 
-    <style>
-        .section-title {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-        }
+<style>
+    .section-title {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+    }
 
-        .image-container {
-            position: relative;
-            margin-bottom: 1rem;
-        }
+    .image-container {
+        position: relative;
+        margin-bottom: 1rem;
+    }
 
-        .play-button {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 60px;
-            height: 60px;
-            background-color: rgba(255, 255, 255, 0.7);
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+    .iframe-container {
+        min-height: 500px;
+    }
 
-        .play-button::after {
-            content: "";
-            border-left: 20px solid #000;
-            border-top: 15px solid transparent;
-            border-bottom: 15px solid transparent;
-            margin-left: 5px;
-        }
+    .play-button {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 60px;
+        height: 60px;
+        background-color: rgba(255, 255, 255, 0.7);
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 
-        .topic-item {
-            margin-bottom: 0rem;
-        }
+    .play-button::after {
+        content: "";
+        border-left: 20px solid #000;
+        border-top: 15px solid transparent;
+        border-bottom: 15px solid transparent;
+        margin-left: 5px;
+    }
 
-        .topic-item span {
-            font-size: 12px;
-        }
+    .topic-item {
+        margin-bottom: 0.5rem;
+    }
 
-        .topic-icon {
-            width: 20px;
-            height: 20px;
-            display: inline-block;
-            margin-right: 0.5rem;
-        }
+    .topic-item span {
+        font-size: 12px;
+    }
 
-        .topic-list {
-            list-style-type: none;
-            padding-left: 0;
-            display: flex;
-            flex-direction: column;
-        }
+    .topic-icon {
+        width: 20px;
+        height: 20px;
+        display: inline-block;
+        margin-right: 0.5rem;
+    }
 
+    .topic-list {
+        list-style-type: none;
+        padding-left: 0;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .topic {
+        width: 100%;
+        padding: 2px 0px;
+        font-size: 14px !important;
+    }
+
+    .topic-list {
+        list-style-type: none;
+        padding-left: 0;
+    }
+
+    .topic-item {
+        margin-bottom: 0rem;
+    }
+
+    .topic-item span {
+        font-size: 12px;
+    }
+
+    .topic {
+        padding: 2px 0px;
+        font-size: 14px;
+    }
+
+    .texte h3{
+        font-size: 19px !important;
+    }
+
+    .texte p{
+        font-size: 16px !important;
+    }
+
+    .archive-section span{
+        font-family: 'Futura Light', sans-serif !important;
+        font-size: 12px !important;
+    }
+
+    iframe .pushfooter {
+        height: 0px !important;
+    }
+
+    @media screen and (max-width: 768px) {
         .topic {
             width: 100%;
-            padding: 5px 0;
-            font-size: 14px !important;
         }
-
-        iframe .pushfooter {
-            height: 0px !important;
-        }
-
-        .topic-list {
-            list-style-type: none;
-            padding-left: 0;
-        }
-
-        .topic-item span {
-            font-size: 12px;
-        }
-
-        .topic {
-            padding: 5px 0;
-            font-size: 14px;
-        }
-
-        .texte h3{
-            font-size: 19px !important;
-        }
-
-        .texte p{
-            font-size: 16px !important;
-        }
-
-        .archive-section span{
-            font-family: 'Futura Light', sans-serif !important;
-            font-size: 12px !important;
-        }
-
-        @media screen and (max-width: 768px) {
-            .topic {
-                width: 100%;
-            }
-        }
-    </style>
+    }
+</style>
 
 @endsection
 
@@ -118,17 +126,18 @@
                     <h3 class="section-title futura-light" style="font-size: 16px !important;">{{ app()->getLocale() == 'fr' ? $post->excerpt_fr : $post->excerpt }}</h3>
                 <div class="row">
                     <div class="col-md-5">
-                        <div class="image-container">
-                            <div class="video-wrapper"
-                                data-video-url="{{ app()->getLocale() == 'fr' ? $post->hihaho : $post->hihaho_en }}">
-                                <img src="/storage/{{ $post->image }}" alt="Imagen de portada"
-                                    class="cover-image w-100 h-100">
-                                <div class="play-button"></div>
-                                <div class="iframe-container" style="display: none;">
-                                    <iframe src="" frameborder="0" webkitallowfullscreen="true"
-                                        mozallowfullscreen="true" allowfullscreen="true"
+                        <div class="image-container" style="height: 100%;">
+                            <div class="video-wrapper" data-video-url="{{ app()->getLocale() == 'fr' ? $post->hihaho : $post->hihaho_en }}">
+                                {{-- Eliminamos la imagen y el botón de play --}}
+                                <div class="iframe-container">
+                                    <iframe src="{{ app()->getLocale() == 'fr' ? $post->hihaho : $post->hihaho_en }}" 
+                                        frameborder="0" 
+                                        webkitallowfullscreen="true" 
+                                        mozallowfullscreen="true"
+                                        allowfullscreen="true" 
                                         allow="autoplay; fullscreen; clipboard-read; clipboard-write"
-                                        style="position: absolute !important; top: 0px !important; left: 0px !important; width: 100% !important; height: 100% !important;"></iframe>
+                                        style="position: absolute !important; top: 0px !important; left: 0px !important; width: 100% !important; height: 100% !important;">
+                                    </iframe>
                                 </div>
                             </div>
                         </div>
@@ -215,7 +224,7 @@
                                                         </svg>
                                                     @endif
                                                 </a>
-                                                <span class="futura-light" style="font-size: 12px !important;">{{ $archive->title }}</span>
+                                                <span class="futura-light" style="font-size: 13px !important;">{{ $archive->title }}</span>
 
                                             </div>
                                         </div>
@@ -231,6 +240,7 @@
                     <div class="row">
         @endif
         @endforeach
+        @if ($index === 0)
         <div class="row mt-4 archive-section">
             <div class="col-12">
                 <div class="d-flex flex-wrap gap-1 justify-content-center">
@@ -298,6 +308,7 @@
                 </div>
             </div>
         </div>
+        @endif
     </div>
     </div>
 @else
@@ -371,7 +382,7 @@
                             </svg>
                         @endif
                     </a>
-                    <span class="futura-light" style="font-size: 12px !important;">{{ $archive->title }}</span>
+                    <span class="futura-light" style="font-size: 13px !important;">{{ $archive->title }}</span>
 
                 </div>
             </div>
@@ -387,6 +398,7 @@
         <div class="row">
     @endif
     @endforeach
+    @if ($index === 0)
     <div class="row mt-4 archive-section">
         <div class="col-12">
             <div class="d-flex flex-wrap gap-1 justify-content-center">
@@ -454,6 +466,7 @@
             </div>
         </div>
     </div>
+    @endif
     </div>
     @endif
 
@@ -478,25 +491,4 @@
     @endforeach
     
     </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const videoWrappers = document.querySelectorAll('.video-wrapper');
-
-            videoWrappers.forEach(wrapper => {
-                const playButton = wrapper.querySelector('.play-button');
-                const coverImage = wrapper.querySelector('.cover-image');
-                const iframeContainer = wrapper.querySelector('.iframe-container');
-                const iframe = wrapper.querySelector('iframe');
-                const videoUrl = wrapper.dataset.videoUrl;
-
-                playButton.addEventListener('click', function() {
-                    coverImage.style.display = 'none';
-                    playButton.style.display = 'none';
-                    iframeContainer.style.display = 'block';
-                    iframe.src = videoUrl;
-                });
-            });
-        });
-    </script>
 @endsection

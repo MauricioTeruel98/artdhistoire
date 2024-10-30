@@ -15,6 +15,10 @@
             margin-bottom: 1rem;
         }
 
+        .iframe-container {
+            min-height: 500px;
+        }
+
         .play-button {
             position: absolute;
             top: 50%;
@@ -61,7 +65,7 @@
 
         .topic {
             width: 100%;
-            padding: 5px 0;
+            padding: 2px 0px;
             font-size: 14px !important;
         }
 
@@ -79,7 +83,7 @@
         }
 
         .topic {
-            padding: 5px 0;
+            padding: 2px 0px;
             font-size: 14px;
         }
 
@@ -152,12 +156,16 @@
                         <div class="col-md-5">
                             <div class="image-container" style="height: 100%;">
                                 <div class="video-wrapper" data-video-url="{{ app()->getLocale() == 'fr' ? $post->hihaho : $post->hihaho_en }}">
-                                    <img src="/storage/{{ $post->image }}" alt="Imagen de portada" class="cover-image w-100 h-100">
-                                    <div class="play-button"></div>
-                                    <div class="iframe-container" style="display: none;">
-                                        <iframe src="" frameborder="0" webkitallowfullscreen="true" mozallowfullscreen="true"
-                                            allowfullscreen="true" allow="autoplay; fullscreen; clipboard-read; clipboard-write"
-                                            style="position: absolute !important; top: 0px !important; left: 0px !important; width: 100% !important; height: 100% !important;"></iframe>
+                                    {{-- Eliminamos la imagen y el botón de play --}}
+                                    <div class="iframe-container">
+                                        <iframe src="{{ app()->getLocale() == 'fr' ? $post->hihaho : $post->hihaho_en }}" 
+                                            frameborder="0" 
+                                            webkitallowfullscreen="true" 
+                                            mozallowfullscreen="true"
+                                            allowfullscreen="true" 
+                                            allow="autoplay; fullscreen; clipboard-read; clipboard-write"
+                                            style="position: absolute !important; top: 0px !important; left: 0px !important; width: 100% !important; height: 100% !important;">
+                                        </iframe>
                                     </div>
                                 </div>
                             </div>
@@ -246,7 +254,7 @@
                                                             </svg>
                                                         @endif
                                                     </a>
-                                                    <span class="futura-light" style="font-size: 12px !important;">{{ $archive->title }}</span>
+                                                    <span class="futura-light" style="font-size: 13px !important;">{{ $archive->title }}</span>
                                                 </div>
                                             </div>
 
@@ -261,6 +269,7 @@
                         <div class="row">
             @endif
         @endforeach
+        @if ($index === 0)
         <div class="row mt-4 archive-section">
             <div class="col-12">
                 <div class="d-flex flex-wrap gap-1 justify-content-center">
@@ -328,6 +337,7 @@
                 </div>
             </div>
         </div>
+        @endif
     </div>
     </div>
 @else
@@ -401,7 +411,7 @@
                             </svg>
                         @endif
                     </a>
-                    <span class="futura-light" style="font-size: 12px !important;">{{ $archive->title }}</span>
+                    <span class="futura-light" style="font-size: 13px !important;">{{ $archive->title }}</span>
 
                 </div>
             </div>
@@ -417,6 +427,7 @@
         <div class="row">
     @endif
     @endforeach
+    @if ($index === 0)
     <div class="row mt-4 archive-section">
         <div class="col-12">
             <div class="d-flex flex-wrap gap-1 justify-content-center">
@@ -484,6 +495,7 @@
             </div>
         </div>
     </div>
+    @endif
     </div>
     @endif
 
@@ -512,26 +524,4 @@
     <p>No se encontraron posts para la categoría pilote.</p>
     @endif
     </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const videoWrappers = document.querySelectorAll('.video-wrapper');
-            const imageWrapper = document.querySelectorAll('.image-container')
-            
-            videoWrappers.forEach(wrapper => {
-                const playButton = wrapper.querySelector('.play-button');
-                const coverImage = wrapper.querySelector('.cover-image');
-                const iframeContainer = wrapper.querySelector('.iframe-container');
-                const iframe = wrapper.querySelector('iframe');
-                const videoUrl = wrapper.dataset.videoUrl;
-                
-                playButton.addEventListener('click', function() {
-                    coverImage.style.display = 'none';
-                    playButton.style.display = 'none';
-                    iframeContainer.style.display = 'block';
-                    iframe.src = videoUrl;
-                });
-            });
-        });
-        </script>
 @endsection
