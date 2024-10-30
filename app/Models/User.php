@@ -3,6 +3,9 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use Illuminate\Support\Facades\Mail;
+use App\Mail\StudentValidated;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -57,5 +60,14 @@ class User extends \TCG\Voyager\Models\User
     public function subscriptions()
     {
         return $this->hasMany(Subscription::class);
+    }
+
+    protected static function booted()
+    {
+        static::updated(function ($user) {
+            if ($user->wasChanged('validated_student') && $user->validated_student) {
+                Mail::to($user->email)->send(new StudentValidated($user));
+            }
+        });
     }
 }
