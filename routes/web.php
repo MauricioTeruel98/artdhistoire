@@ -61,6 +61,10 @@ Route::middleware(['auth'])->group(function () {
     // ... otras rutas que requieran autenticación ...
 });
 
+Route::get('/certificate/pending', function () {
+    return view('auth.certificate.pending');
+})->name('certificate.pending');
+
 Route::post('/contact', [ContactController::class, 'submit'])->name('contact.submit');
 
 

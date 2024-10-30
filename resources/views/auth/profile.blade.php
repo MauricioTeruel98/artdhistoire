@@ -1,6 +1,6 @@
 @extends('layouts.applayout')
 
-@section('title', "Art d'Histoire | Profil")
+@section('title', "Art d'Histoire | Profile")
 
 @section('header')
 <style>
@@ -128,10 +128,10 @@
 @section('content')
 <div class="container profile-container">
     <div class="profile-header">
-        <h2>{{ app()->getLocale() == 'fr' ? 'Profil Utilisateur' : 'Perfil de Usuario' }}</h2>
+        <h2>{{ app()->getLocale() == 'fr' ? 'Profil Utilisateur' : 'User Profile' }}</h2>
         @if($user->is_student)
             <span class="student-badge">
-                {{ app()->getLocale() == 'fr' ? 'Compte Étudiant' : 'Cuenta de Estudiante' }}
+                {{ app()->getLocale() == 'fr' ? 'Compte Étudiant' : 'Student Account' }}
             </span>
         @endif
     </div>
@@ -141,18 +141,18 @@
             <ul class="nav nav-pills mb-4 justify-content-center" id="profileTabs" role="tablist">
                 <li class="nav-item">
                     <a class="nav-link active" id="account-tab" data-toggle="pill" href="#account" role="tab">
-                        {{ app()->getLocale() == 'fr' ? 'Données du Compte' : 'Datos de la Cuenta' }}
+                        {{ app()->getLocale() == 'fr' ? 'Données du Compte' : 'Account Data' }}
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" id="subscription-tab" data-toggle="pill" href="#subscription" role="tab">
-                        {{ app()->getLocale() == 'fr' ? 'Abonnements' : 'Suscripciones' }}
+                        {{ app()->getLocale() == 'fr' ? 'Abonnements' : 'Subscriptions' }}
                     </a>
                 </li>
             </ul>
 
             <div class="tab-content" id="profileTabsContent">
-                <!-- Pestaña de Cuenta -->
+                <!-- Account Tab -->
                 <div class="tab-pane fade show active" id="account" role="tabpanel">
                     <div class="avatar-container">
                         @if($user->avatar)
@@ -167,17 +167,17 @@
                         @method('PUT')
 
                         <div class="form-group">
-                            <label for="avatar">{{ app()->getLocale() == 'fr' ? 'Changer l\'avatar' : 'Cambiar avatar' }}</label>
+                            <label for="avatar">{{ app()->getLocale() == 'fr' ? 'Changer l\'avatar' : 'Change avatar' }}</label>
                             <input type="file" class="form-control-file" id="avatar" name="avatar">
                         </div>
 
                         <div class="form-group">
-                            <label for="name">{{ app()->getLocale() == 'fr' ? 'Nom' : 'Nombre' }}</label>
+                            <label for="name">{{ app()->getLocale() == 'fr' ? 'Nom' : 'Name' }}</label>
                             <input type="text" class="form-control" id="name" name="name" value="{{ $user->name }}" required>
                         </div>
 
                         <div class="form-group">
-                            <label for="email">{{ app()->getLocale() == 'fr' ? 'Adresse e-mail' : 'Correo electrónico' }}</label>
+                            <label for="email">{{ app()->getLocale() == 'fr' ? 'Adresse e-mail' : 'Email' }}</label>
                             <input type="email" class="form-control" id="email" name="email" value="{{ $user->email }}" required>
                         </div>
 
@@ -185,19 +185,19 @@
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" name="is_student" id="is_student" value="1" {{ $user->is_student ? 'checked' : '' }}>
                                 <label class="form-check-label" for="is_student">
-                                    {{ app()->getLocale() == 'fr' ? 'Je suis étudiant' : 'Soy estudiante' }}
+                                    {{ app()->getLocale() == 'fr' ? 'Je suis étudiant' : 'I am a student' }}
                                 </label>
                             </div>
                         </div>
 
                         <button type="submit" class="btn btn-update">
-                            {{ app()->getLocale() == 'fr' ? 'Mettre à jour le profil' : 'Actualizar perfil' }}
+                            {{ app()->getLocale() == 'fr' ? 'Mettre à jour le profil' : 'Update profile' }}
                         </button>
                     </form>
 
                     <div class="password-section">
                         <h4 class="text-center mb-4">
-                            {{ app()->getLocale() == 'fr' ? 'Changer le mot de passe' : 'Cambiar contraseña' }}
+                            {{ app()->getLocale() == 'fr' ? 'Changer le mot de passe' : 'Change password' }}
                         </h4>
                         <form action="{{ route('profile.update.password') }}" method="POST">
                             @csrf
@@ -205,7 +205,7 @@
 
                             <div class="form-group">
                                 <label for="current_password">
-                                    {{ app()->getLocale() == 'fr' ? 'Mot de passe actuel' : 'Contraseña actual' }}
+                                    {{ app()->getLocale() == 'fr' ? 'Mot de passe actuel' : 'Current password' }}
                                 </label>
                                 <div class="input-group">
                                     <input type="password" class="form-control" id="current_password" name="current_password" required>
@@ -219,7 +219,7 @@
 
                             <div class="form-group">
                                 <label for="new_password">
-                                    {{ app()->getLocale() == 'fr' ? 'Nouveau mot de passe' : 'Nueva contraseña' }}
+                                    {{ app()->getLocale() == 'fr' ? 'Nouveau mot de passe' : 'New password' }}
                                 </label>
                                 <div class="input-group">
                                     <input type="password" class="form-control" id="new_password" name="new_password" required>
@@ -233,7 +233,7 @@
 
                             <div class="form-group">
                                 <label for="new_password_confirmation">
-                                    {{ app()->getLocale() == 'fr' ? 'Confirmer le nouveau mot de passe' : 'Confirmar nueva contraseña' }}
+                                    {{ app()->getLocale() == 'fr' ? 'Confirmer le nouveau mot de passe' : 'Confirm new password' }}
                                 </label>
                                 <div class="input-group">
                                     <input type="password" class="form-control" id="new_password_confirmation" name="new_password_confirmation" required>
@@ -246,16 +246,16 @@
                             </div>
 
                             <button type="submit" class="btn btn-update">
-                                {{ app()->getLocale() == 'fr' ? 'Mettre à jour le mot de passe' : 'Actualizar contraseña' }}
+                                {{ app()->getLocale() == 'fr' ? 'Mettre à jour le mot de passe' : 'Update password' }}
                             </button>
                         </form>
                     </div>
                 </div>
 
-                <!-- Pestaña de Suscripciones -->
+                <!-- Subscriptions Tab -->
                 <div class="tab-pane fade" id="subscription" role="tabpanel">
                     <h3 class="text-center mb-4">
-                        {{ app()->getLocale() == 'fr' ? 'Mes Abonnements' : 'Mis Suscripciones' }}
+                        {{ app()->getLocale() == 'fr' ? 'Mes Abonnements' : 'My Subscriptions' }}
                     </h3>
                     
                     @if($activeSubscriptions->isNotEmpty())
@@ -264,20 +264,20 @@
                                 <div class="subscription-card">
                                     <h5 class="card-title">{{ $category->name }}</h5>
                                     <p class="card-text">
-                                        {{ app()->getLocale() == 'fr' ? 'Date de fin :' : 'Fecha de finalización:' }}
+                                        {{ app()->getLocale() == 'fr' ? 'Date de fin :' : 'End date:' }}
                                         {{ Carbon\Carbon::parse($subscription->end_date)->format('d/m/Y') }}
                                     </p>
                                     <a href="{{ route('interactive.show', $category->id) }}" class="btn btn-update">
-                                        {{ app()->getLocale() == 'fr' ? 'Accéder à la saga' : 'Acceder a la saga' }}
+                                        {{ app()->getLocale() == 'fr' ? 'Accéder à la saga' : 'Access saga' }}
                                     </a>
                                 </div>
                             @endforeach
                         @endforeach
                     @else
                         <div class="text-center">
-                            <p>{{ app()->getLocale() == 'fr' ? 'Vous n\'avez aucun abonnement actif.' : 'No tienes suscripciones activas.' }}</p>
+                            <p>{{ app()->getLocale() == 'fr' ? 'Vous n\'avez aucun abonnement actif.' : 'You have no active subscriptions.' }}</p>
                             <a href="{{ route('interactive.index') }}" class="btn btn-update">
-                                {{ app()->getLocale() == 'fr' ? 'Voir les sagas disponibles' : 'Ver sagas disponibles' }}
+                                {{ app()->getLocale() == 'fr' ? 'Voir les sagas disponibles' : 'View available sagas' }}
                             </a>
                         </div>
                     @endif
@@ -288,7 +288,7 @@
 </div>
 
 <script>
-    // Script para el toggle de contraseña
+    // Password toggle script
     document.querySelectorAll('.toggle-password').forEach(button => {
         button.addEventListener('click', function() {
             const input = document.getElementById(this.getAttribute('data-target'));
@@ -302,29 +302,29 @@
         });
     });
     
-    // Inicializar los tabs de Bootstrap
+    // Initialize Bootstrap tabs
     document.addEventListener('DOMContentLoaded', function() {
-        // Obtener todos los elementos con data-toggle="pill"
+        // Get all elements with data-toggle="pill"
         const triggerTabList = [].slice.call(document.querySelectorAll('[data-toggle="pill"]'));
         
         triggerTabList.forEach(function(triggerEl) {
             triggerEl.addEventListener('click', function(event) {
                 event.preventDefault();
                 
-                // Remover la clase active de todos los tabs
+                // Remove active class from all tabs
                 document.querySelectorAll('.nav-link').forEach(tab => {
                     tab.classList.remove('active');
                 });
                 
-                // Remover la clase active y show de todos los contenidos
+                // Remove active and show classes from all contents
                 document.querySelectorAll('.tab-pane').forEach(pane => {
                     pane.classList.remove('active', 'show');
                 });
                 
-                // Agregar la clase active al tab clickeado
+                // Add active class to clicked tab
                 this.classList.add('active');
                 
-                // Obtener el target del tab y mostrar su contenido
+                // Get tab target and show its content
                 const target = document.querySelector(this.getAttribute('href'));
                 if (target) {
                     target.classList.add('active', 'show');

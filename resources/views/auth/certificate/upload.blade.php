@@ -1,6 +1,6 @@
 @extends('layouts.applayout')
 
-@section('title', "Art d'Histoire | Certificado de Estudiante")
+@section('title', "Art d'Histoire | Student Certificate")
 
 @section('header')
 <style>
@@ -95,20 +95,20 @@
 @section('content')
 <div class="container certificate-container">
     <div class="certificate-header">
-        <h2>{{ app()->getLocale() == 'fr' ? 'Télécharger le Certificat Étudiant' : 'Subir Certificado de Estudiante' }}</h2>
-        <p>{{ app()->getLocale() == 'fr' ? 'Pour bénéficier du tarif étudiant, veuillez télécharger votre certificat de scolarité' : 'Para acceder a la tarifa de estudiante, por favor sube tu certificado de estudiante' }}</p>
+        <h2>{{ app()->getLocale() == 'fr' ? 'Télécharger le Certificat Étudiant' : 'Upload Student Certificate' }}</h2>
+        <p>{{ app()->getLocale() == 'fr' ? 'Pour bénéficier du tarif étudiant, veuillez télécharger votre certificat de scolarité' : 'To access the student rate, please upload your student certificate' }}</p>
     </div>
 
     <div class="user-info">
-        <h3>{{ app()->getLocale() == 'fr' ? 'Informations de l\'utilisateur' : 'Información del Usuario' }}</h3>
+        <h3>{{ app()->getLocale() == 'fr' ? 'Informations de l\'utilisateur' : 'User Information' }}</h3>
         <div class="user-data">
-            <p><strong>{{ app()->getLocale() == 'fr' ? 'Nom' : 'Nombre' }}:</strong> {{ Auth::user()->name }}</p>
+            <p><strong>{{ app()->getLocale() == 'fr' ? 'Nom' : 'Name' }}:</strong> {{ Auth::user()->name }}</p>
             <p><strong>Email:</strong> {{ Auth::user()->email }}</p>
-            <p><strong>{{ app()->getLocale() == 'fr' ? 'Date d\'inscription' : 'Fecha de registro' }}:</strong> {{ Auth::user()->created_at->format('d/m/Y') }}</p>
-            <p><strong>{{ app()->getLocale() == 'fr' ? 'Statut' : 'Estado' }}:</strong> 
+            <p><strong>{{ app()->getLocale() == 'fr' ? 'Date d\'inscription' : 'Registration Date' }}:</strong> {{ Auth::user()->created_at->format('d/m/Y') }}</p>
+            <p><strong>{{ app()->getLocale() == 'fr' ? 'Statut' : 'Status' }}:</strong> 
                 {{ Auth::user()->is_student ? 
-                    (app()->getLocale() == 'fr' ? 'Étudiant (En attente de vérification)' : 'Estudiante (Pendiente de verificación)') : 
-                    (app()->getLocale() == 'fr' ? 'Utilisateur standard' : 'Usuario estándar') 
+                    (app()->getLocale() == 'fr' ? 'Étudiant (En attente de vérification)' : 'Student (Pending Verification)') : 
+                    (app()->getLocale() == 'fr' ? 'Utilisateur standard' : 'Standard User') 
                 }}
             </p>
         </div>
@@ -118,12 +118,12 @@
         @csrf
         <input type="hidden" name="category_id" value="{{ $category_id }}">
         <div class="form-group">
-            <label for="certificate">{{ app()->getLocale() == 'fr' ? 'Certificat (PDF)' : 'Certificado (PDF)' }}</label>
+            <label for="certificate">{{ app()->getLocale() == 'fr' ? 'Certificat (PDF)' : 'Certificate (PDF)' }}</label>
             <input type="file" class="form-control" id="certificate" name="certificate" accept=".pdf" required>
-            <p class="file-instructions">{{ app()->getLocale() == 'fr' ? 'Format accepté: PDF. Taille maximale: 5MB' : 'Formato aceptado: PDF. Tamaño máximo: 5MB' }}</p>
+            <p class="file-instructions">{{ app()->getLocale() == 'fr' ? 'Format accepté: PDF. Taille maximale: 5MB' : 'Accepted format: PDF. Maximum size: 5MB' }}</p>
         </div>
         <button type="submit" class="btn btn-upload">
-            {{ app()->getLocale() == 'fr' ? 'Télécharger le Certificat' : 'Subir Certificado' }}
+            {{ app()->getLocale() == 'fr' ? 'Télécharger le Certificat' : 'Upload Certificate' }}
         </button>
     </form>
 </div>

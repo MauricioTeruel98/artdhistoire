@@ -16,7 +16,13 @@ class SubscriptionController extends Controller
         $category = Categories::findOrFail($request->input('category_id'));
         $user = auth()->user();
 
-        if ($user->is_student && !$user->validated_student) {
+        // Si es estudiante y tiene certificado subido pero no validado
+        if ($user->is_student && !$user->validated_student && $user->certificate) {
+            return redirect()->route('certificate.pending');
+        }
+
+        // Si es estudiante pero no ha subido certificado
+        if ($user->is_student && !$user->validated_student && !$user->certificate) {
             return redirect()->route('certificate.upload', ['category_id' => $category->id]);
         }
 

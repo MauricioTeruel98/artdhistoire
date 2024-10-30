@@ -22,14 +22,15 @@ class CertificateController extends Controller
 
         $user = auth()->user();
         $certificatePath = $request->file('certificate')->store('certificates', 'public');
-        
+
         $user->certificate = $certificatePath;
+        $user->is_student = true;
+        $user->validated_student = false;
         $user->save();
 
         // Enviar correo al administrador
         Mail::to('admin@example.com')->send(new CertificateUploaded($user, $certificatePath));
 
-        return redirect()->route('subscription.create', ['category_id' => $request->category_id])
-            ->with('success', 'Certificado subido correctamente. Espere la validación del administrador.');
+        return redirect()->route('certificate.pending');
     }
 }
