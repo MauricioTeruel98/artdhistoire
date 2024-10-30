@@ -26,42 +26,42 @@
     <style>
         @font-face {
             font-family: 'Playfair Display';
-            src: url('../fonts/playfair/PlayfairDisplay-Regular.ttf') format('truetype');
+            src: url('{{ asset('fonts/playfair/PlayfairDisplay-Regular.ttf') }}') format('truetype');
             font-weight: normal;
             font-style: normal;
         }
 
         @font-face {
             font-family: 'Arial';
-            src: url('../fonts/arial/ARIAL.ttf') format('truetype');
+            src: url('{{ asset('fonts/arial/ARIAL.ttf') }}') format('truetype');
             font-weight: normal;
             font-style: normal;
         }
 
         @font-face {
             font-family: 'Linotype';
-            src: url('../fonts/linotype/Linotype\ Didot\ italic.otf') format('opentype');
+            src: url('{{ asset('fonts/linotype/Linotype Didot italic.otf') }}') format('opentype');
             font-weight: normal;
             font-style: normal;
         }
 
         @font-face {
             font-family: 'Futura';
-            src: url('../fonts/futura-2/Futura\ Book\ font.ttf') format('truetype');
+            src: url('{{ asset('fonts/futura-2/Futura Book font.ttf') }}') format('truetype');
             font-weight: normal;
             font-style: normal;
         }
 
         @font-face {
             font-family: 'Futura Light';
-            src: url('../fonts/futura-2/futura\ light\ bt.ttf') format('truetype');
+            src: url('{{ asset('fonts/futura-2/futura light bt.ttf') }}') format('truetype');
             font-weight: normal;
             font-style: normal;
         }
 
         @font-face {
             font-family: 'Baskeville Italic';
-            src: url('../fonts/baskeville/LibreBaskerville-Italic.ttf') format('truetype');
+            src: url('{{ asset('fonts/baskeville/LibreBaskerville-Italic.ttf') }}') format('truetype');
             font-weight: normal;
             font-style: normal;
         }
@@ -74,7 +74,7 @@
             color: #757575 !important;
         }
 
-        .futura{
+        .futura {
             font-family: 'Futura', sans-serif !important;
         }
 

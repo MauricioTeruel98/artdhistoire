@@ -2,192 +2,335 @@
 
 @section('title', "Art d'Histoire | Profil")
 
+@section('header')
+<style>
+    .profile-container {
+        background-color: #fff;
+        padding: 3rem;
+        border-radius: 10px;
+        box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        margin-top: 2rem;
+    }
+
+    .profile-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .profile-header h2 {
+        color: #322668;
+        font-size: 2rem;
+        margin-bottom: 1rem;
+    }
+
+    .nav-pills .nav-link {
+        color: #757575;
+        border-radius: 50px;
+        padding: 0.8rem 2rem;
+        margin: 0 0.5rem;
+        transition: all 0.3s ease;
+    }
+
+    .nav-pills .nav-link.active {
+        background-color: #322668;
+        color: white;
+    }
+
+    .form-group label {
+        color: #322668;
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-control {
+        border-radius: 8px;
+        border: 1px solid #e0e0e0;
+        padding: 0.8rem;
+    }
+
+    .btn-update {
+        background-color: #322668;
+        color: white;
+        padding: 0.8rem 2rem;
+        border: none;
+        border-radius: 50px;
+        font-size: 1.1rem;
+        transition: all 0.3s ease;
+        margin-top: 1.5rem;
+        width: 100%;
+    }
+
+    .btn-update:hover {
+        background-color: #3F7652;
+        color: white;
+    }
+
+    .subscription-card {
+        border: none;
+        border-radius: 8px;
+        box-shadow: 0 0 15px rgba(0,0,0,0.05);
+        margin-bottom: 1.5rem;
+        transition: all 0.3s ease;
+        padding: 1.5rem;
+    }
+
+    .subscription-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .avatar-container {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .avatar-preview {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid #322668;
+        margin-bottom: 1rem;
+    }
+
+    .password-section {
+        background-color: #f8f9fa;
+        padding: 2rem;
+        border-radius: 8px;
+        margin-top: 2rem;
+    }
+
+    .toggle-password {
+        border: none;
+        background: transparent;
+        color: #322668;
+        cursor: pointer;
+    }
+
+    .tab-content {
+        padding: 2rem;
+        background-color: #fff;
+        border-radius: 0 0 8px 8px;
+    }
+
+    .student-badge {
+        background-color: #3F7652;
+        color: white;
+        padding: 0.3rem 1rem;
+        border-radius: 50px;
+        font-size: 0.9rem;
+        display: inline-block;
+        margin-top: 0.5rem;
+    }
+</style>
+@endsection
+
 @section('content')
+<div class="container profile-container">
+    <div class="profile-header">
+        <h2>{{ app()->getLocale() == 'fr' ? 'Profil Utilisateur' : 'Perfil de Usuario' }}</h2>
+        @if($user->is_student)
+            <span class="student-badge">
+                {{ app()->getLocale() == 'fr' ? 'Compte Étudiant' : 'Cuenta de Estudiante' }}
+            </span>
+        @endif
+    </div>
 
-    <div class="container mt-5">
-        <div class="row justify-content-center">
-            <div class="col-lg-8">
-                <div class="card">
-                    <div class="card-header">
-                        <h2 class="text-center">{{ app()->getLocale() == 'fr' ? 'Profil Utilisateur' : 'User Profile' }}</h2>
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <ul class="nav nav-pills mb-4 justify-content-center" id="profileTabs" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" id="account-tab" data-toggle="pill" href="#account" role="tab">
+                        {{ app()->getLocale() == 'fr' ? 'Données du Compte' : 'Datos de la Cuenta' }}
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="subscription-tab" data-toggle="pill" href="#subscription" role="tab">
+                        {{ app()->getLocale() == 'fr' ? 'Abonnements' : 'Suscripciones' }}
+                    </a>
+                </li>
+            </ul>
+
+            <div class="tab-content" id="profileTabsContent">
+                <!-- Pestaña de Cuenta -->
+                <div class="tab-pane fade show active" id="account" role="tabpanel">
+                    <div class="avatar-container">
+                        @if($user->avatar)
+                            <img src="{{ asset('storage/' . $user->avatar) }}" alt="Avatar" class="avatar-preview">
+                        @else
+                            <img src="{{ asset('images/default-avatar.png') }}" alt="Default Avatar" class="avatar-preview">
+                        @endif
                     </div>
-                    <div class="card-body">
-                        <ul class="nav nav-pills mb-3" id="profileTabs" role="tablist">
-                            <li class="nav-item">
-                                <a class="nav-link active" id="account-tab" data-toggle="pill" href="#account"
-                                    role="tab" aria-controls="account"
-                                    aria-selected="true">{{ app()->getLocale() == 'fr' ? 'Données du Compte' : 'Account Data' }}</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" id="subscription-tab" data-toggle="pill" href="#subscription"
-                                    role="tab" aria-controls="subscription"
-                                    aria-selected="false">{{ app()->getLocale() == 'fr' ? 'Abonnement' : 'Subscription' }}</a>
-                            </li>
-                        </ul>
 
-                        <div class="tab-content" id="profileTabsContent">
-                            <!-- Données du Compte -->
-                            <div class="tab-pane fade show active" id="account" role="tabpanel"
-                                aria-labelledby="account-tab">
-                                <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data">
-                                    @csrf
-                                    @method('PUT')
+                    <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        @method('PUT')
 
-                                    <div class="form-group">
-                                        <label for="name">{{ app()->getLocale() == 'fr' ? 'Nom' : 'Name' }}</label>
-                                        <input type="text" class="form-control" id="name" name="name"
-                                            value="{{ $user->name }}" required>
-                                    </div>
+                        <div class="form-group">
+                            <label for="avatar">{{ app()->getLocale() == 'fr' ? 'Changer l\'avatar' : 'Cambiar avatar' }}</label>
+                            <input type="file" class="form-control-file" id="avatar" name="avatar">
+                        </div>
 
-                                    <div class="form-group">
-                                        <label
-                                            for="email">{{ app()->getLocale() == 'fr' ? 'Adresse e-mail' : 'Email' }}</label>
-                                        <input type="email" class="form-control" id="email" name="email"
-                                            value="{{ $user->email }}" required>
-                                    </div>
+                        <div class="form-group">
+                            <label for="name">{{ app()->getLocale() == 'fr' ? 'Nom' : 'Nombre' }}</label>
+                            <input type="text" class="form-control" id="name" name="name" value="{{ $user->name }}" required>
+                        </div>
 
-                                    <div class="form-group">
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="is_student" id="is_student" value="1" {{ $user->is_student ? 'checked' : '' }}>
-                                            <label class="form-check-label" for="is_student">
-                                                {{ app()->getLocale() == 'fr' ? 'Je suis étudiant' : 'I am a student' }}
-                                            </label>
-                                        </div>
-                                    </div>
+                        <div class="form-group">
+                            <label for="email">{{ app()->getLocale() == 'fr' ? 'Adresse e-mail' : 'Correo electrónico' }}</label>
+                            <input type="email" class="form-control" id="email" name="email" value="{{ $user->email }}" required>
+                        </div>
 
-                                    <div class="form-group">
-                                        <label for="avatar">{{ app()->getLocale() == 'fr' ? 'Avatar' : 'Avatar' }}</label>
-                                        <div class="mb-3">
-                                            <input type="file" class="form-control-file" id="avatar" name="avatar">
-                                        </div>
-                                        @if ($user->avatar)
-                                            <div class="mb-3">
-                                                <img src="{{ asset('storage/' . $user->avatar) }}" alt="Avatar"
-                                                    class="img-thumbnail" width="150">
-                                            </div>
-                                        @endif
-                                    </div>
-
-                                    <button type="submit"
-                                        class="btn btn-outline-secondary btn-block">{{ app()->getLocale() == 'fr' ? 'Mettre à jour les données' : 'Update Data' }}</button>
-                                </form>
-                                <hr class="my-4">
-
-                                <h4>{{ app()->getLocale() == 'fr' ? 'Changer le mot de passe' : 'Change Password' }}</h4>
-                                <form action="{{ route('profile.update.password') }}" method="POST">
-                                    @csrf
-                                    @method('PUT')
-
-                                    <div class="form-group">
-                                        <label
-                                            for="current_password">{{ app()->getLocale() == 'fr' ? 'Mot de passe actuel' : 'Current Password' }}</label>
-                                        <div class="input-group">
-                                            <input type="password" class="form-control" id="current_password"
-                                                name="current_password" required>
-                                            <div class="input-group-append">
-                                                <button class="btn btn-outline-secondary toggle-password" type="button"
-                                                    data-target="current_password">
-                                                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-eye"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" /><path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" /></svg>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label
-                                            for="new_password">{{ app()->getLocale() == 'fr' ? 'Nouveau mot de passe' : 'New Password' }}</label>
-                                        <div class="input-group">
-                                            <input type="password" class="form-control" id="new_password"
-                                                name="new_password" required>
-                                            <div class="input-group-append">
-                                                <button class="btn btn-outline-secondary toggle-password" type="button"
-                                                    data-target="new_password">
-                                                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-eye"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" /><path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" /></svg>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label
-                                            for="new_password_confirmation">{{ app()->getLocale() == 'fr' ? 'Confirmer le nouveau mot de passe' : 'Confirm New Password' }}</label>
-                                        <div class="input-group">
-                                            <input type="password" class="form-control" id="new_password_confirmation"
-                                                name="new_password_confirmation" required>
-                                            <div class="input-group-append">
-                                                <button class="btn btn-outline-secondary toggle-password" type="button"
-                                                    data-target="new_password_confirmation">
-                                                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-eye"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" /><path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" /></svg>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <button type="submit"
-                                        class="btn btn-outline-secondary btn-block mt-4">{{ app()->getLocale() == 'fr' ? 'Mettre à jour le mot de passe' : 'Update Password' }}</button>
-                                </form>
-                            </div>
-
-                            <!-- Détails des Abonnements -->
-                            <div class="tab-pane fade" id="subscription" role="tabpanel"
-                                aria-labelledby="subscription-tab">
-                                <h3>{{ app()->getLocale() == 'fr' ? 'Détails des Abonnements' : 'Subscription Details' }}
-                                </h3>
-                                @if ($activeSubscriptions->isNotEmpty())
-                                    @foreach ($activeSubscriptions as $subscription)
-                                        @foreach ($subscription->categories as $category)
-                                            <div class="card mb-3">
-                                                <div class="card-body">
-                                                    <h5 class="card-title">{{ $category->name }}</h5>
-                                                    <p class="card-text">
-                                                        {{ app()->getLocale() == 'fr' ? 'Date de fin :' : 'End date:' }}
-                                                        {{ Carbon\Carbon::parse($subscription->end_date)->format('d/m/Y') }}
-                                                    </p>
-                                                    <a href="{{ route('interactive.show', $category->id) }}"
-                                                        class="btn btn-primary">
-                                                        {{ app()->getLocale() == 'fr' ? 'Accéder à la saga' : 'Go to saga' }}
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        @endforeach
-                                    @endforeach
-                                @else
-                                    <p>{{ app()->getLocale() == 'fr' ? 'Vous n\'avez aucun abonnement actif.' : 'You don\'t have any active subscriptions.' }}
-                                    </p>
-                                    <a href="{{ route('interactive.index') }}" class="btn btn-outline-secondary">
-                                        {{ app()->getLocale() == 'fr' ? 'Voir les sagas disponibles' : 'View available sagas' }}
-                                    </a>
-                                @endif
+                        <div class="form-group">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="is_student" id="is_student" value="1" {{ $user->is_student ? 'checked' : '' }}>
+                                <label class="form-check-label" for="is_student">
+                                    {{ app()->getLocale() == 'fr' ? 'Je suis étudiant' : 'Soy estudiante' }}
+                                </label>
                             </div>
                         </div>
+
+                        <button type="submit" class="btn btn-update">
+                            {{ app()->getLocale() == 'fr' ? 'Mettre à jour le profil' : 'Actualizar perfil' }}
+                        </button>
+                    </form>
+
+                    <div class="password-section">
+                        <h4 class="text-center mb-4">
+                            {{ app()->getLocale() == 'fr' ? 'Changer le mot de passe' : 'Cambiar contraseña' }}
+                        </h4>
+                        <form action="{{ route('profile.update.password') }}" method="POST">
+                            @csrf
+                            @method('PUT')
+
+                            <div class="form-group">
+                                <label for="current_password">
+                                    {{ app()->getLocale() == 'fr' ? 'Mot de passe actuel' : 'Contraseña actual' }}
+                                </label>
+                                <div class="input-group">
+                                    <input type="password" class="form-control" id="current_password" name="current_password" required>
+                                    <div class="input-group-append">
+                                        <button class="btn toggle-password" type="button" data-target="current_password">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="new_password">
+                                    {{ app()->getLocale() == 'fr' ? 'Nouveau mot de passe' : 'Nueva contraseña' }}
+                                </label>
+                                <div class="input-group">
+                                    <input type="password" class="form-control" id="new_password" name="new_password" required>
+                                    <div class="input-group-append">
+                                        <button class="btn toggle-password" type="button" data-target="new_password">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="new_password_confirmation">
+                                    {{ app()->getLocale() == 'fr' ? 'Confirmer le nouveau mot de passe' : 'Confirmar nueva contraseña' }}
+                                </label>
+                                <div class="input-group">
+                                    <input type="password" class="form-control" id="new_password_confirmation" name="new_password_confirmation" required>
+                                    <div class="input-group-append">
+                                        <button class="btn toggle-password" type="button" data-target="new_password_confirmation">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-update">
+                                {{ app()->getLocale() == 'fr' ? 'Mettre à jour le mot de passe' : 'Actualizar contraseña' }}
+                            </button>
+                        </form>
                     </div>
                 </div>
 
-                <div class="text-center mt-4">
-                    <a href="{{ route('home') }}"
-                        class="btn btn-outline-secondary">{{ app()->getLocale() == 'fr' ? 'Retour à l\'accueil' : 'Back to Home' }}</a>
+                <!-- Pestaña de Suscripciones -->
+                <div class="tab-pane fade" id="subscription" role="tabpanel">
+                    <h3 class="text-center mb-4">
+                        {{ app()->getLocale() == 'fr' ? 'Mes Abonnements' : 'Mis Suscripciones' }}
+                    </h3>
+                    
+                    @if($activeSubscriptions->isNotEmpty())
+                        @foreach($activeSubscriptions as $subscription)
+                            @foreach($subscription->categories as $category)
+                                <div class="subscription-card">
+                                    <h5 class="card-title">{{ $category->name }}</h5>
+                                    <p class="card-text">
+                                        {{ app()->getLocale() == 'fr' ? 'Date de fin :' : 'Fecha de finalización:' }}
+                                        {{ Carbon\Carbon::parse($subscription->end_date)->format('d/m/Y') }}
+                                    </p>
+                                    <a href="{{ route('interactive.show', $category->id) }}" class="btn btn-update">
+                                        {{ app()->getLocale() == 'fr' ? 'Accéder à la saga' : 'Acceder a la saga' }}
+                                    </a>
+                                </div>
+                            @endforeach
+                        @endforeach
+                    @else
+                        <div class="text-center">
+                            <p>{{ app()->getLocale() == 'fr' ? 'Vous n\'avez aucun abonnement actif.' : 'No tienes suscripciones activas.' }}</p>
+                            <a href="{{ route('interactive.index') }}" class="btn btn-update">
+                                {{ app()->getLocale() == 'fr' ? 'Voir les sagas disponibles' : 'Ver sagas disponibles' }}
+                            </a>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
-
-    <script>
-        document.querySelectorAll('.toggle-password').forEach(button => {
-            button.addEventListener('click', function() {
-                const input = document.getElementById(this.getAttribute('data-target'));
-                if (input.type === 'password') {
-                    input.type = 'text';
-                    this.innerHTML = '<i class="fa fa-eye-slash"></i>';
-                } else {
-                    input.type = 'password';
-                    this.innerHTML = '<i class="fa fa-eye"></i>';
+<script>
+    // Script para el toggle de contraseña
+    document.querySelectorAll('.toggle-password').forEach(button => {
+        button.addEventListener('click', function() {
+            const input = document.getElementById(this.getAttribute('data-target'));
+            if (input.type === 'password') {
+                input.type = 'text';
+                this.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>';
+            } else {
+                input.type = 'password';
+                this.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>';
+            }
+        });
+    });
+    
+    // Inicializar los tabs de Bootstrap
+    document.addEventListener('DOMContentLoaded', function() {
+        // Obtener todos los elementos con data-toggle="pill"
+        const triggerTabList = [].slice.call(document.querySelectorAll('[data-toggle="pill"]'));
+        
+        triggerTabList.forEach(function(triggerEl) {
+            triggerEl.addEventListener('click', function(event) {
+                event.preventDefault();
+                
+                // Remover la clase active de todos los tabs
+                document.querySelectorAll('.nav-link').forEach(tab => {
+                    tab.classList.remove('active');
+                });
+                
+                // Remover la clase active y show de todos los contenidos
+                document.querySelectorAll('.tab-pane').forEach(pane => {
+                    pane.classList.remove('active', 'show');
+                });
+                
+                // Agregar la clase active al tab clickeado
+                this.classList.add('active');
+                
+                // Obtener el target del tab y mostrar su contenido
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.classList.add('active', 'show');
                 }
             });
         });
+    });
     </script>
-
 @endsection
