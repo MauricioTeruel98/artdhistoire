@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\CertificateUploaded;
+use TCG\Voyager\Facades\Voyager;
 
 class CertificateController extends Controller
 {
@@ -32,7 +33,7 @@ class CertificateController extends Controller
         $certificateUrl = url('storage/' . $certificatePath);
 
         // Enviar correo al administrador con el enlace
-        Mail::to('admin@example.com')->send(new CertificateUploaded($user, $certificateUrl));
+        Mail::to(Voyager::setting('site.email_recibo_certificado'))->send(new CertificateUploaded($user, $certificateUrl));
 
         return redirect()->route('certificate.pending');
     }

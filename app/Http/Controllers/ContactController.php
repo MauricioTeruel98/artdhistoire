@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ContactFormMail;
+use TCG\Voyager\Facades\Voyager;
 
 class ContactController extends Controller
 {
@@ -17,7 +18,7 @@ class ContactController extends Controller
         ]);
 
         try {
-            Mail::to('adh@artdhistoire.com')->send(new ContactFormMail($validatedData));
+            Mail::to(Voyager::setting('site.email_contact'))->send(new ContactFormMail($validatedData));
             return response()->json([
                 'success' => true,
                 'message' => app()->getLocale() == 'fr' ? 
