@@ -117,7 +117,7 @@
     @include('partials.slider')
     <div class="container mt-4">
         {{-- <h1 class="text-center mb-4">{{ app()->getLocale() == 'fr' ? 'Accédez à LISA via la vidéo ou via la librairie' : 'Access LISA via the video or the library' }}</h1> --}}
-        <h1 class="text-center mb-4" style="font-size: 22px !important; font-weight: bold !important;">
+        <h1 class="text-center mb-4 futura-light" style="font-size: 22px !important; font-weight: bold !important;">
             {{ app()->getLocale() == 'fr' ? $textosPiloto->title : $textosPiloto->title_en ?? '' }}
         </h1>
         <div class="row mb-4">

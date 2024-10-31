@@ -87,7 +87,7 @@
         }
 
         .linotype {
-            font-family: 'Linotype', sans-serif !important;
+            font-family: 'Linotype', 'Baskeville Italic', sans-serif !important;
         }
 
         .futura-light {
