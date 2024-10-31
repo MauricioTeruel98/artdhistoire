@@ -399,22 +399,26 @@
             </a>
         </header>
 
-        <div class="row" style="justify-content: center;">
-            @foreach ($videos as $index => $video)
-                <div class="col-md-4 mb-4">
-                    <a href="#" class="video-link" data-video-id="{{ $video->id }}" data-index="{{ $index }}">
-                        <div class="position-relative" style="padding-bottom: 75%;">
-                            <img src="/storage/{{ $video->image }}"
-                                alt="{{ app()->getLocale() == 'fr' ? $video->title_fr : $video->title }}"
-                                class="position-absolute w-100 h-100 object-fit-cover">
-                            <div class="video-overlay">
-                                <h2 class="linotype" style="font-size: 32px !important;">
-                                    {{ app()->getLocale() == 'fr' ? $video->title_fr : $video->title }}</h2>
-                            </div>
+        <div class="col-md-10 mx-auto">
+            <div class="row" style="justify-content: center;">
+                @foreach ($videos as $index => $video)
+                    <div class="col-md-4 mb-5">
+                        <div class="mx-auto" style="max-width: 320px;"> <!-- Contenedor con ancho máximo más pequeño -->
+                            <a href="#" class="video-link" data-video-id="{{ $video->id }}" data-index="{{ $index }}">
+                                <div class="position-relative" style="padding-bottom: 100%;">
+                                    <img src="/storage/{{ $video->image }}"
+                                        alt="{{ app()->getLocale() == 'fr' ? $video->title_fr : $video->title }}"
+                                        class="position-absolute w-100 h-100 object-fit-cover">
+                                    <div class="video-overlay">
+                                        <h2 class="linotype" style="font-size: 24px !important;">
+                                            {{ app()->getLocale() == 'fr' ? $video->title_fr : $video->title }}</h2>
+                                    </div>
+                                </div>
+                            </a>
                         </div>
-                    </a>
-                </div>
-            @endforeach
+                    </div>
+                @endforeach
+            </div>
         </div>
     </div>
 

@@ -243,8 +243,8 @@
         @if ($index === 0)
         <div class="row mt-4 archive-section">
             <div class="col-12">
-                <div class="d-flex flex-wrap gap-1 justify-content-center">
-                    <div class="d-flex align-items-center">
+                <div class="d-flex flex-wrap gap-3 justify-content-center">
+                    {{-- <div class="d-flex align-items-center">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                             fill="currentColor" style="color: grey;"
                             class="icon icon-tabler icons-tabler-filled icon-tabler-file">
@@ -254,12 +254,12 @@
                             <path d="M19 7h-4l-.001 -4.001z" />
                         </svg>
                         <span>{{ app()->getLocale() == 'fr' ? 'Non disponible' : 'Not available' }}</span>
-                    </div>
+                    </div> --}}
                     <div class="d-flex align-items-center">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                             fill="none" stroke="currentColor" stroke-width="2" style="color: #5471f1;"
                             stroke-linecap="round" stroke-linejoin="round"
-                            class="icon icon-tabler icons-tabler-outline icon-tabler-photo me-2">
+                            class="icon icon-tabler icons-tabler-outline icon-tabler-photo me-1">
                             <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                             <path d="M15 8h.01" />
                             <path d="M3 6a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v12a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3v-12z" />
@@ -272,7 +272,7 @@
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                             fill="none" stroke="currentColor" stroke-width="2" style="color: #ffb102;"
                             stroke-linecap="round" stroke-linejoin="round"
-                            class="icon icon-tabler icons-tabler-outline icon-tabler-flask me-2">
+                            class="icon icon-tabler icons-tabler-outline icon-tabler-flask me-1">
                             <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                             <path d="M9 3l6 0" />
                             <path d="M10 9l4 0" />
@@ -284,7 +284,7 @@
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                             fill="none" stroke="currentColor" stroke-width="2" style="color: #ee1c6b;"
                             stroke-linecap="round" stroke-linejoin="round"
-                            class="icon icon-tabler icons-tabler-outline icon-tabler-pencil me-2">
+                            class="icon icon-tabler icons-tabler-outline icon-tabler-pencil me-1">
                             <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                             <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
                             <path d="M13.5 6.5l4 4" />
@@ -295,7 +295,7 @@
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" style="color: #4bc538;"
                             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                             stroke-linecap="round" stroke-linejoin="round"
-                            class="icon icon-tabler icons-tabler-outline icon-tabler-world me-2">
+                            class="icon icon-tabler icons-tabler-outline icon-tabler-world me-1">
                             <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                             <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" />
                             <path d="M3.6 9h16.8" />
@@ -401,8 +401,8 @@
     @if ($index === 0)
     <div class="row mt-4 archive-section">
         <div class="col-12">
-            <div class="d-flex flex-wrap gap-1 justify-content-center">
-                <div class="d-flex align-items-center">
+            <div class="d-flex flex-wrap gap-3 justify-content-center">
+                {{-- <div class="d-flex align-items-center">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                         fill="currentColor" style="color: grey;"
                         class="icon icon-tabler icons-tabler-filled icon-tabler-file">
@@ -412,12 +412,12 @@
                         <path d="M19 7h-4l-.001 -4.001z" />
                     </svg>
                     <span>{{ app()->getLocale() == 'fr' ? 'Non disponible' : 'Not available' }}</span>
-                </div>
+                </div> --}}
                 <div class="d-flex align-items-center">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                         fill="none" stroke="currentColor" stroke-width="2" style="color: #5471f1;"
                         stroke-linecap="round" stroke-linejoin="round"
-                        class="icon icon-tabler icons-tabler-outline icon-tabler-photo me-2">
+                        class="icon icon-tabler icons-tabler-outline icon-tabler-photo me-1">
                         <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                         <path d="M15 8h.01" />
                         <path d="M3 6a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v12a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3v-12z" />
@@ -430,7 +430,7 @@
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                         fill="none" stroke="currentColor" stroke-width="2" style="color: #ffb102;"
                         stroke-linecap="round" stroke-linejoin="round"
-                        class="icon icon-tabler icons-tabler-outline icon-tabler-flask me-2">
+                        class="icon icon-tabler icons-tabler-outline icon-tabler-flask me-1">
                         <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                         <path d="M9 3l6 0" />
                         <path d="M10 9l4 0" />
@@ -442,7 +442,7 @@
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                         fill="none" stroke="currentColor" stroke-width="2" style="color: #ee1c6b;"
                         stroke-linecap="round" stroke-linejoin="round"
-                        class="icon icon-tabler icons-tabler-outline icon-tabler-pencil me-2">
+                        class="icon icon-tabler icons-tabler-outline icon-tabler-pencil me-1">
                         <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                         <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
                         <path d="M13.5 6.5l4 4" />
@@ -453,7 +453,7 @@
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" style="color: #4bc538;"
                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                         stroke-linecap="round" stroke-linejoin="round"
-                        class="icon icon-tabler icons-tabler-outline icon-tabler-world me-2">
+                        class="icon icon-tabler icons-tabler-outline icon-tabler-world me-1">
                         <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                         <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" />
                         <path d="M3.6 9h16.8" />
