@@ -73,7 +73,7 @@ class ArchiveController extends Controller
 
         $archive->save();
 
-        return redirect()->route('voyager.archives.index', ['post_id' => $archive->post_id])
+        return redirect()->back()
             ->with('success', 'Archivo actualizado correctamente.');
     }
 
@@ -92,7 +92,7 @@ class ArchiveController extends Controller
 
         $archive->delete();
 
-        return redirect()->route('voyager.archives.index', ['post_id' => $post_id])
+        return redirect()->back()
             ->with('success', 'Archivo eliminado correctamente.');
     }
 

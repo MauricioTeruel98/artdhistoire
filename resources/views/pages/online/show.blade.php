@@ -164,7 +164,7 @@
 @section('content')
 
     <div class="container">
-        <div class="container mt-4">
+        <div class="col-md-10 mt-4 mx-auto">
             <div class="row">
                 <div class="col-md-5 header text-end">
                     <h1 class="baskeville-italic" style="font-size: 28px !important;">

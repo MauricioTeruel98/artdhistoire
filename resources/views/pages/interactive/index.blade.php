@@ -132,7 +132,7 @@
             {{-- Plan Estudiante --}}
             <div class="col-md-4 mb-4">
                 <div class="card card-plans text-center card-formula">
-                    <h5>{{ app()->getLocale() == 'fr' ? 'Vous êtes étudiants ?' : 'Are you a student?' }}</h5>
+                    <h5>{{ app()->getLocale() == 'fr' ? 'Vous êtes étudiant ?' : 'Are you a student?' }}</h5>
                     <div class="price-tag">€ <span class="display-4">{{ Voyager::setting('site.abono_estudiant') }}</span>
                     </div>
                     <p class="small">
@@ -163,7 +163,7 @@
             @foreach ($categories as $category)
                 <div class="col-md-4 mb-4">
                     <div class="card card-plans text-center p-4">
-                        <h5 class="font-weight-normal">{{ $category->name }}</h5>
+                        <h5 class="font-weight-normal">{{ app()->getLocale() == 'fr' ? $category->name_fr : $category->name }}</h5>
                         <div class="img-container">
                             <img src="{{ asset('storage/' . $category->image) }}" alt="{{ $category->name }}"
                                 class="img-fluid mb-3">
@@ -208,7 +208,7 @@
                             </form> --}}
                         @else
                             <a href="{{ route('login') }}"
-                                class="btn btn-secondary btn-lg">{{ app()->getLocale() == 'fr' ? 'Connectez-vous pour l\'essai gratuit' : 'Login for free trial' }}</a>
+                                class="btn btn-secondary btn-lg">{{ app()->getLocale() == 'fr' ? 'Connectez-vous pour continuer' : 'Login to continue' }}</a>
                         @endauth
                     </div>
                 </div>

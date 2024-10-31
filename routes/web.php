@@ -121,14 +121,14 @@ Route::group(['prefix' => 'admin'], function () {
     Route::post('archives/reorder', [App\Http\Controllers\ArchiveController::class, 'reorder'])->name('archives.reorder');
     Route::post('archives', [App\Http\Controllers\ArchiveController::class, 'store'])->name('voyager.archives.store');
     Route::get('archives/{archive}/edit/edit', [App\Http\Controllers\ArchiveController::class, 'edit'])->name('voyager.archives.edit.edit');
-    Route::put('archives/{archive}', [App\Http\Controllers\ArchiveController::class, 'update'])->name('voyager.archives.update');
+    Route::post('archives/{archive}', [App\Http\Controllers\ArchiveController::class, 'update'])->name('voyager.archives.update');
     Route::delete('archives/{archive}/delete', [App\Http\Controllers\ArchiveController::class, 'destroy'])->name('voyager.archives.destroy.destroy');
 
     Route::get('archives-en', [App\Http\Controllers\ArchivesEnController::class, 'index'])->name('voyager.archives.en.index');
     Route::post('archives-en/reorder', [App\Http\Controllers\ArchivesEnController::class, 'reorder'])->name('archives.en.reorder');
     Route::post('archives-en', [App\Http\Controllers\ArchivesEnController::class, 'store'])->name('voyager.archives.en.store');
     Route::get('archives-en/{archive}/edit/edit', [App\Http\Controllers\ArchivesEnController::class, 'edit'])->name('voyager.archives.en.edit.edit');
-    Route::put('archives-en/{archive}', [App\Http\Controllers\ArchivesEnController::class, 'update'])->name('voyager.archives.en.update');
+    Route::post('archives-en/{archive}', [App\Http\Controllers\ArchivesEnController::class, 'update'])->name('voyager.archives.en.update');
     Route::delete('archives-en/{archive}/delete', [App\Http\Controllers\ArchivesEnController::class, 'destroy'])->name('voyager.archives.en.destroy.destroy');
 });
 
