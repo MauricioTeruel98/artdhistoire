@@ -116,7 +116,7 @@
 
                 @if ($user)
                     <!-- User profile dropdown -->
-                    <li class="nav-item dropdown profile">
+                    <li class="nav-item dropdown profile ms-2">
                         <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button"
                             data-bs-toggle="dropdown" aria-expanded="false" style="padding: 0px;">
                             @if($user->avatar)
