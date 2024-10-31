@@ -77,21 +77,22 @@
                 <div class="card text-center p-4">
                     <h5 class="font-weight-normal">{{ $category->name }}</h5>
                     <div class="d-flex justify-content-center">
-                        <img src="{{ asset('storage/' . $category->image) }}" alt="{{ $category->name }}" class="img-fluid mb-3"
-                        style="height: 200px;
+                        <img src="{{ asset('storage/' . $category->image) }}" alt="{{ $category->name }}"
+                            class="img-fluid mb-3"
+                            style="height: 200px;
                                 width: 80%;
                                 object-fit: cover;">
                     </div>
                     <!-- Reducir el tamaño de la imagen -->
                     @if (Auth::user()->is_student ?? false)
-                        <div class="display-4 my-3">€ <strong>19</strong></div>
+                        <div class="display-4 my-3">€ <strong>{{ Voyager::setting('site.abono_estudiant') }}</strong></div>
                         <p class="mb-3">
                             {{ app()->getLocale() == 'fr' ? 'Accès complet pour un an' : 'Full access for one year' }}</p>
                         <p class="mb-3">
                             {{ app()->getLocale() == 'fr' ? 'Precio especial por ser estudiante' : 'Special price for students' }}
                         </p>
                     @else
-                        <div class="display-4 my-3">€ <strong>49</strong></div>
+                        <div class="display-4 my-3">€ <strong>{{ Voyager::setting('site.abono_normal') }}</strong></div>
                         <p class="mb-3">
                             {{ app()->getLocale() == 'fr' ? 'Accès complet pour un an' : 'Full access for one year' }}</p>
                     @endif

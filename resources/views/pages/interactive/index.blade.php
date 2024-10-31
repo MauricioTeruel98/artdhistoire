@@ -4,9 +4,13 @@
 
 @section('header')
     <style>
-        .card {
+        .card-plans {
             border: 1px solid #ddd;
             padding: 2rem;
+        }
+
+        .card-formula {
+            min-height: 310px;
         }
 
         .display-4 {
@@ -116,22 +120,23 @@
         <div class="row justify-content-center mb-5">
             {{-- Plan Particulier --}}
             <div class="col-md-4 mb-4">
-                <div class="card text-center">
+                <div class="card card-plans text-center card-formula">
                     <h5>{{ app()->getLocale() == 'fr' ? 'Vous êtes un particulier ?' : 'Are you an individual?' }}</h5>
-                    <div class="price-tag">€ <span class="display-4">49</span></div>
+                    <div class="price-tag">€ <span class="display-4">{{ Voyager::setting('site.abono_normal') }}</span></div>
                     <p class="small">
-                        {{ app()->getLocale() == 'fr' ? 'Tarif par conférence, pour l\'accès aux 4 vidéos interactives accompagnées de leur corpus de texte' : 'Price per conference, for access to 4 interactive videos with their text corpus' }}
+                        {{ app()->getLocale() == 'fr' ? $textosFormula->formula_normal : $textosFormula->formula_normal_en }}
                     </p>
                 </div>
             </div>
 
             {{-- Plan Estudiante --}}
             <div class="col-md-4 mb-4">
-                <div class="card text-center">
+                <div class="card card-plans text-center card-formula">
                     <h5>{{ app()->getLocale() == 'fr' ? 'Vous êtes étudiants ?' : 'Are you a student?' }}</h5>
-                    <div class="price-tag">€ <span class="display-4">19</span></div>
+                    <div class="price-tag">€ <span class="display-4">{{ Voyager::setting('site.abono_estudiant') }}</span>
+                    </div>
                     <p class="small">
-                        {{ app()->getLocale() == 'fr' ? 'Tarif par conférence, pour l\'accès aux 4 vidéos interactives accompagnées de leur corpus de texte' : 'Price per conference, for access to 4 interactive videos with their text corpus' }}
+                        {{ app()->getLocale() == 'fr' ? $textosFormula->formula_estudiante : $textosFormula->formula_estudiante_en }}
                     </p>
                     <p class="text-muted small">*
                         {{ app()->getLocale() == 'fr' ? 'Sous présentation de justificatif' : 'With proof of student status' }}
@@ -141,14 +146,14 @@
 
             {{-- Plan Empresa/Socio --}}
             <div class="col-md-4 mb-4">
-                <div class="card text-center">
+                <div class="card card-plans text-center card-formula">
                     <h5>{{ app()->getLocale() == 'fr' ? 'Vous êtes partenaire ou souhaitez devenir partenaire ?' : 'Are you a partner or wish to become a partner?' }}
                     </h5>
-                    <p>{{ app()->getLocale() == 'fr' ? 'Vous êtes étudiant, indépendant ou entreprise' : 'You are a student, independent or company' }}
+                    <p>{{ app()->getLocale() == 'fr' ? $textosFormula->formula_personalizada : $textosFormula->formula_personalizada_en }}
                     </p>
-                    <a href="/about" class="btn btn-outline-primary">
+                    <button class="btn btn-outline-primary" onclick="document.getElementById('chat-toggle').click()">
                         {{ app()->getLocale() == 'fr' ? 'Contactez - nous' : 'Contact us' }}
-                    </a>
+                    </button>
                 </div>
             </div>
         </div>
@@ -157,7 +162,7 @@
         <div class="row justify-content-center">
             @foreach ($categories as $category)
                 <div class="col-md-4 mb-4">
-                    <div class="card text-center p-4">
+                    <div class="card card-plans text-center p-4">
                         <h5 class="font-weight-normal">{{ $category->name }}</h5>
                         <div class="img-container">
                             <img src="{{ asset('storage/' . $category->image) }}" alt="{{ $category->name }}"
@@ -170,9 +175,9 @@
                                     {{ app()->getLocale() == 'fr' ? 'Prix spécial pour les étudiants' : 'Special price for students' }}
                                 </strong>
                             </p>
-                            <div class="display-4 my-3">€ <strong>19</strong></div>
+                            <div class="display-4 my-3">€ <strong>{{ Voyager::setting('site.abono_estudiant') }}</strong></div>
                         @else
-                            <div class="display-4 my-3">€ <strong>49</strong></div>
+                            <div class="display-4 my-3">€ <strong>{{ Voyager::setting('site.abono_normal') }}</strong></div>
                         @endif
                         <p class="mb-3">
                             {{ app()->getLocale() == 'fr' ? 'Accès complet pour un an' : 'Full access for one year' }}</p>

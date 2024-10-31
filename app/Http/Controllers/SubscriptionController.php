@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Srmklive\PayPal\Facades\PayPal;
 use Stripe\Stripe;
 use Stripe\Checkout\Session;
+use TCG\Voyager\Facades\Voyager;
 
 class SubscriptionController extends Controller
 {
@@ -27,7 +28,7 @@ class SubscriptionController extends Controller
         }
 
         $paymentMethod = $request->input('payment_method');
-        $amount = $user->is_student && $user->validated_student ? 19.00 : 49.00;
+        $amount = $user->is_student && $user->validated_student ? Voyager::setting('site.abono_estudiant') : Voyager::setting('site.abono_normal');
 
         if ($paymentMethod === 'stripe') {
             return $this->createStripeCheckoutSession($request, $category, $amount);

@@ -28,8 +28,11 @@ class CertificateController extends Controller
         $user->validated_student = false;
         $user->save();
 
-        // Enviar correo al administrador
-        Mail::to('admin@example.com')->send(new CertificateUploaded($user, $certificatePath));
+        // Generar URL pública del certificado
+        $certificateUrl = url('storage/' . $certificatePath);
+
+        // Enviar correo al administrador con el enlace
+        Mail::to('admin@example.com')->send(new CertificateUploaded($user, $certificateUrl));
 
         return redirect()->route('certificate.pending');
     }

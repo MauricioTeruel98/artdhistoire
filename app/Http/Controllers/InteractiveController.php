@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Categories;
 use App\Models\Slider;
 use App\Models\Archive;
+use App\Models\TextosFormula;
 use App\Models\TextosPiloto;
 use Illuminate\Http\Request;
 use TCG\Voyager\Models\Post;
@@ -22,6 +23,7 @@ class InteractiveController extends Controller
         $slider = Slider::all();
         $user = Auth::user();
         $subscribedCategoryIds = [];
+        $textosFormula = TextosFormula::first();
 
         if ($user) {
             $subscribedCategoryIds = $user->subscriptions()
@@ -38,7 +40,7 @@ class InteractiveController extends Controller
 
         $categories = Categories::whereNotIn('id', $subscribedCategoryIds)->get();
 
-        return view('pages.interactive.index', compact('slider', 'categories'));
+        return view('pages.interactive.index', compact('slider', 'categories', 'textosFormula'));
     }
     public function show(Request $request, $id)
     {

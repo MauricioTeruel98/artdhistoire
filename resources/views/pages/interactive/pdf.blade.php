@@ -18,14 +18,14 @@
 
     @font-face {
             font-family: 'Futura';
-            src: url('../fonts/futura-2/Futura\ Book\ font.ttf') format('truetype');
+            src: url('../../fonts/futura-2/Futura\ Book\ font.ttf') format('truetype');
             font-weight: normal;
             font-style: normal;
         }
 
         @font-face {
             font-family: 'Baskeville Italic';
-            src: url('../fonts/baskeville/LibreBaskerville-Italic.ttf') format('truetype');
+            src: url('../../fonts/baskeville/LibreBaskerville-Italic.ttf') format('truetype');
             font-weight: normal;
             font-style: normal;
         }

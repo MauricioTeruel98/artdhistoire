@@ -11,17 +11,17 @@ class CertificateUploaded extends Mailable
     use Queueable, SerializesModels;
 
     public $user;
-    public $certificatePath;
+    public $certificateUrl;
 
-    public function __construct($user, $certificatePath)
+    public function __construct($user, $certificateUrl)
     {
         $this->user = $user;
-        $this->certificatePath = $certificatePath;
+        $this->certificateUrl = $certificateUrl;
     }
 
     public function build()
     {
         return $this->view('emails.certificate_uploaded')
-                    ->attach(storage_path('app/public/' . $this->certificatePath));
+                    ->subject('Nuevo certificado de estudiante - ' . $this->user->name);
     }
 }
