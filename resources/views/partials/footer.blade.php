@@ -10,8 +10,8 @@
     <div id="chat-window" class="card shadow d-none" style="width: 300px;">
         <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
             <div class="d-flex align-items-center">
-                <img src="{{ asset('path/to/logo.png') }}" alt="Art d'Histoire" class="rounded-circle me-2"
-                    width="30" height="30">
+                {{-- <img src="{{ asset('path/to/logo.png') }}" alt="Art d'Histoire" class="rounded-circle me-2"
+                    width="30" height="30"> --}}
                 <span>Art d'Histoire</span>
             </div>
             <button id="close-chat" class="btn-close btn-close-white"></button>

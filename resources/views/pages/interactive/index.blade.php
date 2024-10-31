@@ -181,25 +181,24 @@
                         @endif
                         <p class="mb-3">
                             {{ app()->getLocale() == 'fr' ? 'Accès complet pour un an' : 'Full access for one year' }}</p>
-                        <form action="{{ route('subscription.create') }}" method="POST" class="mb-2">
-                            @csrf
-                            <input type="hidden" name="category_id" value="{{ $category->id }}">
-                            <button type="submit" name="payment_method" value="stripe" class="btn btn-primary btn-lg mb-2">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    class="icon icon-tabler icons-tabler-outline icon-tabler-credit-card">
-                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                    <path
-                                        d="M3 5m0 3a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3z" />
-                                    <path d="M3 10l18 0" />
-                                    <path d="M7 15l.01 0" />
-                                    <path d="M11 15l2 0" />
-                                </svg>
-                                {{ app()->getLocale() == 'fr' ? 'Payer avec une carte de crédit' : 'Pay with credit card' }}</button>
-                            {{-- <button type="submit" name="payment_method" value="paypal"
-                                class="btn btn-info btn-lg mb-2">{{ app()->getLocale() == 'fr' ? 'Payer avec PayPal' : 'Pay with PayPal' }}</button> --}}
-                        </form>
+
+                            <form action="{{ route('subscription.create') }}" method="POST" class="mb-2">
+                                @csrf
+                                <input type="hidden" name="category_id" value="{{ $category->id }}">
+                                <button type="submit" name="payment_method" value="stripe" class="btn btn-outline-primary btn-lg mb-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        class="icon icon-tabler icons-tabler-outline icon-tabler-credit-card">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                        <path d="M3 5m0 3a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3z" />
+                                        <path d="M3 10l18 0" />
+                                        <path d="M7 15l.01 0" />
+                                        <path d="M11 15l2 0" />
+                                    </svg>
+                                    {{ app()->getLocale() == 'fr' ? 'Payer avec une carte de crédit' : 'Pay with credit card' }}
+                                </button>
+                            </form>
                         @auth
                             {{-- <form action="{{ route('subscription.trial') }}" method="POST">
                                 @csrf
