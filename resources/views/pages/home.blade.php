@@ -540,8 +540,6 @@
                         return `/interactive/${item.id}`;
                     case 'PDF':
                         return `/interactive/pdf/${item.id}`;
-                    case 'Video':
-                        return `/video-online/${item.id}`;
                     case 'Video Online':
                         return `/video-online/${item.id}`;
                     default:

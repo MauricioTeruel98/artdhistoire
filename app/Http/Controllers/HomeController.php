@@ -69,13 +69,11 @@ class HomeController extends Controller
     if ($locale == 'fr') {
         $pdfs = Archive::select('id', 'title', DB::raw('NULL as title_fr'), DB::raw('"pdf" as type'))
             ->where('title', 'like', '%' . $searchQuery . '%');
-        $videos = Video::select('id', 'title', DB::raw('NULL as title_fr'), DB::raw('"video" as type'))
-            ->where('title', 'like', '%' . $searchQuery . '%');
+        
     } else {
         $pdfs = ArchivesEn::select('id', 'title', DB::raw('NULL as title_fr'), DB::raw('"pdf" as type'))
             ->where('title', 'like', '%' . $searchQuery . '%');
-        $videos = VideoEn::select('id', 'title', DB::raw('NULL as title_fr'), DB::raw('"video" as type'))
-            ->where('title', 'like', '%' . $searchQuery . '%');
+        
     }
 
     $videosOnline = VideoOnline::select('id', 'title', 'title_fr', DB::raw('"video_online" as type'))
@@ -83,7 +81,7 @@ class HomeController extends Controller
         ->orWhere('title_fr', 'like', '%' . $searchQuery . '%');
 
     // Combinar los resultados y paginar
-    $results = $pdfs->union($videos)
+    $results = $pdfs
         ->union($videosOnline)
         ->union($interactive)
         ->union($sagas)
@@ -100,9 +98,6 @@ class HomeController extends Controller
                 break;
             case 'pdf':
                 $item->type = app()->getLocale() == 'fr' ? 'PDF' : 'PDF';
-                break;
-            case 'video':
-                $item->type = app()->getLocale() == 'fr' ? 'Video' : 'Video';
                 break;
             case 'video_online':
                 $item->type = app()->getLocale() == 'fr' ? 'Video Online' : 'Video Online';
