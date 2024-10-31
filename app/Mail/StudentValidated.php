@@ -19,9 +19,17 @@ class StudentValidated extends Mailable
 
     public function build()
     {
+        $messageId = time() . '.' . uniqid() . '@artdhistoire.com';
+
         return $this->view('emails.student_validated')
-                    ->subject(app()->getLocale() == 'fr' ? 
-                        'Votre statut étudiant a été validé' : 
-                        'Your student status has been validated');
+            ->subject(app()->getLocale() == 'fr' ?
+                'Votre statut étudiant a été validé' :
+                'Your student status has been validated')
+            ->withSwiftMessage(function ($message) use ($messageId) {
+                $message->getHeaders()
+                    ->addTextHeader('Message-ID', '<' . $messageId . '>')
+                    ->remove('References')
+                    ->remove('In-Reply-To');
+            });
     }
 }

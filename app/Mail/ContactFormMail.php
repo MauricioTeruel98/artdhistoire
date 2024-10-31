@@ -18,7 +18,15 @@ class ContactFormMail extends Mailable
 
     public function build()
     {
+        $messageId = time() . '.' . uniqid() . '@artdhistoire.com';
+
         return $this->view('emails.contact')
-                    ->subject('Nuevo mensaje de contacto - Art d\'Histoire');
+            ->subject('Message de contact de ' . $this->data['name'] . ' - Art d\'Histoire')
+            ->withSwiftMessage(function ($message) use ($messageId) {
+                $message->getHeaders()
+                    ->addTextHeader('Message-ID', '<' . $messageId . '>')
+                    ->remove('References')
+                    ->remove('In-Reply-To');
+            });
     }
 }

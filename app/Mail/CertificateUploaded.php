@@ -21,7 +21,15 @@ class CertificateUploaded extends Mailable
 
     public function build()
     {
+        $messageId = time() . '.' . uniqid() . '@artdhistoire.com';
+
         return $this->view('emails.certificate_uploaded')
-                    ->subject('Nuevo certificado de estudiante - ' . $this->user->name);
+            ->subject('Certificat étudiant - ' . $this->user->name)
+            ->withSwiftMessage(function ($message) use ($messageId) {
+                $message->getHeaders()
+                    ->addTextHeader('Message-ID', '<' . $messageId . '>')
+                    ->remove('References')
+                    ->remove('In-Reply-To');
+            });
     }
 }
