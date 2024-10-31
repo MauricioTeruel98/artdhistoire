@@ -7,29 +7,36 @@
         body {
             background-color: #f8f9fa;
         }
+
         .card {
             border: none;
             border-radius: 1rem;
             box-shadow: 0 0.5rem 1rem 0 rgba(0, 0, 0, 0.1);
         }
+
         .card-body {
             padding: 2rem;
         }
+
         .btn-primary {
             background-color: #007bff;
             border-color: #007bff;
         }
+
         .btn-primary:hover {
             background-color: #0056b3;
             border-color: #0056b3;
         }
+
         .social-btn {
             color: #fff;
             padding: 0.5rem 1rem;
         }
+
         .btn-google {
             background-color: #db4437;
         }
+
         .btn-facebook {
             background-color: #4267B2;
         }
@@ -43,17 +50,24 @@
             <div class="col-md-6">
                 <div class="card shadow-sm">
                     <div class="card-body">
-                        @if(session('pdf_message'))
+                        @if (session('pdf_message'))
                             <div class="alert alert-info">
                                 {{ session('pdf_message') }}
+                            </div>
+                        @endif
+                        @if (session('success'))
+                            <div class="alert alert-success">
+                                {{ session('success') }}
                             </div>
                         @endif
                         <h2 class="text-center mb-4 fw-bold">{{ app()->getLocale() == 'fr' ? 'Connexion' : 'Login' }}</h2>
                         <form action="{{ route('login') }}" method="POST">
                             @csrf
                             <div class="mb-3">
-                                <label for="email" class="form-label">{{ app()->getLocale() == 'fr' ? 'Email' : 'Email' }}</label>
-                                <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email') }}" required>
+                                <label for="email"
+                                    class="form-label">{{ app()->getLocale() == 'fr' ? 'Email' : 'Email' }}</label>
+                                <input type="email" class="form-control @error('email') is-invalid @enderror"
+                                    id="email" name="email" value="{{ old('email') }}" required>
                                 @error('email')
                                     <div class="invalid-feedback">
                                         {{ $message }}
@@ -62,8 +76,10 @@
                             </div>
 
                             <div class="mb-3">
-                                <label for="password" class="form-label">{{ app()->getLocale() == 'fr' ? 'Mot de passe' : 'Password' }}</label>
-                                <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password" required>
+                                <label for="password"
+                                    class="form-label">{{ app()->getLocale() == 'fr' ? 'Mot de passe' : 'Password' }}</label>
+                                <input type="password" class="form-control @error('password') is-invalid @enderror"
+                                    id="password" name="password" required>
                                 @error('password')
                                     <div class="invalid-feedback">
                                         {{ $message }}
@@ -71,21 +87,25 @@
                                 @enderror
                             </div>
 
-                            <button type="submit" class="btn btn-outline-secondary mb-3 w-100">{{ app()->getLocale() == 'fr' ? 'Se connecter' : 'Login' }}</button>
+                            <button type="submit"
+                                class="btn btn-outline-secondary mb-3 w-100">{{ app()->getLocale() == 'fr' ? 'Se connecter' : 'Login' }}</button>
                         </form>
 
                         <div class="text-center">
                             <p>{{ app()->getLocale() == 'fr' ? 'Ou connectez-vous avec :' : 'Or login with:' }}</p>
                             <a href="{{ url('login/google') }}" class="btn social-btn btn-google my-2">
-                                <i class="fab fa-google me-2"></i>{{ app()->getLocale() == 'fr' ? 'Se connecter avec Google' : 'Login with Google' }}
+                                <i
+                                    class="fab fa-google me-2"></i>{{ app()->getLocale() == 'fr' ? 'Se connecter avec Google' : 'Login with Google' }}
                             </a>
                             <a href="{{ url('login/facebook') }}" class="btn social-btn btn-facebook">
-                                <i class="fab fa-facebook-f me-2"></i>{{ app()->getLocale() == 'fr' ? 'Se connecter avec Facebook' : 'Login with Facebook' }}
+                                <i
+                                    class="fab fa-facebook-f me-2"></i>{{ app()->getLocale() == 'fr' ? 'Se connecter avec Facebook' : 'Login with Facebook' }}
                             </a>
                         </div>
 
                         <div class="text-center mt-3">
-                            <a href="{{ route('register') }}" class="text-decoration-none">{{ app()->getLocale() == 'fr' ? "Vous n'avez pas de compte ? Inscrivez-vous ici" : "Don't have an account? Register here" }}</a>
+                            <a href="{{ route('register') }}"
+                                class="text-decoration-none">{{ app()->getLocale() == 'fr' ? "Vous n'avez pas de compte ? Inscrivez-vous ici" : "Don't have an account? Register here" }}</a>
                         </div>
                     </div>
                 </div>

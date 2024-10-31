@@ -119,7 +119,11 @@
                     <li class="nav-item dropdown profile">
                         <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button"
                             data-bs-toggle="dropdown" aria-expanded="false" style="padding: 0px;">
-                            <img src="{{ asset('img/user.png') }}" alt="Profile" class="profile-pic">
+                            @if($user->avatar)
+                                <img src="{{ asset('storage/' . $user->avatar) }}" alt="Profile" class="profile-pic">
+                            @else
+                                <img src="{{ asset('img/user.png') }}" alt="Profile" class="profile-pic">
+                            @endif
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
 

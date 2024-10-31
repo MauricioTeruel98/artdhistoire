@@ -32,6 +32,10 @@ class AuthController extends Controller
             'password' => Hash::make($request->password),
             'is_student' => $request->is_student ?? false,
         ]);
+
+        return redirect('/login')->with('success', app()->getLocale() == 'fr'
+            ? 'Inscription réussie. Veuillez vous connecter.'
+            : 'Registration successful. Please login.');
     }
 
     // Muestra el formulario de login

@@ -414,6 +414,50 @@
             }
         }
     </style>
+
+    <style>
+        .student-banner {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #322668;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            max-width: 300px;
+            display: none;
+        }
+
+        .student-banner.show {
+            display: block;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .student-banner-close {
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -439,6 +483,23 @@
     </div>
 
     <div class="newsletter-toggle" onclick="toggleNewsletter()">Newsletter</div>
+
+    @auth
+        @if (!Auth::user()->is_student)
+            <div id="studentBanner" class="student-banner">
+                <button class="student-banner-close" onclick="closeStudentBanner()">&times;</button>
+                <p class="mb-2">
+                    {{ app()->getLocale() == 'fr' ? 'Vous êtes étudiant ?' : 'Are you a student?' }}
+                </p>
+                <p class="mb-3">
+                    {{ app()->getLocale() == 'fr' ? 'Mettez à jour votre profil pour bénéficier de tarifs préférentiels!' : 'Update your profile to get student discounts!' }}
+                </p>
+                <a href="{{ route('profile.show') }}" class="btn btn-light btn-sm">
+                    {{ app()->getLocale() == 'fr' ? 'Mettre à jour mon profil' : 'Update my profile' }}
+                </a>
+            </div>
+        @endif
+    @endauth
 
     <script src="{{ asset('js/app.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
@@ -499,6 +560,25 @@
                 toggleNewsletter();
             }
         });
+    </script>
+
+    <script>
+        function showStudentBanner() {
+            const banner = document.getElementById('studentBanner');
+            if (banner && !localStorage.getItem('studentBannerClosed')) {
+                setTimeout(() => {
+                    banner.classList.add('show');
+                }, 2000);
+            }
+        }
+
+        function closeStudentBanner() {
+            const banner = document.getElementById('studentBanner');
+            banner.classList.remove('show');
+            localStorage.setItem('studentBannerClosed', 'true');
+        }
+
+        document.addEventListener('DOMContentLoaded', showStudentBanner);
     </script>
 </body>
 
