@@ -119,8 +119,9 @@
                     <li class="nav-item dropdown profile ms-2">
                         <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button"
                             data-bs-toggle="dropdown" aria-expanded="false" style="padding: 0px;">
-                            @if($user->avatar)
-                                <img src="{{ asset('storage/' . $user->avatar) }}" alt="Profile" class="profile-pic">
+                            @if ($user->avatar)
+                                <img src="{{ asset('storage/' . $user->avatar) }}" alt="Profile" class="profile-pic"
+                                    onerror="this.onerror=null; this.src='{{ asset('img/user.png') }}'">
                             @else
                                 <img src="{{ asset('img/user.png') }}" alt="Profile" class="profile-pic">
                             @endif
@@ -183,6 +184,3 @@
         <div id="searchResults" class="mt-3"></div>
     </div>
 </div>
-
-
-
