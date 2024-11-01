@@ -83,8 +83,13 @@
                 {{-- Boton libro blanco --}}
 
                 @php
-                    $livreBlanc = json_decode(Voyager::setting('site.livre_blanc'), true);
-                    $downloadLink = $livreBlanc[0]['download_link'] ?? '#';
+                    if(app()->getLocale() == 'fr') {
+                        $livreBlanc = json_decode(Voyager::setting('site.livre_blanc'), true);
+                        $downloadLink = $livreBlanc[0]['download_link'] ?? '#';
+                    } else {
+                        $livreBlanc = json_decode(Voyager::setting('site.lb_anglais'), true);
+                        $downloadLink = $livreBlanc[0]['download_link'] ?? '#';
+                    }
                 @endphp
                 <a href="/storage/{{ $downloadLink }}" target="_blank" class="btn-download">
                     {{ app()->getLocale() == 'fr' ? 'Télécharger le livre blanc' : 'Download the white book' }}

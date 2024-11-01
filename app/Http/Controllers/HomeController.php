@@ -69,11 +69,9 @@ class HomeController extends Controller
     if ($locale == 'fr') {
         $pdfs = Archive::select('id', 'title', DB::raw('NULL as title_fr'), DB::raw('"pdf" as type'))
             ->where('title', 'like', '%' . $searchQuery . '%');
-        
     } else {
         $pdfs = ArchivesEn::select('id', 'title', DB::raw('NULL as title_fr'), DB::raw('"pdf" as type'))
             ->where('title', 'like', '%' . $searchQuery . '%');
-        
     }
 
     $videosOnline = VideoOnline::select('id', 'title', 'title_fr', DB::raw('"video_online" as type'))
