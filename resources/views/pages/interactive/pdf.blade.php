@@ -87,7 +87,7 @@
                     </svg>
                     {{ app()->getLocale() == 'fr' ? 'Retour à la bibliothèque' : 'Back to the library' }}
                 </button>
-                <h2 class="mb-4">{{ app()->getLocale() == 'fr' ? $archive->title_fr : $archive->title }}</h2>
+                <h2 class="mb-4">{{ $archive->title }}</h2>
                 <div class="zoom-controls">
                     <p>Zoom</p>
                     <button class="zoom-btn" onclick="changeZoom(0.2)">+</button>
