@@ -580,6 +580,78 @@
 
         document.addEventListener('DOMContentLoaded', showStudentBanner);
     </script>
+
+    <script>
+        $(document).ready(function() {
+            $('#searchToggle').on('click', function() {
+                $('#searchBar').slideToggle();
+            });
+
+            function getItemUrl(item) {
+                switch (item.type) {
+                    case 'Saga':
+                        return `/interactive/${item.id}`;
+                    case 'Interactive':
+                        return `/interactive/${item.id}`;
+                    case 'PDF':
+                        return item.is_pilote ?
+                            `/interactive/pdf/${item.id}/pilote` :
+                            `/interactive/pdf/${item.id}/${item.category_id || 0}`;
+                    case 'Video Online':
+                        return `/video-online/${item.id}`;
+                    default:
+                        return '#';
+                }
+            }
+
+            function fetchContent(searchQuery = '', page = 1) {
+                $.ajax({
+                    url: '{{ route('search.content') }}',
+                    method: 'GET',
+                    data: {
+                        search: searchQuery,
+                        page: page
+                    },
+                    success: function(response) {
+                        let resultsHtml = '';
+                        if (response.data.length > 0) {
+                            resultsHtml += '<ul class="list-group mb-4">';
+                            response.data.forEach(function(item) {
+                                const itemUrl = getItemUrl(item);
+                                resultsHtml += `
+                                <li class="list-group-item">
+                                    <a href="${itemUrl}">
+                                        ${item.title || item.title_fr || item.name || item.name_fr}
+                                        <span class="badge bg-secondary">${item.type}</span>
+                                    </a>
+                                </li>`;
+                            });
+                            resultsHtml += '</ul>';
+                            resultsHtml += response.links;
+                        } else {
+                            resultsHtml =
+                                `<p>{{ app()->getLocale() == 'fr' ? 'Aucun résultat trouvé pour' : 'No results found for' }} "${searchQuery}".</p>`;
+                        }
+                        $('#searchResults').html(resultsHtml);
+                    }
+                });
+            }
+
+            $('#searchForm').on('submit', function(e) {
+                e.preventDefault();
+                const searchQuery = $('#searchInput').val();
+                fetchContent(searchQuery);
+            });
+
+            $(document).on('click', '.pagination a', function(e) {
+                e.preventDefault();
+                const url = $(this).attr('href');
+                const page = url.split('page=')[1];
+                const searchQuery = $('#searchInput').val();
+                fetchContent(searchQuery, page);
+            });
+        });
+    </script>
 </body>
 
 </html>
