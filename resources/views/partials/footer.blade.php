@@ -118,9 +118,11 @@
 <footer class="d-flex flex-column align-items-center justify-content-center my-5">
     <div>
         <div class="d-md-flex gap-5 text-center">
-            {{-- <p>{{ app()->getLocale() == 'fr' ? '"L\'art est avec nous pour que nous ne périssions pas de la vérité." Friedrich Nietzsche' : '"Art is with us in order that we may not perish through truth." Friedrich Nietzsche' }}
-            </p> --}}
-            {{-- <p class="d-none d-md-block">|</p> --}}
+            @php
+                $textos = App\Models\TextosGenerales::first();
+            @endphp
+            {!! app()->getLocale() == 'fr' ? $textos->texto_footer : $textos->texto_footer_en !!}
+            <p class="d-none d-md-block">|</p>
             <p>adh@artdhistoire.com</p>
         </div>
         {{-- <div>

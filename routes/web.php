@@ -98,6 +98,10 @@ Route::middleware(['auth', 'subscriptionOrWhitelist'])->group(function () {
     Route::get('/interactive/pdf/{id}/{category_id}', [InteractiveController::class, 'showPdf'])->name('interactive.pdf');
 });
 
+Route::fallback(function () {
+    return response()->view('404', [], 404);
+});
+
 Route::group(['prefix' => 'admin'], function () {
     Voyager::routes();
 

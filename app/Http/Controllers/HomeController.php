@@ -88,6 +88,9 @@ class HomeController extends Controller
                 DB::raw('"pdf" as type'),
                 'post_id'
             )
+                ->whereHas('post', function($query) {
+                    $query->whereHas('category');  // Solo incluir PDFs que tengan post con categoría
+                })
                 ->where('title', 'like', '%' . $searchQuery . '%');
         } else {
             $pdfs = ArchivesEn::select(
@@ -97,6 +100,9 @@ class HomeController extends Controller
                 DB::raw('"pdf" as type'),
                 'post_id'
             )
+                ->whereHas('post', function($query) {
+                    $query->whereHas('category');  // Solo incluir PDFs que tengan post con categoría
+                })
                 ->where('title', 'like', '%' . $searchQuery . '%');
         }
 

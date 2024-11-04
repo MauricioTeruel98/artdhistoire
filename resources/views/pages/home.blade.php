@@ -97,6 +97,10 @@
             color: initial;
             background-color: initial;
             box-shadow: none;
+        }}
+
+        .title-header {
+            margin-bottom: 0 !important;
         }
 
         /* Estilos para la lista de resultados */
@@ -392,12 +396,14 @@
             </div>
         </div> --}}
 
-        <header class="text-center mb-5">
-            {!! app()->getLocale() == 'fr' ? $textos->texto_home : $textos->texto_home_en !!}
-            <a href="/interactive" class="btn btn-outline-secondary">
-                {{ app()->getLocale() == 'fr' ? 'Essayez LISA' : 'Try LISA' }}
-            </a>
-        </header>
+        <div class="col-md-10 mx-auto">
+            <header class="text-center mb-5">
+                {!! app()->getLocale() == 'fr' ? $textos->texto_home : $textos->texto_home_en !!}
+                <a href="/interactive" class="btn btn-outline-secondary">
+                    {{ app()->getLocale() == 'fr' ? 'Essayez LISA' : 'Try LISA' }}
+                </a>
+            </header>
+        </div>
 
         <div class="col-md-10 mx-auto">
             <div class="row" style="justify-content: center;">

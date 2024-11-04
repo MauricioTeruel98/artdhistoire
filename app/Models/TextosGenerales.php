@@ -18,6 +18,8 @@ class TextosGenerales extends Model
         'texto_header_en',
         'texto_home_en',
         'texto_about_first_en',
-        'texto_about_second_en'
+        'texto_about_second_en',
+        'texto_footer',
+        'texto_footer_en'
     ];
 }

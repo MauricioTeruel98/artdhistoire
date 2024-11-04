@@ -10,11 +10,40 @@
             height: 80vh;
             border: 1px solid #ccc;
             overflow: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         #pdf-viewer canvas {
             max-width: 100%;
             height: auto !important;
+        }
+
+        .zoom-controls {
+            margin-bottom: 15px;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .zoom-btn {
+            margin: 0 5px;
+            padding: 5px 15px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            background: white;
+            cursor: pointer;
+        }
+
+        .zoom-btn:hover {
+            background: #f0f0f0;
+        }
+
+        .pdf-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
         }
 
         @font-face {
@@ -31,11 +60,8 @@
             font-style: normal;
         }
 
-
-        /* Ahora puedes usar la fuente en tu CSS */
         body {
             font-family: 'Futura', sans-serif !important;
-            /* Aplica la fuente a todo el cuerpo de la página */
             color: rgb(117, 117, 117) !important;
         }
 
@@ -62,88 +88,114 @@
                     {{ app()->getLocale() == 'fr' ? 'Retour à la bibliothèque' : 'Back to the library' }}
                 </button>
                 <h2 class="mb-4">{{ app()->getLocale() == 'fr' ? $archive->title_fr : $archive->title }}</h2>
-                <div id="pdf-viewer"></div>
+                <div class="zoom-controls">
+                    <p>Zoom</p>
+                    <button class="zoom-btn" onclick="changeZoom(0.2)">+</button>
+                    <button class="zoom-btn" onclick="changeZoom(-0.2)">-</button>
+                    <button class="zoom-btn" onclick="resetZoom()">Reset</button>
+                </div>
+                <div id="pdf-viewer">
+                    <div class="pdf-container"></div>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        // URL del PDF
-        var url = '/storage/{{ $archive->route }}';
+        var currentScale = 1;
+        var initialScale = 1;
 
-        // Carga el PDF
-        pdfjsLib.getDocument(url).promise.then(function(pdf) {
-            var numPages = pdf.numPages;
-            var viewer = document.getElementById('pdf-viewer');
+        function changeZoom(delta) {
+            currentScale += delta;
+            currentScale = Math.max(0.5, Math.min(3, currentScale)); // Limitar zoom entre 0.5x y 3x
+            reloadPDF();
+        }
 
-            function renderPage(pageNumber) {
-                pdf.getPage(pageNumber).then(function(page) {
-                    var viewport = page.getViewport({
-                        scale: 1
-                    });
-                    var canvas = document.createElement('canvas');
-                    var context = canvas.getContext('2d');
+        function resetZoom() {
+            currentScale = initialScale;
+            reloadPDF();
+        }
 
-                    // Ajusta la escala para que se adapte al ancho del contenedor
-                    var scale = viewer.clientWidth / viewport.width;
-                    var scaledViewport = page.getViewport({
-                        scale: scale
-                    });
+        function reloadPDF() {
+            var viewer = document.querySelector('.pdf-container');
+            viewer.innerHTML = '';
+            loadPDF();
+        }
 
-                    canvas.height = scaledViewport.height;
-                    canvas.width = scaledViewport.width;
+        function loadPDF() {
+            var url = '/storage/{{ $archive->route }}';
+            pdfjsLib.getDocument(url).promise.then(function(pdf) {
+                var numPages = pdf.numPages;
+                var viewer = document.querySelector('.pdf-container');
+                viewer.innerHTML = '';
 
-                    // Crear un div contenedor para el canvas y los enlaces
-                    var wrapper = document.createElement('div');
-                    wrapper.style.position = 'relative';
-                    viewer.appendChild(wrapper);
-                    wrapper.appendChild(canvas);
+                function renderPage(pageNumber) {
+                    pdf.getPage(pageNumber).then(function(page) {
+                        var viewport = page.getViewport({ scale: 1 });
+                        var canvas = document.createElement('canvas');
+                        var context = canvas.getContext('2d');
 
-                    var renderContext = {
-                        canvasContext: context,
-                        viewport: scaledViewport
-                    };
+                        // Ajusta la escala considerando el zoom actual
+                        var scale = (viewer.clientWidth / viewport.width) * currentScale;
+                        var scaledViewport = page.getViewport({ scale: scale });
 
-                    // Renderizar la página
-                    var renderTask = page.render(renderContext);
+                        canvas.height = scaledViewport.height;
+                        canvas.width = scaledViewport.width;
 
-                    // Obtener y renderizar los enlaces
-                    page.getAnnotations().then(function(annotations) {
-                        annotations.forEach(function(annotation) {
-                            if (annotation.subtype === 'Link') {
-                                var bounds = annotation.rect;
-                                var left = bounds[0];
-                                var top = bounds[1];
-                                var width = bounds[2] - bounds[0];
-                                var height = bounds[3] - bounds[1];
+                        // Crear un div contenedor para el canvas y los enlaces
+                        var wrapper = document.createElement('div');
+                        wrapper.style.position = 'relative';
+                        wrapper.style.marginBottom = '20px';
+                        viewer.appendChild(wrapper);
+                        wrapper.appendChild(canvas);
 
-                                // Crear elemento de enlace
-                                var link = document.createElement('a');
-                                link.href = annotation.url || '';
-                                link.style.position = 'absolute';
-                                link.style.left = (left * scale) + 'px';
-                                // Corregir la posición vertical y añadir 5px
-                                link.style.top = ((scaledViewport.height - ((top + height) *
-                                    scale)) + 10) + 'px';
-                                link.style.width = (width * scale) + 'px';
-                                link.style.height = (height * scale) + 'px';
-                                link.style.cursor = 'pointer';
-                                link.style.zIndex = '100';
-                                link.target = '_blank';
+                        var renderContext = {
+                            canvasContext: context,
+                            viewport: scaledViewport
+                        };
 
-                                wrapper.appendChild(link);
-                            }
+                        // Renderizar la página
+                        var renderTask = page.render(renderContext);
+
+                        // Obtener y renderizar los enlaces
+                        page.getAnnotations().then(function(annotations) {
+                            annotations.forEach(function(annotation) {
+                                if (annotation.subtype === 'Link') {
+                                    var bounds = annotation.rect;
+                                    var left = bounds[0];
+                                    var top = bounds[1];
+                                    var width = bounds[2] - bounds[0];
+                                    var height = bounds[3] - bounds[1];
+
+                                    // Crear elemento de enlace
+                                    var link = document.createElement('a');
+                                    link.href = annotation.url || '';
+                                    link.style.position = 'absolute';
+                                    link.style.left = (left * scale) + 'px';
+                                    link.style.top = ((scaledViewport.height - ((top + height) *
+                                        scale)) + 10) + 'px';
+                                    link.style.width = (width * scale) + 'px';
+                                    link.style.height = (height * scale) + 'px';
+                                    link.style.cursor = 'pointer';
+                                    link.style.zIndex = '100';
+                                    link.target = '_blank';
+
+                                    wrapper.appendChild(link);
+                                }
+                            });
                         });
                     });
+                }
 
-                });
-            }
+                // Renderiza todas las páginas
+                for (var i = 1; i <= numPages; i++) {
+                    renderPage(i);
+                }
+            });
+        }
 
-            // Renderiza todas las páginas
-            for (var i = 1; i <= numPages; i++) {
-                renderPage(i);
-            }
-        });
+        // Iniciar carga del PDF
+        loadPDF();
 
         // Deshabilitar clic derecho
         document.addEventListener('contextmenu', function(e) {

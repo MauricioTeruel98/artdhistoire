@@ -158,7 +158,7 @@
             </div>
         </div>
         <h2 class="text-center mb-4">
-            {{ app()->getLocale() == 'fr' ? 'Choisissez une saga pour vous abonner' : 'Choose a saga to subscribe' }}</h2>
+            {{ app()->getLocale() == 'fr' ? Voyager::setting('site.titulo_sagas_index') : Voyager::setting('site.titulo_sagas_index_en') }}</h2>
         <div class="row justify-content-center">
             @foreach ($categories as $category)
                 <div class="col-md-4 mb-4">
