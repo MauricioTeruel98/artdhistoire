@@ -87,15 +87,15 @@
             font-size: 14px;
         }
 
-        .texte h3{
+        .texte h3 {
             font-size: 19px !important;
         }
 
-        .texte p{
+        .texte p {
             font-size: 16px !important;
         }
 
-        .archive-section span{
+        .archive-section span {
             font-family: 'Futura Light', sans-serif !important;
             font-size: 12px !important;
         }
@@ -107,6 +107,18 @@
         @media screen and (max-width: 768px) {
             .topic {
                 width: 100%;
+            }
+        }
+
+        @media (min-width: 1400px) {
+
+            .container,
+            .container-lg,
+            .container-md,
+            .container-sm,
+            .container-xl,
+            .container-xxl {
+                max-width: 1400px;
             }
         }
     </style>
@@ -150,19 +162,20 @@
         @if ($pilote && $pilote->posts)
             @foreach ($pilote->posts as $index => $post)
                 <section class="my-5">
-                    <h2 class="futura-light" style="font-size: 20px !important;">{{ $index + 1 }}. {{ app()->getLocale() == 'fr' ? $post->title_fr : $post->title }}</h2>
-                    <h3 class="section-title futura-light" style="font-size: 16px !important;">{{ app()->getLocale() == 'fr' ? $post->excerpt_fr : $post->excerpt }}</h3>
+                    <h2 class="futura-light" style="font-size: 20px !important;">{{ $index + 1 }}.
+                        {{ app()->getLocale() == 'fr' ? $post->title_fr : $post->title }}</h2>
+                    <h3 class="section-title futura-light" style="font-size: 16px !important;">
+                        {{ app()->getLocale() == 'fr' ? $post->excerpt_fr : $post->excerpt }}</h3>
                     <div class="row">
                         <div class="col-md-5">
                             <div class="image-container" style="height: 100%;">
-                                <div class="video-wrapper" data-video-url="{{ app()->getLocale() == 'fr' ? $post->hihaho : $post->hihaho_en }}">
+                                <div class="video-wrapper"
+                                    data-video-url="{{ app()->getLocale() == 'fr' ? $post->hihaho : $post->hihaho_en }}">
                                     {{-- Eliminamos la imagen y el botón de play --}}
                                     <div class="iframe-container">
-                                        <iframe src="{{ app()->getLocale() == 'fr' ? $post->hihaho : $post->hihaho_en }}" 
-                                            frameborder="0" 
-                                            webkitallowfullscreen="true" 
-                                            mozallowfullscreen="true"
-                                            allowfullscreen="true" 
+                                        <iframe src="{{ app()->getLocale() == 'fr' ? $post->hihaho : $post->hihaho_en }}"
+                                            frameborder="0" webkitallowfullscreen="true" mozallowfullscreen="true"
+                                            allowfullscreen="true"
                                             allow="autoplay; fullscreen; clipboard-read; clipboard-write"
                                             style="position: absolute !important; top: 0px !important; left: 0px !important; width: 100% !important; height: 100% !important;">
                                         </iframe>
@@ -178,7 +191,7 @@
                                             ->where('post_id', $post->id)
                                             ->orderBy('order', 'ASC')
                                             ->get();
-                                        
+
                                         // Calcular el número de elementos por columna
                                         $totalItems = $archives->count();
                                         $columnsCount = 3; // Número deseado de columnas
@@ -191,37 +204,72 @@
                                                 @foreach ($archives->slice($col * $itemsPerColumn, $itemsPerColumn) as $archive)
                                                     <div class="topic">
                                                         <div class="topic-item">
-                                                            <a href="{{ route('interactive.pdf.pilote', ['id' => $archive->id]) }}">
+                                                            <a
+                                                                href="{{ route('interactive.pdf.pilote', ['id' => $archive->id]) }}">
                                                                 @if ($archive->type == 'nonDisponible')
-                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" style="color: grey;" class="icon icon-tabler icons-tabler-filled icon-tabler-file">
-                                                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                                                        <path d="M12 2l.117 .007a1 1 0 0 1 .876 .876l.007 .117v4l.005 .15a2 2 0 0 0 1.838 1.844l.157 .006h4l.117 .007a1 1 0 0 1 .876 .876l.007 .117v9a3 3 0 0 1 -2.824 2.995l-.176 .005h-10a3 3 0 0 1 -2.995 -2.824l-.005 -.176v-14a3 3 0 0 1 2.824 -2.995l.176 -.005h5z" />
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                                                        height="24" viewBox="0 0 24 24"
+                                                                        fill="currentColor" style="color: grey;"
+                                                                        class="icon icon-tabler icons-tabler-filled icon-tabler-file">
+                                                                        <path stroke="none" d="M0 0h24v24H0z"
+                                                                            fill="none" />
+                                                                        <path
+                                                                            d="M12 2l.117 .007a1 1 0 0 1 .876 .876l.007 .117v4l.005 .15a2 2 0 0 0 1.838 1.844l.157 .006h4l.117 .007a1 1 0 0 1 .876 .876l.007 .117v9a3 3 0 0 1 -2.824 2.995l-.176 .005h-10a3 3 0 0 1 -2.995 -2.824l-.005 -.176v-14a3 3 0 0 1 2.824 -2.995l.176 -.005h5z" />
                                                                         <path d="M19 7h-4l-.001 -4.001z" />
                                                                     </svg>
                                                                 @elseif ($archive->type == 'contexto')
-                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: #5471f1;" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-photo">
-                                                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                                                        height="24" viewBox="0 0 24 24" fill="none"
+                                                                        stroke="currentColor" stroke-width="2"
+                                                                        style="color: #5471f1;" stroke-linecap="round"
+                                                                        stroke-linejoin="round"
+                                                                        class="icon icon-tabler icons-tabler-outline icon-tabler-photo">
+                                                                        <path stroke="none" d="M0 0h24v24H0z"
+                                                                            fill="none" />
                                                                         <path d="M15 8h.01" />
-                                                                        <path d="M3 6a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v12a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3v-12z" />
-                                                                        <path d="M3 16l5 -5c.928 -.893 2.072 -.893 3 0l5 5" />
-                                                                        <path d="M14 14l1 -1c.928 -.893 2.072 -.893 3 0l3 3" />
+                                                                        <path
+                                                                            d="M3 6a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v12a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3v-12z" />
+                                                                        <path
+                                                                            d="M3 16l5 -5c.928 -.893 2.072 -.893 3 0l5 5" />
+                                                                        <path
+                                                                            d="M14 14l1 -1c.928 -.893 2.072 -.893 3 0l3 3" />
                                                                     </svg>
                                                                 @elseif($archive->type == 'teoria')
-                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: #ffb102;" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-flask">
-                                                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                                                        height="24" viewBox="0 0 24 24" fill="none"
+                                                                        stroke="currentColor" stroke-width="2"
+                                                                        style="color: #ffb102;" stroke-linecap="round"
+                                                                        stroke-linejoin="round"
+                                                                        class="icon icon-tabler icons-tabler-outline icon-tabler-flask">
+                                                                        <path stroke="none" d="M0 0h24v24H0z"
+                                                                            fill="none" />
                                                                         <path d="M9 3l6 0" />
                                                                         <path d="M10 9l4 0" />
-                                                                        <path d="M10 3v6l-4 11a.7 .7 0 0 0 .5 1h11a.7 .7 0 0 0 .5 -1l-4 -11v-6" />
+                                                                        <path
+                                                                            d="M10 3v6l-4 11a.7 .7 0 0 0 .5 1h11a.7 .7 0 0 0 .5 -1l-4 -11v-6" />
                                                                     </svg>
                                                                 @elseif ($archive->type == 'bio')
-                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: #ee1c6b;" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-pencil">
-                                                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                                                        <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                                                        height="24" viewBox="0 0 24 24" fill="none"
+                                                                        stroke="currentColor" stroke-width="2"
+                                                                        style="color: #ee1c6b;" stroke-linecap="round"
+                                                                        stroke-linejoin="round"
+                                                                        class="icon icon-tabler icons-tabler-outline icon-tabler-pencil">
+                                                                        <path stroke="none" d="M0 0h24v24H0z"
+                                                                            fill="none" />
+                                                                        <path
+                                                                            d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
                                                                         <path d="M13.5 6.5l4 4" />
                                                                     </svg>
                                                                 @elseif ($archive->type == 'social')
-                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" style="color: #4bc538;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-world">
-                                                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                                                        height="24" style="color: #4bc538;"
+                                                                        viewBox="0 0 24 24" fill="none"
+                                                                        stroke="currentColor" stroke-width="2"
+                                                                        stroke-linecap="round" stroke-linejoin="round"
+                                                                        class="icon icon-tabler icons-tabler-outline icon-tabler-world">
+                                                                        <path stroke="none" d="M0 0h24v24H0z"
+                                                                            fill="none" />
                                                                         <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" />
                                                                         <path d="M3.6 9h16.8" />
                                                                         <path d="M3.6 15h16.8" />
@@ -230,7 +278,8 @@
                                                                     </svg>
                                                                 @endif
                                                             </a>
-                                                            <span class="futura-light" style="font-size: 13px !important;">{{ $archive->title }}</span>
+                                                            <span class="futura-light"
+                                                                style="font-size: 13px !important;">{{ $archive->title }}</span>
                                                         </div>
                                                     </div>
                                                 @endforeach
@@ -245,7 +294,7 @@
                                             ->where('post_id', $post->id)
                                             ->orderBy('order', 'ASC')
                                             ->get();
-                                        
+
                                         $totalItems = $archivesEn->count();
                                         $columnsCount = 3;
                                         $itemsPerColumn = ceil($totalItems / $columnsCount);
@@ -257,37 +306,72 @@
                                                 @foreach ($archivesEn->slice($col * $itemsPerColumn, $itemsPerColumn) as $archive)
                                                     <div class="topic">
                                                         <div class="topic-item">
-                                                            <a href="{{ route('interactive.pdf.pilote', ['id' => $archive->id]) }}">
+                                                            <a
+                                                                href="{{ route('interactive.pdf.pilote', ['id' => $archive->id]) }}">
                                                                 @if ($archive->type == 'nonDisponible')
-                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" style="color: grey;" class="icon icon-tabler icons-tabler-filled icon-tabler-file">
-                                                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                                                        <path d="M12 2l.117 .007a1 1 0 0 1 .876 .876l.007 .117v4l.005 .15a2 2 0 0 0 1.838 1.844l.157 .006h4l.117 .007a1 1 0 0 1 .876 .876l.007 .117v9a3 3 0 0 1 -2.824 2.995l-.176 .005h-10a3 3 0 0 1 -2.995 -2.824l-.005 -.176v-14a3 3 0 0 1 2.824 -2.995l.176 -.005h5z" />
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                                                        height="24" viewBox="0 0 24 24"
+                                                                        fill="currentColor" style="color: grey;"
+                                                                        class="icon icon-tabler icons-tabler-filled icon-tabler-file">
+                                                                        <path stroke="none" d="M0 0h24v24H0z"
+                                                                            fill="none" />
+                                                                        <path
+                                                                            d="M12 2l.117 .007a1 1 0 0 1 .876 .876l.007 .117v4l.005 .15a2 2 0 0 0 1.838 1.844l.157 .006h4l.117 .007a1 1 0 0 1 .876 .876l.007 .117v9a3 3 0 0 1 -2.824 2.995l-.176 .005h-10a3 3 0 0 1 -2.995 -2.824l-.005 -.176v-14a3 3 0 0 1 2.824 -2.995l.176 -.005h5z" />
                                                                         <path d="M19 7h-4l-.001 -4.001z" />
                                                                     </svg>
                                                                 @elseif ($archive->type == 'contexto')
-                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: #5471f1;" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-photo">
-                                                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                                                        height="24" viewBox="0 0 24 24" fill="none"
+                                                                        stroke="currentColor" stroke-width="2"
+                                                                        style="color: #5471f1;" stroke-linecap="round"
+                                                                        stroke-linejoin="round"
+                                                                        class="icon icon-tabler icons-tabler-outline icon-tabler-photo">
+                                                                        <path stroke="none" d="M0 0h24v24H0z"
+                                                                            fill="none" />
                                                                         <path d="M15 8h.01" />
-                                                                        <path d="M3 6a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v12a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3v-12z" />
-                                                                        <path d="M3 16l5 -5c.928 -.893 2.072 -.893 3 0l5 5" />
-                                                                        <path d="M14 14l1 -1c.928 -.893 2.072 -.893 3 0l3 3" />
+                                                                        <path
+                                                                            d="M3 6a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v12a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3v-12z" />
+                                                                        <path
+                                                                            d="M3 16l5 -5c.928 -.893 2.072 -.893 3 0l5 5" />
+                                                                        <path
+                                                                            d="M14 14l1 -1c.928 -.893 2.072 -.893 3 0l3 3" />
                                                                     </svg>
                                                                 @elseif($archive->type == 'teoria')
-                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: #ffb102;" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-flask">
-                                                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                                                        height="24" viewBox="0 0 24 24" fill="none"
+                                                                        stroke="currentColor" stroke-width="2"
+                                                                        style="color: #ffb102;" stroke-linecap="round"
+                                                                        stroke-linejoin="round"
+                                                                        class="icon icon-tabler icons-tabler-outline icon-tabler-flask">
+                                                                        <path stroke="none" d="M0 0h24v24H0z"
+                                                                            fill="none" />
                                                                         <path d="M9 3l6 0" />
                                                                         <path d="M10 9l4 0" />
-                                                                        <path d="M10 3v6l-4 11a.7 .7 0 0 0 .5 1h11a.7 .7 0 0 0 .5 -1l-4 -11v-6" />
+                                                                        <path
+                                                                            d="M10 3v6l-4 11a.7 .7 0 0 0 .5 1h11a.7 .7 0 0 0 .5 -1l-4 -11v-6" />
                                                                     </svg>
                                                                 @elseif ($archive->type == 'bio')
-                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: #ee1c6b;" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-pencil">
-                                                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                                                        <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                                                        height="24" viewBox="0 0 24 24" fill="none"
+                                                                        stroke="currentColor" stroke-width="2"
+                                                                        style="color: #ee1c6b;" stroke-linecap="round"
+                                                                        stroke-linejoin="round"
+                                                                        class="icon icon-tabler icons-tabler-outline icon-tabler-pencil">
+                                                                        <path stroke="none" d="M0 0h24v24H0z"
+                                                                            fill="none" />
+                                                                        <path
+                                                                            d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
                                                                         <path d="M13.5 6.5l4 4" />
                                                                     </svg>
                                                                 @elseif ($archive->type == 'social')
-                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" style="color: #4bc538;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-world">
-                                                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                                                        height="24" style="color: #4bc538;"
+                                                                        viewBox="0 0 24 24" fill="none"
+                                                                        stroke="currentColor" stroke-width="2"
+                                                                        stroke-linecap="round" stroke-linejoin="round"
+                                                                        class="icon icon-tabler icons-tabler-outline icon-tabler-world">
+                                                                        <path stroke="none" d="M0 0h24v24H0z"
+                                                                            fill="none" />
                                                                         <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" />
                                                                         <path d="M3.6 9h16.8" />
                                                                         <path d="M3.6 15h16.8" />
@@ -296,7 +380,8 @@
                                                                     </svg>
                                                                 @endif
                                                             </a>
-                                                            <span class="futura-light" style="font-size: 13px !important;">{{ $archive->title }}</span>
+                                                            <span class="futura-light"
+                                                                style="font-size: 13px !important;">{{ $archive->title }}</span>
                                                         </div>
                                                     </div>
                                                 @endforeach
@@ -311,34 +396,51 @@
                                     <div class="col-12">
                                         <div class="d-flex flex-wrap gap-1 justify-content-center">
                                             <div class="d-flex align-items-center">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" style="color: grey;" class="icon icon-tabler icons-tabler-filled icon-tabler-file">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                    viewBox="0 0 24 24" fill="currentColor" style="color: grey;"
+                                                    class="icon icon-tabler icons-tabler-filled icon-tabler-file">
                                                     <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                                    <path d="M12 2l.117 .007a1 1 0 0 1 .876 .876l.007 .117v4l.005 .15a2 2 0 0 0 1.838 1.844l.157 .006h4l.117 .007a1 1 0 0 1 .876 .876l.007 .117v9a3 3 0 0 1 -2.824 2.995l-.176 .005h-10a3 3 0 0 1 -2.995 -2.824l-.005 -.176v-14a3 3 0 0 1 2.824 -2.995l.176 -.005h5z" />
+                                                    <path
+                                                        d="M12 2l.117 .007a1 1 0 0 1 .876 .876l.007 .117v4l.005 .15a2 2 0 0 0 1.838 1.844l.157 .006h4l.117 .007a1 1 0 0 1 .876 .876l.007 .117v9a3 3 0 0 1 -2.824 2.995l-.176 .005h-10a3 3 0 0 1 -2.995 -2.824l-.005 -.176v-14a3 3 0 0 1 2.824 -2.995l.176 -.005h5z" />
                                                     <path d="M19 7h-4l-.001 -4.001z" />
                                                 </svg>
                                                 <span>{{ app()->getLocale() == 'fr' ? 'Non disponible' : 'Not available' }}</span>
                                             </div>
                                             <div class="d-flex align-items-center">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: #5471f1;" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-photo me-2">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                    stroke-width="2" style="color: #5471f1;" stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    class="icon icon-tabler icons-tabler-outline icon-tabler-photo me-2">
                                                     <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                                     <path d="M15 8h.01" />
-                                                    <path d="M3 6a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v12a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3v-12z" />
+                                                    <path
+                                                        d="M3 6a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v12a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3v-12z" />
                                                     <path d="M3 16l5 -5c.928 -.893 2.072 -.893 3 0l5 5" />
                                                     <path d="M14 14l1 -1c.928 -.893 2.072 -.893 3 0l3 3" />
                                                 </svg>
                                                 <span>{{ app()->getLocale() == 'fr' ? 'Contexte artistique' : 'Artistic context' }}</span>
                                             </div>
                                             <div class="d-flex align-items-center">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: #ffb102;" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-flask me-2">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                    stroke-width="2" style="color: #ffb102;" stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    class="icon icon-tabler icons-tabler-outline icon-tabler-flask me-2">
                                                     <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                                     <path d="M9 3l6 0" />
                                                     <path d="M10 9l4 0" />
-                                                    <path d="M10 3v6l-4 11a.7 .7 0 0 0 .5 1h11a.7 .7 0 0 0 .5 -1l-4 -11v-6" />
+                                                    <path
+                                                        d="M10 3v6l-4 11a.7 .7 0 0 0 .5 1h11a.7 .7 0 0 0 .5 -1l-4 -11v-6" />
                                                 </svg>
                                                 <span>{{ app()->getLocale() == 'fr' ? 'Théorie' : 'Theory' }}</span>
                                             </div>
                                             <div class="d-flex align-items-center">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: #ee1c6b;" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-pencil me-2">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                    stroke-width="2" style="color: #ee1c6b;" stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    class="icon icon-tabler icons-tabler-outline icon-tabler-pencil me-2">
                                                     <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                                     <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
                                                     <path d="M13.5 6.5l4 4" />
@@ -346,7 +448,11 @@
                                                 <span>{{ app()->getLocale() == 'fr' ? 'Élément biographique' : 'Biographical element' }}</span>
                                             </div>
                                             <div class="d-flex align-items-center">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" style="color: #4bc538;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-world me-2">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                    style="color: #4bc538;" viewBox="0 0 24 24" fill="none"
+                                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    class="icon icon-tabler icons-tabler-outline icon-tabler-world me-2">
                                                     <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                                     <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" />
                                                     <path d="M3.6 9h16.8" />

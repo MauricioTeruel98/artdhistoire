@@ -471,7 +471,7 @@
 
     <div id="newsletter-panel">
         <h2 class="newsletter-title">KEEP IN TOUCH!</h2>
-        <p>Je m'inscris à la newsletter</p>
+        <p>{{ app()->getLocale() == 'fr' ? 'Je m\'inscris à la newsletter' : 'Subscribe to the newsletter' }}</p>
         <form class="newsletter-form" id="newsletterForm">
             @csrf
             <input type="text" name="nom" placeholder="Nom" required>

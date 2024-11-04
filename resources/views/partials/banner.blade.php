@@ -5,7 +5,7 @@
             <a href="/">
                 <img src="{{ asset('img/logo-header.webp') }}" alt="">
             </a>
-            <h2 class="title-header text-white">
+            <h2 class="title-header text-white playfair-display">
                 {!! app()->getLocale() == 'fr' ? $textos->texto_header : $textos->texto_header_en !!}
             </h2>
         </div>

@@ -19,7 +19,7 @@
         <div class="card-body">
             <div class="text-muted small mb-3">{{ now()->format('g:i A') }}</div>
             <div id="chat-messages">
-                <p>{{ app()->getLocale() == 'fr' ? 'Bonjour, veuillez laisser vos coordonnées pour pouvoir nous envoyer un message ici.' : 'Hello, please leave your contact information to send us a message here.' }}
+                <p>{{ app()->getLocale() == 'fr' ? 'Comment pouvons-nous vous aider ?' : 'How can we help?' }}
                 </p>
             </div>
             <form id="contact-form" class="mt-3">
@@ -118,9 +118,9 @@
 <footer class="d-flex flex-column align-items-center justify-content-center my-5">
     <div>
         <div class="d-md-flex gap-5 text-center">
-            <p>{{ app()->getLocale() == 'fr' ? '"L\'art est avec nous pour que nous ne périssions pas de la vérité." Friedrich Nietzsche' : '"Art is with us in order that we may not perish through truth." Friedrich Nietzsche' }}
-            </p>
-            <p class="d-none d-md-block">|</p>
+            {{-- <p>{{ app()->getLocale() == 'fr' ? '"L\'art est avec nous pour que nous ne périssions pas de la vérité." Friedrich Nietzsche' : '"Art is with us in order that we may not perish through truth." Friedrich Nietzsche' }}
+            </p> --}}
+            {{-- <p class="d-none d-md-block">|</p> --}}
             <p>adh@artdhistoire.com</p>
         </div>
         {{-- <div>
