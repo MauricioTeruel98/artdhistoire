@@ -246,7 +246,7 @@
             overflow-y: auto;
         }
 
-        header h1{
+        header h1 {
             font-family: 'Playfair Display', serif !important;
             font-size: 25px !important;
             font-weight: bold !important;
@@ -254,7 +254,7 @@
         }
 
         /* De header selecciona el primer elemento p, solo el primero */
-        header p:first-of-type{
+        header p:first-of-type {
             /* Coloca estos estilos Futura Light - 17px - Gras+ Italique #0000 */
             font-family: 'Futura Light', sans-serif !important;
             font-style: italic !important;
@@ -264,7 +264,7 @@
         }
 
         /* A las demas etiquetas p de header aplicales estos estilos: Futura Light - 16px #757575 */
-        header p:not(:first-of-type){
+        header p:not(:first-of-type) {
             font-family: 'Futura Light', sans-serif !important;
             font-size: 16px !important;
             color: #757575 !important;
@@ -404,7 +404,8 @@
                 @foreach ($videos as $index => $video)
                     <div class="col-md-4 mb-5">
                         <div class="mx-auto" style="max-width: 320px;"> <!-- Contenedor con ancho máximo más pequeño -->
-                            <a href="#" class="video-link" data-video-id="{{ $video->id }}" data-index="{{ $index }}">
+                            <a href="#" class="video-link" data-video-id="{{ $video->id }}"
+                                data-index="{{ $index }}">
                                 <div class="position-relative" style="padding-bottom: 100%;">
                                     <img src="/storage/{{ $video->image }}"
                                         alt="{{ app()->getLocale() == 'fr' ? $video->title_fr : $video->title }}"
@@ -532,21 +533,26 @@
             });
 
             function getItemUrl(item) {
-                console.log('Generando URL para:', item);
-                switch (item.type) {
-                    case 'Saga':
-                        return `/interactive/${item.id}`;
-                    case 'Interactive':
-                        return `/interactive/${item.id}`;
-                    case 'PDF':
-                        return `/interactive/pdf/${item.id}`; // /interactive/pdf/${item.id}/${category.id}
-                    case 'Video Online':
-                        return `/video-online/${item.id}`;
-                    default:
-                        console.log('Tipo desconocido:', item.type);
-                        return '#';
-                }
+    console.log('Generando URL para:', item);
+    switch (item.type) {
+        case 'Saga':
+            return `/interactive/${item.id}`;
+        case 'Interactive':
+            return `/interactive/${item.id}`;
+        case 'PDF':
+            // Si es piloto, usar una ruta diferente
+            if (item.is_pilote) {
+                return `/interactive/pdf/${item.id}/pilote`;
             }
+            // Si no es piloto, usar la ruta normal
+            return `/interactive/pdf/${item.id}/${item.category_id || 0}`;
+        case 'Video Online':
+            return `/video-online/${item.id}`;
+        default:
+            console.log('Tipo desconocido:', item.type);
+            return '#';
+    }
+}
 
             function fetchContent(searchQuery = '', page = 1) {
                 $.ajax({
