@@ -38,7 +38,7 @@ class InteractiveController extends Controller
                 ->toArray();
         }
 
-        $categories = Categories::whereNotIn('id', $subscribedCategoryIds)->get();
+        $categories = Categories::whereNotIn('id', $subscribedCategoryIds)->where('is_pilote', '!=', 1)->get();
 
         return view('pages.interactive.index', compact('slider', 'categories', 'textosFormula'));
     }

@@ -27,7 +27,7 @@
                         <li><a class="dropdown-item"
                                 href="/interactive">{{ app()->getLocale() == 'fr' ? 'Pilote' : 'Pilot' }}</a></li>
                         @php
-                            $sagas = DB::table('categories')->where('name', '!=', 'pilote')->get();
+                            $sagas = DB::table('categories')->where('is_pilote', '!=', 1)->get();
                         @endphp
 
                         @foreach ($sagas as $saga)

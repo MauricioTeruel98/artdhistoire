@@ -70,6 +70,25 @@
         .btn-download:hover {
             background-color: #f0f0f0;
         }
+
+        .content-about h3{
+            font-size: 16px !important;
+            font-family: 'Futura Light', sans-serif;
+            font-weight: bold !important;
+            color: #322668 !important;
+        }
+
+        .content-about .highlight{
+            color: #7F5122 !important;
+        }
+
+        h1{
+            font-size: 28px !important;
+        }
+
+        p{
+            font-size: 16px !important;
+        }
     </style>
 
 @endsection
@@ -91,9 +110,11 @@
                         $downloadLink = $livreBlanc[0]['download_link'] ?? '#';
                     }
                 @endphp
-                <a href="/storage/{{ $downloadLink }}" target="_blank" class="btn-download">
-                    {{ app()->getLocale() == 'fr' ? 'Télécharger le livre blanc' : 'Download the white book' }}
-                </a>
+                <div class="d-flex justify-content-center">
+                    <a href="/storage/{{ $downloadLink }}" target="_blank" class="btn-download">
+                        {{ app()->getLocale() == 'fr' ? 'Télécharger le livre blanc' : 'Download the white book' }}
+                    </a>
+                </div>
 
                 <h3 class="mt-5 mb-3">{{ app()->getLocale() == 'fr' ? 'Nous contacter' : 'Contact us' }}</h3>
                 <form id="contact-form" class="mt-3">
@@ -117,7 +138,7 @@
                 </form>
             </div>
 
-            <div class="col-md-6">
+            <div class="col-md-6 content-about">
                 {!! app()->getLocale() == 'fr' ? $textos->texto_about_second : $textos->texto_about_second_en !!}
             </div>
         </div>

@@ -85,7 +85,7 @@ class SubscriptionController extends Controller
                 'payment_method_types' => ['card'],
                 'line_items' => [[
                     'price_data' => [
-                        'currency' => 'eur',
+                        'currency' => app()->getLocale() == 'fr' ? 'eur' : 'USD',
                         'product_data' => [
                             'name' => 'Suscripción anual a ' . $category->name,
                         ],

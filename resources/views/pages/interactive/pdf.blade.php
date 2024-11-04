@@ -122,17 +122,20 @@
                                 link.href = annotation.url || '';
                                 link.style.position = 'absolute';
                                 link.style.left = (left * scale) + 'px';
-                                // Ajustar la posición vertical
-                                link.style.top = (canvas.height - (top * scale)) + 'px';
+                                // Corregir la posición vertical y añadir 5px
+                                link.style.top = ((scaledViewport.height - ((top + height) *
+                                    scale)) + 10) + 'px';
                                 link.style.width = (width * scale) + 'px';
                                 link.style.height = (height * scale) + 'px';
                                 link.style.cursor = 'pointer';
-                                link.target = '_blank'; // Abrir en nueva pestaña
+                                link.style.zIndex = '100';
+                                link.target = '_blank';
 
                                 wrapper.appendChild(link);
                             }
                         });
                     });
+
                 });
             }
 
