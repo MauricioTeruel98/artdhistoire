@@ -526,33 +526,33 @@
         });
     </script> --}}
 
-    <script>
+    {{-- <script>
         $(document).ready(function() {
             $('#searchToggle').on('click', function() {
                 $('#searchBar').slideToggle();
             });
 
             function getItemUrl(item) {
-    console.log('Generando URL para:', item);
-    switch (item.type) {
-        case 'Saga':
-            return `/interactive/${item.id}`;
-        case 'Interactive':
-            return `/interactive/${item.id}`;
-        case 'PDF':
-            // Si es piloto, usar una ruta diferente
-            if (item.is_pilote) {
-                return `/interactive/pdf/${item.id}/pilote`;
+                console.log('Generando URL para:', item);
+                switch (item.type) {
+                    case 'Saga':
+                        return `/interactive/${item.id}`;
+                    case 'Interactive':
+                        return `/interactive/${item.id}`;
+                    case 'PDF':
+                        // Si es piloto, usar una ruta diferente
+                        if (item.is_pilote) {
+                            return `/interactive/pdf/${item.id}/pilote`;
+                        }
+                        // Si no es piloto, usar la ruta normal
+                        return `/interactive/pdf/${item.id}/${item.category_id || 0}`;
+                    case 'Video Online':
+                        return `/video-online/${item.id}`;
+                    default:
+                        console.log('Tipo desconocido:', item.type);
+                        return '#';
+                }
             }
-            // Si no es piloto, usar la ruta normal
-            return `/interactive/pdf/${item.id}/${item.category_id || 0}`;
-        case 'Video Online':
-            return `/video-online/${item.id}`;
-        default:
-            console.log('Tipo desconocido:', item.type);
-            return '#';
-    }
-}
 
             function fetchContent(searchQuery = '', page = 1) {
                 $.ajax({
@@ -617,7 +617,7 @@
                 fetchContent(searchQuery, page);
             });
         });
-    </script>
+    </script> --}}
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
