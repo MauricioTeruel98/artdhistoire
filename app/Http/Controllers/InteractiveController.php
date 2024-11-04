@@ -61,6 +61,13 @@ class InteractiveController extends Controller
     {
         $archive = Archive::findOrFail($id);
         $slider = Slider::all();
+
+        // Verificar si el archivo pertenece a una categoría piloto
+        $post = Post::find($archive->post_id);
+        if (!$post || !$post->category || !$post->category->is_pilote) {
+            abort(404);
+        }
+
         return view('pages.interactive.pdf', compact('archive', 'slider'));
     }
 
