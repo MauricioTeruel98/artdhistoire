@@ -65,6 +65,7 @@ Route::get('/subscription-required/{category_id}', function ($category_id) {
 Route::middleware(['auth'])->group(function () {
     Route::post('/subscription/trial', [SubscriptionController::class, 'createTrialSubscription'])->name('subscription.trial');
     // ... otras rutas que requieran autenticación ...
+    
 });
 
 Route::get('/certificate/pending', function () {
@@ -92,6 +93,7 @@ Route::middleware('auth')->group(function () {
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::get('/certificate/upload/{category_id}', [CertificateController::class, 'showUploadForm'])->name('certificate.upload');
     Route::post('/certificate/store', [CertificateController::class, 'store'])->name('certificate.store');
+    Route::delete('/profile/avatar', [ProfileController::class, 'deleteAvatar'])->name('profile.delete-avatar');
 });
 
 Route::get('/interactive/index', [InteractiveController::class, 'index'])->name('interactive.index');

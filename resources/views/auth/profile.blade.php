@@ -156,11 +156,18 @@
                 <div class="tab-pane fade show active" id="account" role="tabpanel">
                     <div class="avatar-container">
                         @if ($user->avatar)
-                                <img src="{{ asset('storage/' . $user->avatar) }}" alt="Profile" class="avatar-preview"
-                                    onerror="this.onerror=null; this.src='{{ asset('img/user.png') }}'">
-                            @else
-                                <img src="{{ asset('img/user.png') }}" alt="Profile" class="avatar-preview">
-                            @endif
+                            <img src="{{ asset('storage/' . $user->avatar) }}" alt="Profile" class="avatar-preview"
+                                onerror="this.onerror=null; this.src='{{ asset('img/user.png') }}'">
+                            <form action="{{ route('profile.delete-avatar') }}" method="POST" class="d-inline">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger btn-sm mt-2">
+                                    {{ app()->getLocale() == 'fr' ? 'Supprimer l\'avatar' : 'Delete avatar' }}
+                                </button>
+                            </form>
+                        @else
+                            <img src="{{ asset('img/user.png') }}" alt="Profile" class="avatar-preview">
+                        @endif
                     </div>
 
                     <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data">

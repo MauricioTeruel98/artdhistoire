@@ -72,4 +72,20 @@ class ProfileController extends Controller
 
         return redirect()->route('profile.show')->with('success', 'Contraseña actualizada correctamente.');
     }
+
+    public function deleteAvatar()
+    {
+        $user = Auth::user();
+
+        if ($user->avatar && $user->avatar !== 'users/default.png') {
+            Storage::disk('public')->delete($user->avatar);
+            $user->avatar = 'users/default.png';
+            $user->save();
+        }
+
+        return redirect()->route('profile.show')->with(
+            'success',
+            app()->getLocale() == 'fr' ? 'Avatar supprimé avec succès' : 'Avatar deleted successfully'
+        );
+    }
 }

@@ -100,7 +100,7 @@
 @section('content')
     <div class="container mt-5">
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-6 px-4">
                 {{--Justificar texto--}}
                 <div class="text-justify">
                     {!! app()->getLocale() == 'fr' ? $textos->texto_about_first : $textos->texto_about_first_en !!}
@@ -145,7 +145,7 @@
                 </form>
             </div>
 
-            <div class="col-md-6 content-about">
+            <div class="col-md-6 content-about px-4">
                 {{--Justificar texto--}}
                 <div class="text-justify">
                     {!! app()->getLocale() == 'fr' ? $textos->texto_about_second : $textos->texto_about_second_en !!}
