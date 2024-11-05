@@ -3,8 +3,49 @@
 @section('title', "Art d'Histoire | Visor de PDF")
 
 @section('header')
-    <script src="https://documentcloud.adobe.com/view-sdk/main.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.9.359/pdf.min.js"></script>
     <style>
+        #pdf-viewer {
+            width: 100%;
+            height: 80vh;
+            border: 1px solid #ccc;
+            overflow: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #pdf-viewer canvas {
+            max-width: 100%;
+            height: auto !important;
+        }
+
+        .zoom-controls {
+            margin-bottom: 15px;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .zoom-btn {
+            margin: 0 5px;
+            padding: 5px 15px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            background: white;
+            cursor: pointer;
+        }
+
+        .zoom-btn:hover {
+            background: #f0f0f0;
+        }
+
+        .pdf-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
         @font-face {
             font-family: 'Futura';
             src: url('../../fonts/futura-2/Futura\ Book\ font.ttf') format('truetype');
@@ -27,44 +68,6 @@
         .baskeville-italic {
             font-family: 'Baskeville Italic', sans-serif !important;
         }
-
-        .pdf-container {
-            width: 100%;
-            height: 90vh;
-            margin: 20px 0;
-            background-color: #f8f9fa;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        #adobe-dc-view {
-            width: 100%;
-            height: 100%;
-        }
-
-        .loading-message {
-            text-align: center;
-            padding: 20px;
-            font-size: 1.2em;
-            color: #666;
-        }
-
-        .error-message {
-            text-align: center;
-            padding: 20px;
-            color: #dc3545;
-        }
-
-        .italic{
-            font-style: italic;
-        }
-
-        @media (max-width: 768px) {
-            .pdf-container {
-                height: 80vh;
-            }
-        }
     </style>
 @endsection
 
@@ -84,95 +87,147 @@
                     </svg>
                     {{ app()->getLocale() == 'fr' ? 'Retour à la bibliothèque' : 'Back to the library' }}
                 </button>
-                <h2 class="mb-4 italic">{{ $archive->title }}</h2>
-                <div class="pdf-container">
-                    <div id="adobe-dc-view"></div>
-                    <div class="loading-message">
-                        {{ app()->getLocale() == 'fr' ? 'Chargement du PDF...' : 'Loading PDF...' }}
-                    </div>
+                <h2 class="mb-4">{{ $archive->title }}</h2>
+                <div class="zoom-controls">
+                    <p>Zoom</p>
+                    <button class="zoom-btn" onclick="changeZoom(0.2)">+</button>
+                    <button class="zoom-btn" onclick="changeZoom(-0.2)">-</button>
+                    <button class="zoom-btn" onclick="resetZoom()">Reset</button>
+                </div>
+                <div id="pdf-viewer">
+                    <div class="pdf-container"></div>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        document.addEventListener("adobe_dc_view_sdk.ready", function() {
-            document.querySelector('.loading-message').style.display = 'none';
+        var currentScale = 1;
+        var initialScale = 1;
+        // Agregar variables para los límites
+        var maxDimensions = {
+            width: 1294,
+            height: 1830
+        };
+        var minDimensions = {
+            width: 647,
+            height: 915
+        };
 
-            try {
-                var adobeDCView = new AdobeDC.View({
-                    clientId: "ab9d6fe153f547109b7ff1fce07cf913", // Reemplaza con tu Client ID de Adobe
-                    divId: "adobe-dc-view"
-                });
+        function changeZoom(delta) {
+            var viewer = document.querySelector('.pdf-container');
+            var testCanvas = viewer.querySelector('canvas');
 
-                adobeDCView.previewFile({
-                    content: {
-                        location: {
-                            url: "{{ asset('storage/' . $archive->route) }}"
-                        }
-                    },
-                    metaData: {
-                        fileName: "{{ $archive->title }}.pdf",
-                        id: "{{ $archive->id }}"
-                    }
-                }, {
-                    embedMode: "FULL_WINDOW",
-                    showDownloadPDF: false,
-                    showPrintPDF: false,
-                    showLeftHandPanel: true,
-                    showAnnotationTools: false,
-                    enableFormFilling: false,
-                    showZoomControl: true,
-                    showToolbar: true, // Asegura que la barra de herramientas esté visible
-                    toolbarControlsToShow: ['zoom', 'pageControls', 'fitWidth',
-                    'fitPage'], // Especifica los controles a mostrar
-                    defaultViewMode: "FIT_WIDTH",
-                    zoom: {
-                        default: 1.0, // Zoom inicial
-                        minimum: 0.5, // Zoom mínimo permitido
-                        maximum: 4.0 // Zoom máximo permitido
-                    },
-                    enableLinearization: true,
-                    dockPageControls: true,
-                    showPageControls: true,
-                    enablePageScrolling: true
-                });
+            if (testCanvas) {
+                var newScale = currentScale + delta;
+                var newWidth = testCanvas.width / currentScale * newScale;
+                var newHeight = testCanvas.height / currentScale * newScale;
 
-                // Prevenir el menú contextual (clic derecho)
-                document.getElementById('adobe-dc-view').addEventListener('contextmenu', function(e) {
-                    e.preventDefault();
-                });
-
-                // Configuración adicional de seguridad
-                adobeDCView.registerCallback(
-                    AdobeDC.View.Enum.CallbackType.GET_USER_PROFILE_API,
-                    function() {
-                        return {
-                            userProfile: {
-                                name: "{{ auth()->user()->name ?? 'Guest' }}",
-                            }
-                        };
-                    }
-                );
-
-                // Prevenir acciones de descarga
-                adobeDCView.registerCallback(
-                    AdobeDC.View.Enum.CallbackType.SAVE_API,
-                    function(metaData) {
-                        return false; // Previene la descarga
-                    }
-                );
-
-            } catch (error) {
-                console.error("Error loading Adobe DC View:", error);
-                document.querySelector('.loading-message').innerHTML = `
-                    <div class="error-message">
-                        ${app.getLocale() == 'fr' 
-                            ? 'Erreur lors du chargement du PDF.' 
-                            : 'Error loading PDF.'}
-                    </div>
-                `;
+                // Verificar si las nuevas dimensiones están dentro de los límites
+                if (newWidth >= minDimensions.width &&
+                    newWidth <= maxDimensions.width &&
+                    newHeight >= minDimensions.height &&
+                    newHeight <= maxDimensions.height) {
+                    currentScale = newScale;
+                    reloadPDF();
+                }
             }
+        }
+
+        function resetZoom() {
+            currentScale = initialScale;
+            reloadPDF();
+        }
+
+        function reloadPDF() {
+            var viewer = document.querySelector('.pdf-container');
+            viewer.innerHTML = '';
+            loadPDF();
+        }
+
+        function loadPDF() {
+            var url = '/storage/{{ $archive->route }}';
+            pdfjsLib.getDocument(url).promise.then(function(pdf) {
+                var numPages = pdf.numPages;
+                var viewer = document.querySelector('.pdf-container');
+                viewer.innerHTML = '';
+
+                function renderPage(pageNumber) {
+                    pdf.getPage(pageNumber).then(function(page) {
+                        var viewport = page.getViewport({
+                            scale: 1
+                        });
+                        var canvas = document.createElement('canvas');
+                        var context = canvas.getContext('2d');
+
+                        // Ajusta la escala considerando el zoom actual
+                        var scale = (viewer.clientWidth / viewport.width) * currentScale;
+                        var scaledViewport = page.getViewport({
+                            scale: scale
+                        });
+
+                        canvas.height = scaledViewport.height;
+                        canvas.width = scaledViewport.width;
+
+                        // Crear un div contenedor para el canvas y los enlaces
+                        var wrapper = document.createElement('div');
+                        wrapper.style.position = 'relative';
+                        wrapper.style.marginBottom = '20px';
+                        viewer.appendChild(wrapper);
+                        wrapper.appendChild(canvas);
+
+                        var renderContext = {
+                            canvasContext: context,
+                            viewport: scaledViewport
+                        };
+
+                        // Renderizar la página
+                        var renderTask = page.render(renderContext);
+
+                        // Obtener y renderizar los enlaces
+                        page.getAnnotations().then(function(annotations) {
+                            annotations.forEach(function(annotation) {
+                                if (annotation.subtype === 'Link') {
+                                    var bounds = annotation.rect;
+                                    var left = bounds[0];
+                                    var top = bounds[1];
+                                    var width = bounds[2] - bounds[0];
+                                    var height = bounds[3] - bounds[1];
+
+                                    // Crear elemento de enlace
+                                    var link = document.createElement('a');
+                                    link.href = annotation.url || '';
+                                    link.style.position = 'absolute';
+                                    link.style.left = (left * scale) + 'px';
+                                    link.style.top = ((scaledViewport.height - ((top +
+                                            height) *
+                                        scale)) + 10) + 'px';
+                                    link.style.width = (width * scale) + 'px';
+                                    link.style.height = (height * scale) + 'px';
+                                    link.style.cursor = 'pointer';
+                                    link.style.zIndex = '100';
+                                    link.target = '_blank';
+
+                                    wrapper.appendChild(link);
+                                }
+                            });
+                        });
+                    });
+                }
+
+                // Renderiza todas las páginas
+                for (var i = 1; i <= numPages; i++) {
+                    renderPage(i);
+                }
+            });
+        }
+
+        // Iniciar carga del PDF
+        loadPDF();
+
+        // Deshabilitar clic derecho
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
         });
     </script>
 @endsection
