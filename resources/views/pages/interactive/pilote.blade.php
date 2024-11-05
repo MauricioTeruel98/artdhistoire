@@ -175,7 +175,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-7 d-flex flex-column justify-content-center">
+                        <div class="col-md-7 d-flex flex-column">
                             @if (app()->getLocale() == 'fr')
                                 <div class="d-flex flex-wrap topic-list">
                                     @php
