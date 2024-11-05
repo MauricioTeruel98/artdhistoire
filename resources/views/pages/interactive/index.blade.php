@@ -345,7 +345,7 @@
                                     </form>
 
                                     {{-- Formulario de PayPal --}}
-                                    <form action="{{ route('subscription.create') }}" method="POST">
+                                    {{-- <form action="{{ route('subscription.create') }}" method="POST">
                                         @csrf
                                         <input type="hidden" name="category_id" value="{{ $category->id }}">
                                         <input type="hidden" name="amount" value="{{ $amount }}">
@@ -357,7 +357,7 @@
                                             <i class="fab fa-paypal me-2"></i>
                                             {{ app()->getLocale() == 'fr' ? 'Payer avec PayPal' : 'Pay with PayPal' }}
                                         </button>
-                                    </form>
+                                    </form> --}}
                                 </div>
                                 <script>
                                     document.getElementById('coupon_code_{{ $category->id }}').addEventListener('input', function() {
