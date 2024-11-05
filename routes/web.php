@@ -8,6 +8,7 @@ use App\Http\Controllers\VideoItemController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\VideoController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\CouponController;
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\SubscriptionController;
@@ -17,6 +18,7 @@ use Illuminate\Support\Facades\Route;
 use Laravel\Socialite\Facades\Socialite;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use TCG\Voyager\Facades\Voyager;
 
 /*
 |--------------------------------------------------------------------------
@@ -52,7 +54,11 @@ Route::get('/search-content', [HomeController::class, 'searchContent'])->name('s
 
 Route::get('/subscription-required/{category_id}', function ($category_id) {
     $category = Categories::findOrFail($category_id);
-    return view('pages.subscription.required', compact('category'));
+    $user = auth()->user();
+    $amount = $user && $user->is_student && $user->validated_student ?
+        Voyager::setting('site.abono_estudiant') :
+        Voyager::setting('site.abono_normal');
+    return view('pages.subscription.required', compact('category', 'amount'));
 })->name('subscription.required');
 
 
@@ -97,6 +103,8 @@ Route::get('/interactive/{id}', [InteractiveController::class, 'show'])->name('i
 Route::middleware(['auth', 'subscriptionOrWhitelist'])->group(function () {
     Route::get('/interactive/pdf/{id}/{category_id}', [InteractiveController::class, 'showPdf'])->name('interactive.pdf');
 });
+
+Route::post('/validate-coupon', [CouponController::class, 'validateCoupon'])->name('coupon.validate');
 
 Route::fallback(function () {
     return response()->view('404', [], 404);

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Categories;
+use App\Models\Coupon;
 use App\Models\Subscription;
 use Illuminate\Http\Request;
 use Srmklive\PayPal\Facades\PayPal;
@@ -17,18 +18,33 @@ class SubscriptionController extends Controller
         $category = Categories::findOrFail($request->input('category_id'));
         $user = auth()->user();
 
-        // Si es estudiante y tiene certificado subido pero no validado
+        // Verificaciones de estudiante...
         if ($user->is_student && !$user->validated_student && $user->certificate) {
             return redirect()->route('certificate.pending');
         }
 
-        // Si es estudiante pero no ha subido certificado
         if ($user->is_student && !$user->validated_student && !$user->certificate) {
             return redirect()->route('certificate.upload', ['category_id' => $category->id]);
         }
 
         $paymentMethod = $request->input('payment_method');
-        $amount = $user->is_student && $user->validated_student ? Voyager::setting('site.abono_estudiant') : Voyager::setting('site.abono_normal');
+        $amount = $user->is_student && $user->validated_student ?
+            Voyager::setting('site.abono_estudiant') :
+            Voyager::setting('site.abono_normal');
+
+        // Solo validar el cupón sin marcarlo como usado
+        if ($couponCode = $request->input('coupon_code')) {
+            $coupon = Coupon::where('code', $couponCode)
+                ->where('used', false)
+                ->first();
+
+            if ($coupon) {
+                $discount = ($amount * $coupon->discount_percentage) / 100;
+                $amount = $amount - $discount;
+                // Guardamos el código del cupón en la sesión
+                session(['coupon_code' => $couponCode]);
+            }
+        }
 
         if ($paymentMethod === 'stripe') {
             return $this->createStripeCheckoutSession($request, $category, $amount);
@@ -88,13 +104,15 @@ class SubscriptionController extends Controller
                         'currency' => app()->getLocale() == 'fr' ? 'eur' : 'USD',
                         'product_data' => [
                             'name' => 'Suscripción anual a ' . $category->name,
+                            'description' => $request->input('coupon_code') ?
+                                'Incluye descuento por cupón' : null,
                         ],
-                        'unit_amount' => $amount * 100,
+                        'unit_amount' => (int)($amount * 100), // Convertir a centavos
                     ],
                     'quantity' => 1,
                 ]],
                 'mode' => 'payment',
-                'success_url' => route('subscription.success') . '?session_id={CHECKOUT_SESSION_ID}&category_id=' . $category->id,
+                'success_url' => route('subscription.success') . '?session_id={CHECKOUT_SESSION_ID}&category_id=' . $category->id . '&amount=' . $amount,
                 'cancel_url' => route('subscription.cancel'),
             ]);
 
@@ -119,13 +137,20 @@ class SubscriptionController extends Controller
                     [
                         'amount' => [
                             'currency_code' => 'EUR',
-                            'value' => $amount
+                            'value' => number_format($amount, 2, '.', ''),
+                            'breakdown' => [
+                                'item_total' => [
+                                    'currency_code' => 'EUR',
+                                    'value' => number_format($amount, 2, '.', '')
+                                ]
+                            ]
                         ],
-                        'description' => 'Suscripción anual a ' . $category->name,
+                        'description' => 'Suscripción anual a ' . $category->name .
+                            ($request->input('coupon_code') ? ' (Incluye descuento por cupón)' : ''),
                     ]
                 ],
                 'application_context' => [
-                    'return_url' => route('subscription.success') . '?category_id=' . $category->id,
+                    'return_url' => route('subscription.success') . '?category_id=' . $category->id . '&amount=' . $amount,
                     'cancel_url' => route('subscription.cancel'),
                 ]
             ]);
@@ -136,15 +161,18 @@ class SubscriptionController extends Controller
             return redirect()->back()->with('error', 'Hubo un problema al procesar el pago con PayPal. Por favor, inténtalo de nuevo.');
         }
     }
+
     public function success(Request $request)
     {
         $user = auth()->user();
         $categoryId = $request->get('category_id');
+        $amount = $request->get('amount');
         $category = Categories::findOrFail($categoryId);
 
+        // Crear la suscripción
         $subscription = Subscription::create([
             'user_id' => $user->id,
-            'amount' => 49.00,
+            'amount' => $amount,
             'start_date' => now(),
             'end_date' => now()->addYear(),
             'status' => 'active',
@@ -152,9 +180,24 @@ class SubscriptionController extends Controller
 
         $subscription->categories()->attach($category);
 
+        // Marcar el cupón como usado si existe
+        if ($couponCode = session('coupon_code')) {
+            $coupon = Coupon::where('code', $couponCode)
+                ->where('used', false)
+                ->first();
+
+            if ($coupon) {
+                $coupon->used = true;
+                $coupon->save();
+            }
+
+            // Limpiar el código de cupón de la sesión
+            session()->forget('coupon_code');
+        }
+
         return redirect()->route('home')->with('success', '¡Suscripción exitosa a ' . $category->name . '!');
     }
-
+    
     public function cancel()
     {
         return redirect()->route('home')->with('info', 'La suscripción ha sido cancelada.');

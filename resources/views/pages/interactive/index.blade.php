@@ -3,6 +3,7 @@
 @section('title', "Art d'Histoire | Videos ")
 
 @section('header')
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         .card-plans {
             border: 1px solid #ddd;
@@ -10,7 +11,7 @@
         }
 
         .card-formula {
-            min-height: 310px;
+            min-height: 330px;
         }
 
         .display-4 {
@@ -106,9 +107,132 @@
             transition: all 0.3s ease;
         }
 
-        .card-abono:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        .saga-card {
+            border: 1px solid #eaeaea;
+            border-radius: 0.375rem;
+            transition: all 0.3s ease;
+            background: white;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .saga-card:hover {
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .saga-image-container {
+            position: relative;
+            height: 200px;
+            overflow: hidden;
+            border-radius: 0.375rem 0.375rem 0 0;
+            flex-shrink: 0;
+        }
+
+        .saga-image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .saga-card:hover .saga-image-container img {
+            transform: scale(1.05);
+        }
+
+        .saga-content {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .saga-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #333;
+            flex-shrink: 0;
+        }
+
+        .saga-price {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+            flex-shrink: 0;
+        }
+
+        .saga-price .display-4 {
+            color: #212529;
+            font-weight: 700;
+        }
+
+        .student-badge {
+            background: #e3f2fd;
+            color: #1565c0;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            display: inline-block;
+            margin-bottom: 1rem;
+            flex-shrink: 0;
+        }
+
+        .coupon-section {
+            margin: 1.5rem 0;
+            padding: 1rem;
+            border: 1px dashed #dee2e6;
+            border-radius: 10px;
+            background: #fafafa;
+            flex-shrink: 0;
+        }
+
+        .coupon-input {
+            border: 1px solid #ced4da;
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            width: 100%;
+            margin-top: 0.5rem;
+        }
+
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: auto;
+            flex-shrink: 0;
+        }
+
+        .btn-subscribe {
+            background: #0000FF;
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 30px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-subscribe:hover {
+            background: #0000cc;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 255, 0.2);
+        }
+
+        .saga-description {
+            color: #666;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            flex-grow: 1;
+        }
+
+        .col-md-4.mb-4 {
+            margin-bottom: 2rem;
         }
     </style>
 @endsection
@@ -158,106 +282,106 @@
             </div>
         </div>
         <h2 class="text-center mb-4">
-            {{ app()->getLocale() == 'fr' ? Voyager::setting('site.titulo_sagas_index') : Voyager::setting('site.titulo_sagas_index_en') }}</h2>
+            {{ app()->getLocale() == 'fr' ? Voyager::setting('site.titulo_sagas_index') : Voyager::setting('site.titulo_sagas_index_en') }}
+        </h2>
         <div class="row justify-content-center">
             @foreach ($categories as $category)
                 <div class="col-md-4 mb-4">
-                    <div class="card card-plans text-center p-4">
-                        <h5 class="font-weight-normal">{{ app()->getLocale() == 'fr' ? $category->name_fr : $category->name }}</h5>
-                        <div class="img-container">
+                    <div class="saga-card">
+                        <div class="saga-image-container">
                             <img src="{{ asset('storage/' . $category->image) }}" alt="{{ $category->name }}"
-                                class="img-fluid mb-3">
+                                class="saga-image">
                         </div>
-                        {{-- Quiero mostrar un mensaje si el usuario es estudiante, en ambos idiomas --}}
-                        @if (Auth::user()->is_student ?? false)
-                            <p class="mt-3">
-                                <strong>
-                                    {{ app()->getLocale() == 'fr' ? 'Prix spécial pour les étudiants' : 'Special price for students' }}
-                                </strong>
-                            </p>
-                            <div class="display-4 my-3">€ <strong>{{ Voyager::setting('site.abono_estudiant') }}</strong></div>
-                        @else
-                            <div class="display-4 my-3">€ <strong>{{ Voyager::setting('site.abono_normal') }}</strong></div>
-                        @endif
-                        <p class="mb-3">
-                            {{ app()->getLocale() == 'fr' ? $textosFormula->texto_debajo_formula : $textosFormula->texto_debajo_formula_en }}</p>
 
-                            <form action="{{ route('subscription.create') }}" method="POST" class="mb-2">
-                                @csrf
-                                <input type="hidden" name="category_id" value="{{ $category->id }}">
-                                <button type="submit" name="payment_method" value="stripe" class="btn btn-outline-primary btn-lg mb-2">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        class="icon icon-tabler icons-tabler-outline icon-tabler-credit-card">
-                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                        <path d="M3 5m0 3a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3z" />
-                                        <path d="M3 10l18 0" />
-                                        <path d="M7 15l.01 0" />
-                                        <path d="M11 15l2 0" />
-                                    </svg>
-                                    {{ app()->getLocale() == 'fr' ? 'Payer avec une carte de crédit' : 'Pay with credit card' }}
-                                </button>
-                            </form>
-                        @auth
-                            {{-- <form action="{{ route('subscription.trial') }}" method="POST">
-                                @csrf
-                                <input type="hidden" name="category_id" value="{{ $category->id }}">
-                                <button type="submit"
-                                    class="btn btn-success btn-lg">{{ app()->getLocale() == 'fr' ? 'Essai gratuit (7 jours)' : 'Free trial (7 days)' }}</button>
-                            </form> --}}
-                        @else
-                            <a href="{{ route('login') }}"
-                                class="btn btn-secondary btn-lg">{{ app()->getLocale() == 'fr' ? 'Connectez-vous pour continuer' : 'Login to continue' }}</a>
-                        @endauth
+                        <div class="saga-content">
+                            <h3 class="saga-title">
+                                {{ app()->getLocale() == 'fr' ? $category->name_fr : $category->name }}
+                            </h3>
+
+                            @auth
+                                @if (Auth::user()->is_student ?? false)
+                                    <div class="student-badge">
+                                        <i class="fas fa-graduation-cap me-2"></i>
+                                        {{ app()->getLocale() == 'fr' ? 'Prix spécial pour les étudiants' : 'Special price for students' }}
+                                    </div>
+                                @endif
+
+                                <div class="saga-price">
+                                    <div class="display-4"
+                                        data-original-amount="{{ Auth::user()->is_student ?? false ? Voyager::setting('site.abono_estudiant') : Voyager::setting('site.abono_normal') }}">
+                                        €
+                                        <strong>{{ Auth::user()->is_student ?? false ? Voyager::setting('site.abono_estudiant') : Voyager::setting('site.abono_normal') }}</strong>
+                                    </div>
+                                </div>
+
+                                <p class="saga-description">
+                                    {{ app()->getLocale() == 'fr' ? $textosFormula->texto_debajo_formula : $textosFormula->texto_debajo_formula_en }}
+                                </p>
+
+                                <form action="{{ route('subscription.create') }}" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="category_id" value="{{ $category->id }}">
+                                    <input type="hidden" name="amount" value="{{ $amount }}">
+                                    <input type="hidden" name="payment_method" value="stripe">
+
+                                    <div class="coupon-section">
+                                        <label for="coupon_code" class="d-block mb-2">
+                                            <i class="fas fa-tag me-2"></i>
+                                            {{ app()->getLocale() == 'fr' ? 'Code promo' : 'Coupon code' }}
+                                        </label>
+                                        <input type="text" class="coupon-input" id="coupon_code" name="coupon_code"
+                                            placeholder="{{ app()->getLocale() == 'fr' ? 'Entrez votre code' : 'Enter your code' }}">
+                                        <small id="coupon-message" class="form-text mt-2 d-block"></small>
+                                    </div>
+
+                                    <div class="action-buttons">
+                                        <button type="submit" class="btn btn-outline-primary">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                                stroke-linecap="round" stroke-linejoin="round"
+                                                class="icon icon-tabler icons-tabler-outline icon-tabler-credit-card">
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                <path
+                                                    d="M3 5m0 3a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3z" />
+                                                <path d="M3 10l18 0" />
+                                                <path d="M7 15l.01 0" />
+                                                <path d="M11 15l2 0" />
+                                            </svg>
+                                            {{ app()->getLocale() == 'fr' ? 'Payer avec une carte de crédit' : 'Pay with credit card' }}
+                                        </button>
+                                    </div>
+                                </form>
+                            @else
+                                {{-- Mostrar precio base para usuarios no autenticados --}}
+                                <div class="saga-price">
+                                    <div class="display-4">
+                                        € <strong>{{ Voyager::setting('site.abono_normal') }}</strong>
+                                    </div>
+                                </div>
+
+                                <p class="saga-description">
+                                    {{ app()->getLocale() == 'fr' ? $textosFormula->texto_debajo_formula : $textosFormula->texto_debajo_formula_en }}
+                                </p>
+
+                                <div class="action-buttons">
+                                    <a href="{{ route('login') }}" class="btn btn-outline-secondary">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round"
+                                            class="icon icon-tabler icons-tabler-outline icon-tabler-login">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                            <path
+                                                d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2" />
+                                            <path d="M20 12h-13l3 -3m0 6l-3 -3" />
+                                        </svg>
+                                        {{ app()->getLocale() == 'fr' ? 'Se connecter pour continuer' : 'Login to continue' }}
+                                    </a>
+                                </div>
+                            @endauth
+                        </div>
                     </div>
                 </div>
             @endforeach
         </div>
-
-        {{--
-        <div class="row justify-content-center mt-5">
-            <div class="col-md-6 mb-4">
-                <div class="card card-abono text-center {{ !Auth::user()?->is_student ? 'highlighted-plan' : '' }}">
-                    <h5>{{ app()->getLocale() == 'fr' ? 'Adhésion à une conférence' : 'Conference Subscription' }}</h5>
-                    <div class="price-tag">€ <span class="display-4">49</span></div>
-                    <p class="small">
-                        {{ app()->getLocale() == 'fr' ? 'Accès complet aux vidéos de la conférence et librairies interactives' : 'Full access to conference videos and interactive libraries' }}
-                    </p>
-                    <a href="#" class="btn btn-primary mb-4">
-                        {{ app()->getLocale() == 'fr' ? 'Sélectionner' : 'Select' }}
-                    </a>
-                    <p class="small text-muted">
-                        {{ app()->getLocale() == 'fr' ? '4 vidéos interactives, 100 articles, 1000 liens sourcés' : '4 interactive videos, 100 articles, 1000 sourced links' }}
-                    </p>
-                    @if (!Auth::user()?->is_student)
-                        <div class="recommended-badge">
-                            {{ app()->getLocale() == 'fr' ? 'Plan recommandé pour vous' : 'Recommended plan for you' }}
-                        </div>
-                    @endif
-                </div>
-            </div>
-    
-            <div class="col-md-6 mb-4">
-                <div class="card card-abono text-center {{ Auth::user()?->is_student ? 'highlighted-plan' : '' }}">
-                    <h5>{{ app()->getLocale() == 'fr' ? 'Adhésion à une conférence, étudiant' : 'Conference Subscription, student' }}</h5>
-                    <div class="price-tag">€ <span class="display-4">19</span></div>
-                    <p class="small">
-                        {{ app()->getLocale() == 'fr' ? 'Accès complet aux vidéos et librairies interactives' : 'Full access to videos and interactive libraries' }}
-                    </p>
-                    <a href="#" class="btn btn-primary mb-4">
-                        {{ app()->getLocale() == 'fr' ? 'Sélectionner' : 'Select' }}
-                    </a>
-                    <p class="small text-muted">
-                        {{ app()->getLocale() == 'fr' ? 'Tarif étudiant sous présentation de justificatif' : 'Student rate with proof of status' }}
-                    </p>
-                    @if (Auth::user()?->is_student)
-                        <div class="recommended-badge">
-                            {{ app()->getLocale() == 'fr' ? 'Plan recommandé pour vous' : 'Recommended plan for you' }}
-                        </div>
-                    @endif
-                </div>
-            </div>
-        </div> --}}
     </div>
 @endsection

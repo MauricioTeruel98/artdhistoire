@@ -20,27 +20,19 @@
 
                 <!-- Second item -->
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="/interactive/index" id="lisaDropdown" role="button"
-                        data-bs-toggle="dropdown">
+                    <a class="nav-link" href="/interactive/index" id="lisaDropdown" role="button">
                         {{ app()->getLocale() == 'fr' ? 'Vidéos interactives LISA' : 'LISA Interactive Videos' }}
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="lisaDropdown">
-                        <!-- Agregar enlace padre como primera opción en móvil -->
-                        <li class="d-lg-none">
-                            <a class="dropdown-item" href="/interactive/index">
-                                {{ app()->getLocale() == 'fr' ? 'Vidéos interactives LISA' : 'LISA Interactive Videos' }}
-                            </a>
-                        </li>
                         <li><a class="dropdown-item"
                                 href="/interactive">{{ app()->getLocale() == 'fr' ? 'Pilote' : 'Pilot' }}</a></li>
-
                         @php
                             $sagas = DB::table('categories')->where('is_pilote', '!=', 1)->get();
                         @endphp
 
                         @foreach ($sagas as $saga)
-                            <li><a class="dropdown-item" href="/interactive/{{ $saga->id }}">
-                                    {{ app()->getLocale() == 'fr' ? $saga->name_fr : $saga->name }}</a>
+                            <li><a class="dropdown-item"
+                                    href="/interactive/{{ $saga->id }}">{{ app()->getLocale() == 'fr' ? $saga->name_fr : $saga->name }}</a>
                             </li>
                         @endforeach
                     </ul>
@@ -50,24 +42,16 @@
 
                 <!-- Fourth item -->
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="/videos-online" id="onlineVideosDropdown" role="button"
-                        data-bs-toggle="dropdown">
+                    <a class="nav-link" href="/videos-online" id="onlineVideosDropdown" role="button">
                         {{ app()->getLocale() == 'fr' ? 'Vidéos en ligne' : 'Online Videos' }}
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="onlineVideosDropdown">
-                        <!-- Agregar enlace padre como primera opción en móvil -->
-                        <li class="d-lg-none">
-                            <a class="dropdown-item" href="/videos-online">
-                                {{ app()->getLocale() == 'fr' ? 'Vidéos en ligne' : 'Online Videos' }}
-                            </a>
-                        </li>
-
                         @php
                             $videos = DB::table('videosonline')->get();
                         @endphp
                         @foreach ($videos as $video)
-                            <li><a class="dropdown-item" href="/video-online/{{ $video->id }}">
-                                    {{ app()->getLocale() == 'fr' ? $video->title_fr : $video->title }}</a>
+                            <li><a class="dropdown-item"
+                                    href="/video-online/{{ $video->id }}">{{ app()->getLocale() == 'fr' ? $video->title_fr : $video->title }}</a>
                             </li>
                         @endforeach
                     </ul>

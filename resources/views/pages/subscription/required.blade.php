@@ -3,78 +3,100 @@
 @section('title', "Art d'Histoire | Abonnement Requis")
 
 @section('header')
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        @font-face {
-            font-family: 'Futura';
-            src: url('../../fonts/futura-2/Futura\ Book\ font.ttf') format('truetype');
-            font-weight: normal;
-            font-style: normal;
+        .saga-card {
+            border: 1px solid #eaeaea;
+            border-radius: 0.375rem;
+            transition: all 0.3s ease;
+            background: white;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         }
 
-        @font-face {
-            font-family: 'Baskeville Italic';
-            src: url('../../fonts/baskeville/LibreBaskerville-Italic.ttf') format('truetype');
-            font-weight: normal;
-            font-style: normal;
+        .saga-image-container {
+            position: relative;
+            height: 200px;
+            overflow: hidden;
+            border-radius: 0.375rem 0.375rem 0 0;
         }
 
-        body {
-            font-family: 'Futura', sans-serif !important;
-            color: rgb(117, 117, 117) !important;
+        .saga-image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
-        .baskeville-italic {
-            font-family: 'Baskeville Italic', sans-serif !important;
+        .saga-content {
+            padding: 1.5rem;
         }
 
-        .card {
-            border: 1px solid #ddd;
-            padding: 2rem;
+        .saga-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #333;
         }
 
-        .display-4 {
-            font-size: 2rem;
-            font-weight: bold;
+        .saga-price {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 10px;
+            margin: 1rem 0;
         }
 
-        .btn-primary,
-        .btn-info,
-        .btn-success {
-            border: none;
-            font-size: 1.2rem;
-            padding: 0.8rem 2rem;
+        .saga-price .display-4 {
+            color: #212529;
+            font-weight: 700;
+            font-size: 2.5rem;
         }
 
-        .btn-primary {
-            background-color: #0000FF;
-        }
-
-        .btn-primary:hover {
-            background-color: #0000cc;
-        }
-
-        .btn-success {
-            background-color: #28a745;
-        }
-
-        .btn-success:hover {
-            background-color: #218838;
-        }
-
-        .text-muted {
+        .student-badge {
+            background: #e3f2fd;
+            color: #1565c0;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
             font-size: 0.9rem;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+
+        .coupon-section {
+            margin: 1.5rem 0;
+            padding: 1rem;
+            border: 1px dashed #dee2e6;
+            border-radius: 10px;
+            background: #fafafa;
+        }
+
+        .coupon-input {
+            border: 1px solid #ced4da;
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            width: 100%;
+            margin-top: 0.5rem;
+        }
+
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 1rem;
         }
 
         .btn-outline-primary {
             border: 2px solid #0000FF;
             color: #0000FF;
-            padding: 0.5rem 2rem;
-            margin: 1rem 0;
+            padding: 0.8rem 2rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
         }
 
         .btn-outline-primary:hover {
             background-color: #0000FF;
             color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 255, 0.2);
         }
     </style>
 @endsection
@@ -83,50 +105,72 @@
     <div class="container mt-5">
         <div class="row justify-content-center">
             <div class="col-md-8">
-                <h2 class="text-center mb-4">{{ app()->getLocale() == 'fr' ? 'Abonnement Requis' : 'Subscription Required' }}
+                <h2 class="text-center mb-4">
+                    {{ app()->getLocale() == 'fr' ? 'Abonnement Requis' : 'Subscription Required' }}
                 </h2>
-                <div class="card text-center p-4">
-                    <h5 class="font-weight-normal">{{ $category->name }}</h5>
-                    <div class="d-flex justify-content-center">
-                        <img src="{{ asset('storage/' . $category->image) }}" alt="{{ $category->name }}"
-                            class="img-fluid mb-3"
-                            style="height: 200px;
-                                width: 80%;
-                                object-fit: cover;">
+                
+                <div class="saga-card">
+                    <div class="saga-image-container">
+                        <img src="{{ asset('storage/' . $category->image) }}" alt="{{ $category->name }}">
                     </div>
-                    @if (Auth::user()->is_student ?? false)
-                        <div class="display-4 my-3">€ <strong>{{ Voyager::setting('site.abono_estudiant') }}</strong></div>
-                        <p class="mb-3">
-                            {{ app()->getLocale() == 'fr' ? 'Accès complet pour un an' : 'Full access for one year' }}</p>
-                        <p class="mb-3">
-                            {{ app()->getLocale() == 'fr' ? 'Prix spécial pour les étudiants' : 'Special price for students' }}
-                        </p>
-                    @else
-                        <div class="display-4 my-3">€ <strong>{{ Voyager::setting('site.abono_normal') }}</strong></div>
-                        <p class="mb-3">
-                            {{ app()->getLocale() == 'fr' ? 'Accès complet pour un an' : 'Full access for one year' }}</p>
-                    @endif
-                    <form action="{{ route('subscription.create') }}" method="POST" class="mb-2">
-                        @csrf
-                        <input type="hidden" name="category_id" value="{{ $category->id }}">
-                        <button type="submit" name="payment_method" value="stripe" class="btn btn-outline-primary btn-lg mb-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round"
-                                class="icon icon-tabler icons-tabler-outline icon-tabler-credit-card">
-                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                <path d="M3 5m0 3a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3z" />
-                                <path d="M3 10l18 0" />
-                                <path d="M7 15l.01 0" />
-                                <path d="M11 15l2 0" />
-                            </svg>
-                            {{ app()->getLocale() == 'fr' ? 'Payer avec une carte de crédit' : 'Pay with credit card' }}
-                        </button>
-                    </form>
-                    @guest
-                        <a href="{{ route('login') }}"
-                            class="btn btn-secondary btn-lg">{{ app()->getLocale() == 'fr' ? 'Connectez-vous pour continuer' : 'Login to continue' }}</a>
-                    @endguest
+
+                    <div class="saga-content text-center">
+                        <h3 class="saga-title">{{ $category->name }}</h3>
+
+                        @auth
+                            @if (Auth::user()->is_student ?? false)
+                                <div class="student-badge">
+                                    <i class="fas fa-graduation-cap me-2"></i>
+                                    {{ app()->getLocale() == 'fr' ? 'Prix spécial pour les étudiants' : 'Special price for students' }}
+                                </div>
+                            @endif
+
+                            <div class="saga-price">
+                                <div class="display-4">
+                                    € <strong>{{ Auth::user()->is_student ?? false ? Voyager::setting('site.abono_estudiant') : Voyager::setting('site.abono_normal') }}</strong>
+                                </div>
+                                <p class="mb-0">
+                                    {{ app()->getLocale() == 'fr' ? 'Accès complet pour un an' : 'Full access for one year' }}
+                                </p>
+                            </div>
+
+                            <form action="{{ route('subscription.create') }}" method="POST">
+                                @csrf
+                                <input type="hidden" name="category_id" value="{{ $category->id }}">
+                                <input type="hidden" name="amount" value="{{ $amount }}">
+                                <input type="hidden" name="payment_method" value="stripe">
+
+                                <div class="coupon-section">
+                                    <label for="coupon_code" class="d-block mb-2">
+                                        <i class="fas fa-tag me-2"></i>
+                                        {{ app()->getLocale() == 'fr' ? 'Code promo' : 'Coupon code' }}
+                                    </label>
+                                    <input type="text" class="coupon-input" id="coupon_code" name="coupon_code"
+                                        placeholder="{{ app()->getLocale() == 'fr' ? 'Entrez votre code' : 'Enter your code' }}">
+                                    <small id="coupon-message" class="form-text mt-2 d-block"></small>
+                                </div>
+
+                                <div class="action-buttons">
+                                    <button type="submit" class="btn btn-outline-primary">
+                                        <i class="fas fa-credit-card me-2"></i>
+                                        {{ app()->getLocale() == 'fr' ? 'Payer avec une carte de crédit' : 'Pay with credit card' }}
+                                    </button>
+                                </div>
+                            </form>
+                        @else
+                            <div class="saga-price">
+                                <div class="display-4">
+                                    € <strong>{{ Voyager::setting('site.abono_normal') }}</strong>
+                                </div>
+                            </div>
+                            <div class="action-buttons">
+                                <a href="{{ route('login') }}" class="btn btn-outline-primary">
+                                    <i class="fas fa-sign-in-alt me-2"></i>
+                                    {{ app()->getLocale() == 'fr' ? 'Se connecter pour continuer' : 'Login to continue' }}
+                                </a>
+                            </div>
+                        @endauth
+                    </div>
                 </div>
             </div>
         </div>

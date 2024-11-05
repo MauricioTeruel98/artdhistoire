@@ -10,6 +10,7 @@ use App\Models\TextosPiloto;
 use Illuminate\Http\Request;
 use TCG\Voyager\Models\Post;
 use Illuminate\Support\Facades\Auth;
+use TCG\Voyager\Facades\Voyager;
 
 class InteractiveController extends Controller
 {
@@ -25,6 +26,11 @@ class InteractiveController extends Controller
         $subscribedCategoryIds = [];
         $textosFormula = TextosFormula::first();
 
+        // Determinar el monto base según si el usuario es estudiante validado o no
+        $amount = $user && $user->is_student && $user->validated_student ?
+            Voyager::setting('site.abono_estudiant') :
+            Voyager::setting('site.abono_normal');
+
         if ($user) {
             $subscribedCategoryIds = $user->subscriptions()
                 ->where('status', 'active')
@@ -38,9 +44,16 @@ class InteractiveController extends Controller
                 ->toArray();
         }
 
-        $categories = Categories::whereNotIn('id', $subscribedCategoryIds)->where('is_pilote', '!=', 1)->get();
+        $categories = Categories::whereNotIn('id', $subscribedCategoryIds)
+            ->where('is_pilote', '!=', 1)
+            ->get();
 
-        return view('pages.interactive.index', compact('slider', 'categories', 'textosFormula'));
+        return view('pages.interactive.index', compact(
+            'categories',
+            'slider',
+            'textosFormula',
+            'amount' // Agregamos el amount al compact
+        ));
     }
     public function show(Request $request, $id)
     {
