@@ -123,42 +123,74 @@ class SubscriptionController extends Controller
         }
     }
 
-    public function subscribeWithPayPal(Request $request, Categories $category, $amount)
+    private function subscribeWithPayPal(Request $request, Categories $category, $amount)
     {
         try {
             $provider = PayPal::setProvider();
             $provider->setApiCredentials(config('paypal'));
-            $token = $provider->getAccessToken();
-            $provider->setAccessToken($token['access_token']);
+            $tokenData = $provider->getAccessToken();
+
+            $provider->setAccessToken([
+                'access_token' => $tokenData['access_token'],
+                'token_type' => 'Bearer'
+            ]);
+
+            // Eliminamos esta sección ya que el descuento ya se aplicó en create()
+            // if ($couponCode = $request->input('coupon_code')) {
+            //     $coupon = Coupon::where('code', $couponCode)
+            //         ->where('used', false)
+            //         ->first();
+
+            //     if ($coupon) {
+            //         $discount = ($amount * $coupon->discount_percentage) / 100;
+            //         $amount = $amount - $discount;
+            //         session(['coupon_code' => $couponCode]);
+            //     }
+            // }
 
             $order = $provider->createOrder([
                 'intent' => 'CAPTURE',
-                'purchase_units' => [
-                    [
-                        'amount' => [
-                            'currency_code' => 'EUR',
-                            'value' => number_format($amount, 2, '.', ''),
-                            'breakdown' => [
-                                'item_total' => [
-                                    'currency_code' => 'EUR',
-                                    'value' => number_format($amount, 2, '.', '')
-                                ]
-                            ]
-                        ],
-                        'description' => 'Suscripción anual a ' . $category->name .
-                            ($request->input('coupon_code') ? ' (Incluye descuento por cupón)' : ''),
-                    ]
-                ],
+                'purchase_units' => [[
+                    'amount' => [
+                        'currency_code' => 'EUR',
+                        'value' => number_format($amount, 2, '.', ''),
+                    ],
+                    'description' => 'Suscripción anual a ' . $category->name .
+                        ($request->input('coupon_code') ? ' (Descuento aplicado)' : '')
+                ]],
                 'application_context' => [
-                    'return_url' => route('subscription.success') . '?category_id=' . $category->id . '&amount=' . $amount,
-                    'cancel_url' => route('subscription.cancel'),
+                    'brand_name' => config('app.name'),
+                    'locale' => app()->getLocale() == 'fr' ? 'fr-FR' : 'en-US',
+                    'landing_page' => 'LOGIN',
+                    'shipping_preference' => 'NO_SHIPPING',
+                    'user_action' => 'PAY_NOW',
+                    'return_url' => route('subscription.success', [
+                        'category_id' => $category->id,
+                        'amount' => $amount
+                    ]),
+                    'cancel_url' => route('subscription.cancel')
                 ]
             ]);
 
-            return redirect($order['links'][1]['href']);
+            if (isset($order['links'][1]['href'])) {
+                return redirect($order['links'][1]['href']);
+            }
+
+            \Log::error('PayPal Order Response:', $order);
+            return redirect()->back()->with(
+                'error',
+                app()->getLocale() == 'fr' ?
+                    'Erreur lors de la création de la commande PayPal.' :
+                    'Error creating PayPal order.'
+            );
         } catch (\Exception $e) {
-            \Log::error('Error de PayPal: ' . $e->getMessage());
-            return redirect()->back()->with('error', 'Hubo un problema al procesar el pago con PayPal. Por favor, inténtalo de nuevo.');
+            \Log::error('PayPal Error: ' . $e->getMessage());
+            return redirect()->back()->with(
+                'error',
+                app()->getLocale() == 'fr' ?
+                    'Un problème est survenu lors du traitement du paiement PayPal. Veuillez réessayer.' :
+                    'There was a problem processing the PayPal payment. Please try again.'
+            );
         }
     }
 
@@ -197,7 +229,7 @@ class SubscriptionController extends Controller
 
         return redirect()->route('home')->with('success', '¡Suscripción exitosa a ' . $category->name . '!');
     }
-    
+
     public function cancel()
     {
         return redirect()->route('home')->with('info', 'La suscripción ha sido cancelada.');

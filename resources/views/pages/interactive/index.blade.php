@@ -201,7 +201,7 @@
         .action-buttons {
             display: flex;
             flex-direction: column;
-            gap: 1rem;
+            gap: 0rem;
             margin-top: auto;
             flex-shrink: 0;
         }
@@ -318,39 +318,84 @@
                                     {{ app()->getLocale() == 'fr' ? $textosFormula->texto_debajo_formula : $textosFormula->texto_debajo_formula_en }}
                                 </p>
 
-                                <form action="{{ route('subscription.create') }}" method="POST">
-                                    @csrf
-                                    <input type="hidden" name="category_id" value="{{ $category->id }}">
-                                    <input type="hidden" name="amount" value="{{ $amount }}">
-                                    <input type="hidden" name="payment_method" value="stripe">
+                                <div class="action-buttons">
+                                    {{-- Formulario de Stripe --}}
+                                    <form action="{{ route('subscription.create') }}" method="POST">
+                                        @csrf
+                                        <input type="hidden" name="category_id" value="{{ $category->id }}">
+                                        <input type="hidden" name="amount" value="{{ $amount }}">
+                                        <input type="hidden" name="payment_method" value="stripe">
+                                        <input type="hidden" name="coupon_code" id="hidden_coupon_code_{{ $category->id }}">
 
-                                    <div class="coupon-section">
-                                        <label for="coupon_code" class="d-block mb-2">
-                                            <i class="fas fa-tag me-2"></i>
-                                            {{ app()->getLocale() == 'fr' ? 'Code promo' : 'Coupon code' }}
-                                        </label>
-                                        <input type="text" class="coupon-input" id="coupon_code" name="coupon_code"
-                                            placeholder="{{ app()->getLocale() == 'fr' ? 'Entrez votre code' : 'Enter your code' }}">
-                                        <small id="coupon-message" class="form-text mt-2 d-block"></small>
-                                    </div>
+                                        <div class="coupon-section">
+                                            <label for="coupon_code_{{ $category->id }}" class="d-block mb-2">
+                                                <i class="fas fa-tag me-2"></i>
+                                                {{ app()->getLocale() == 'fr' ? 'Code promo' : 'Coupon code' }}
+                                            </label>
+                                            <input type="text" class="coupon-input" id="coupon_code_{{ $category->id }}"
+                                                placeholder="{{ app()->getLocale() == 'fr' ? 'Entrez votre code' : 'Enter your code' }}">
+                                            <small id="coupon-message-{{ $category->id }}"
+                                                class="form-text mt-2 d-block"></small>
+                                        </div>
 
-                                    <div class="action-buttons">
-                                        <button type="submit" class="btn btn-outline-primary">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                                stroke-linecap="round" stroke-linejoin="round"
-                                                class="icon icon-tabler icons-tabler-outline icon-tabler-credit-card">
-                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                                <path
-                                                    d="M3 5m0 3a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3z" />
-                                                <path d="M3 10l18 0" />
-                                                <path d="M7 15l.01 0" />
-                                                <path d="M11 15l2 0" />
-                                            </svg>
+                                        <button type="submit" class="btn btn-outline-primary w-100 mb-2">
+                                            <i class="fas fa-credit-card me-2"></i>
                                             {{ app()->getLocale() == 'fr' ? 'Payer avec une carte de crédit' : 'Pay with credit card' }}
                                         </button>
-                                    </div>
-                                </form>
+                                    </form>
+
+                                    {{-- Formulario de PayPal --}}
+                                    <form action="{{ route('subscription.create') }}" method="POST">
+                                        @csrf
+                                        <input type="hidden" name="category_id" value="{{ $category->id }}">
+                                        <input type="hidden" name="amount" value="{{ $amount }}">
+                                        <input type="hidden" name="payment_method" value="paypal">
+                                        <input type="hidden" name="coupon_code"
+                                            id="hidden_coupon_code_paypal_{{ $category->id }}">
+
+                                        <button type="submit" class="btn btn-outline-primary w-100">
+                                            <i class="fab fa-paypal me-2"></i>
+                                            {{ app()->getLocale() == 'fr' ? 'Payer avec PayPal' : 'Pay with PayPal' }}
+                                        </button>
+                                    </form>
+                                </div>
+                                <script>
+                                    document.getElementById('coupon_code_{{ $category->id }}').addEventListener('input', function() {
+                                        const couponCode = this.value;
+                                        const hiddenInputs = [
+                                            document.getElementById('hidden_coupon_code_{{ $category->id }}'),
+                                            document.getElementById('hidden_coupon_code_paypal_{{ $category->id }}')
+                                        ];
+
+                                        if (couponCode) {
+                                            fetch('/validate-coupon', {
+                                                    method: 'POST',
+                                                    headers: {
+                                                        'Content-Type': 'application/json',
+                                                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                                                    },
+                                                    body: JSON.stringify({
+                                                        code: couponCode
+                                                    })
+                                                })
+                                                .then(response => response.json())
+                                                .then(data => {
+                                                    const messageElement = document.getElementById('coupon-message-{{ $category->id }}');
+                                                    if (data.valid) {
+                                                        messageElement.style.color = 'green';
+                                                        messageElement.textContent = data.message;
+                                                        // Actualizar ambos inputs ocultos con el código del cupón
+                                                        hiddenInputs.forEach(input => input.value = couponCode);
+                                                    } else {
+                                                        messageElement.style.color = 'red';
+                                                        messageElement.textContent = data.message;
+                                                        // Limpiar ambos inputs ocultos
+                                                        hiddenInputs.forEach(input => input.value = '');
+                                                    }
+                                                });
+                                        }
+                                    });
+                                </script>
                             @else
                                 {{-- Mostrar precio base para usuarios no autenticados --}}
                                 <div class="saga-price">
