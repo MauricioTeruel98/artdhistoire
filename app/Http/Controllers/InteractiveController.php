@@ -63,26 +63,27 @@ class InteractiveController extends Controller
         return view('pages.interactive.show', compact('interactive', 'slider'));
     }
 
-    public function showPdf($id)
+    public function showPdf($id, $category_id)
     {
         $archive = Archive::findOrFail($id);
         $slider = Slider::all();
-        return view('pages.interactive.pdf', compact('archive', 'slider'));
+        return view('pages.interactive.pdf', compact('archive', 'slider', 'category_id'));
     }
 
-    public function showPdfPilote($id)
-    {
-        $archive = Archive::findOrFail($id);
-        $slider = Slider::all();
+public function showPdfPilote($id)
+{
+    $archive = Archive::findOrFail($id);
+    $slider = Slider::all();
+    $isPilote = true;
 
-        // Verificar si el archivo pertenece a una categoría piloto
-        $post = Post::find($archive->post_id);
-        if (!$post || !$post->category || !$post->category->is_pilote) {
-            abort(404);
-        }
-
-        return view('pages.interactive.pdf', compact('archive', 'slider'));
+    // Verificar si el archivo pertenece a una categoría piloto
+    $post = Post::find($archive->post_id);
+    if (!$post || !$post->category || !$post->category->is_pilote) {
+        abort(404);
     }
+
+    return view('pages.interactive.pdf', compact('archive', 'slider', 'isPilote'));
+}
 
     public function pilote()
     {

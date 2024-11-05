@@ -81,7 +81,7 @@
     <div class="container mt-5">
         <div class="row justify-content-center">
             <div class="col-md-12">
-                <button onclick="history.back()" class="btn btn-outline-secondary mb-4">
+                <button onclick="goBack()" class="btn btn-outline-secondary mb-4">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                         class="icon icon-tabler icons-tabler-outline icon-tabler-chevrons-left">
@@ -91,6 +91,16 @@
                     </svg>
                     {{ app()->getLocale() == 'fr' ? 'Retour à la bibliothèque' : 'Back to the library' }}
                 </button>
+                
+                <script>
+                function goBack() {
+                    @if(isset($isPilote) && $isPilote)
+                        window.location.href = "{{ route('interactive.pilote') }}";
+                    @else
+                        window.location.href = "{{ route('interactive.show', ['id' => $category_id ?? '']) }}";
+                    @endif
+                }
+                </script>
                 <h2 class="mb-4 italic playfair-display">{{ $archive->title }}</h2>
                 <div class="zoom-controls">
                     <p>Zoom</p>
