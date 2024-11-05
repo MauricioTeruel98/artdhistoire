@@ -228,7 +228,6 @@
         .title-header {
             color: white;
             font-size: 18px;
-            font-style: italic;
             padding: 0px 20px;
         }
 

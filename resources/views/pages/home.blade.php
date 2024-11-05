@@ -97,7 +97,7 @@
             color: initial;
             background-color: initial;
             box-shadow: none;
-        }}
+        }
 
         .title-header {
             margin-bottom: 0 !important;

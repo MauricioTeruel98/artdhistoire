@@ -100,6 +100,10 @@
             font-size: 12px !important;
         }
 
+        .container-special{
+            width: 90%;
+        }
+
         iframe .pushfooter {
             height: 0px !important;
         }
@@ -109,25 +113,13 @@
                 width: 100%;
             }
         }
-
-        @media (min-width: 1400px) {
-
-            .container,
-            .container-lg,
-            .container-md,
-            .container-sm,
-            .container-xl,
-            .container-xxl {
-                max-width: 1400px;
-            }
-        }
     </style>
 
 @endsection
 
 @section('content')
     @include('partials.slider')
-    <div class="container mt-4">
+    <div class="mx-auto mt-4 container-special">
         <h1 class="futura-light mb-4" style="font-size: 30px !important;">
             {{ app()->getLocale() == 'fr' ? $interactive->name_fr : $interactive->name }}
         </h1>
@@ -356,7 +348,7 @@
                         @if ($index === 0)
                             <div class="row mt-4 archive-section">
                                 <div class="col-12">
-                                    <div class="d-flex flex-wrap gap-3 justify-content-center">
+                                    <div class="d-flex flex-wrap gap-4 justify-content-center">
                                         <div class="d-flex align-items-center">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                 viewBox="0 0 24 24" fill="none" stroke="currentColor"

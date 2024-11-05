@@ -18,6 +18,8 @@ class TextosFormula extends Model
         'formula_estudiante',
         'formula_estudiante_en',
         'formula_personalizada',
-        'formula_personalizada_en'
+        'formula_personalizada_en',
+        'texto_debajo_formula',
+        'texto_debajo_formula_en'
     ];
 }

@@ -180,7 +180,7 @@
                             <div class="display-4 my-3">€ <strong>{{ Voyager::setting('site.abono_normal') }}</strong></div>
                         @endif
                         <p class="mb-3">
-                            {{ app()->getLocale() == 'fr' ? Voyager::setting('site.texto_formulas') : Voyager::setting('site.texto_formulas_en') }}</p>
+                            {{ app()->getLocale() == 'fr' ? $textosFormula->texto_debajo_formula : $textosFormula->texto_debajo_formula_en }}</p>
 
                             <form action="{{ route('subscription.create') }}" method="POST" class="mb-2">
                                 @csrf
