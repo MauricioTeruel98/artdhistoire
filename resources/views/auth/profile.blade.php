@@ -155,11 +155,12 @@
                 <!-- Account Tab -->
                 <div class="tab-pane fade show active" id="account" role="tabpanel">
                     <div class="avatar-container">
-                        @if($user->avatar)
-                            <img src="{{ asset('storage/' . $user->avatar) }}" alt="Avatar" class="avatar-preview">
-                        @else
-                            <img src="{{ asset('img/user.png') }}" alt="Default Avatar" class="avatar-preview">
-                        @endif
+                        @if ($user->avatar)
+                                <img src="{{ asset('storage/' . $user->avatar) }}" alt="Profile" class="avatar-preview"
+                                    onerror="this.onerror=null; this.src='{{ asset('img/user.png') }}'">
+                            @else
+                                <img src="{{ asset('img/user.png') }}" alt="Profile" class="avatar-preview">
+                            @endif
                     </div>
 
                     <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data">

@@ -16,7 +16,7 @@
         }
 
         .iframe-container {
-            min-height: 500px;
+            min-height: 420px;
         }
 
         .play-button {
@@ -104,7 +104,7 @@
             height: 0px !important;
         }
 
-        .container-special{
+        .container-special {
             width: 90%;
         }
 
@@ -175,7 +175,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-7">
+                        <div class="col-md-7 d-flex flex-column justify-content-center">
                             @if (app()->getLocale() == 'fr')
                                 <div class="d-flex flex-wrap topic-list">
                                     @php
@@ -195,7 +195,7 @@
                                             <div class="col-md-4">
                                                 @foreach ($archives->slice($col * $itemsPerColumn, $itemsPerColumn) as $archive)
                                                     <div class="topic">
-                                                        <div class="topic-item">
+                                                        <div class="topic-item d-flex align-items-center">
                                                             <a
                                                                 href="{{ route('interactive.pdf.pilote', ['id' => $archive->id]) }}">
                                                                 @if ($archive->type == 'nonDisponible')
@@ -297,7 +297,7 @@
                                             <div class="col-md-4">
                                                 @foreach ($archivesEn->slice($col * $itemsPerColumn, $itemsPerColumn) as $archive)
                                                     <div class="topic">
-                                                        <div class="topic-item">
+                                                        <div class="topic-item d-flex align-items-center">
                                                             <a
                                                                 href="{{ route('interactive.pdf.pilote', ['id' => $archive->id]) }}">
                                                                 @if ($archive->type == 'nonDisponible')
