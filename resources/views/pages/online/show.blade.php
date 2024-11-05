@@ -134,6 +134,10 @@
         .texte-video{
             font-size: 16px !important;
         }
+
+        .text-justify p{
+            text-align: justify !important;
+        }
     </style>
 
     <script>
@@ -173,13 +177,17 @@
                         {{ app()->getLocale() == 'fr' ? $videoOnline->subtitle_fr : $videoOnline->subtitle }}</h2>
                 </div>
                 <div class="col-md-7 text-start texte futura-light">
-                    {!! app()->getLocale() == 'fr' ? $videoOnline->text_fr : $videoOnline->text !!}
+                    <div class="text-justify">
+                        {!! app()->getLocale() == 'fr' ? $videoOnline->text_fr : $videoOnline->text !!}
+                    </div>
                 </div>
             </div>
 
             <div class="row mt-4">
                 <div class="col-12 futura subtitle">
-                    {!! app()->getLocale() == 'fr' ? $videoOnline->texto_secondary_fr : $videoOnline->texto_secondary !!}
+                    <div class="text-justify">
+                        {!! app()->getLocale() == 'fr' ? $videoOnline->texto_secondary_fr : $videoOnline->texto_secondary !!}
+                    </div>
                 </div>
             </div>
 
@@ -263,7 +271,7 @@
                                     </div>
                                 @endif
                             </div>
-                            <div class="col-md-7 texte-video futura-light">
+                            <div class="col-md-7 d-flex justify-content-center align-items-center texte-video futura-light">
                                 {!! $video['text'] !!}
                             </div>
                         </div>
@@ -351,7 +359,7 @@
                                 </div>
                             @endif
                         </div>
-                        <div class="col-md-7 texte-video futura-light">
+                        <div class="col-md-7 d-flex justify-content-center align-items-center texte-video futura-light">
                             {!! $video['text'] !!}
                         </div>
                     </div>

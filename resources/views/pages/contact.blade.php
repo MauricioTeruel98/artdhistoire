@@ -89,6 +89,10 @@
         p{
             font-size: 16px !important;
         }
+
+        .text-justify p{
+            text-align: justify !important;
+        }
     </style>
 
 @endsection
@@ -97,7 +101,10 @@
     <div class="container mt-5">
         <div class="row">
             <div class="col-md-6">
-                {!! app()->getLocale() == 'fr' ? $textos->texto_about_first : $textos->texto_about_first_en !!}
+                {{--Justificar texto--}}
+                <div class="text-justify">
+                    {!! app()->getLocale() == 'fr' ? $textos->texto_about_first : $textos->texto_about_first_en !!}
+                </div>
 
                 {{-- Boton libro blanco --}}
 
@@ -139,7 +146,10 @@
             </div>
 
             <div class="col-md-6 content-about">
-                {!! app()->getLocale() == 'fr' ? $textos->texto_about_second : $textos->texto_about_second_en !!}
+                {{--Justificar texto--}}
+                <div class="text-justify">
+                    {!! app()->getLocale() == 'fr' ? $textos->texto_about_second : $textos->texto_about_second_en !!}
+                </div>
             </div>
         </div>
     </div>

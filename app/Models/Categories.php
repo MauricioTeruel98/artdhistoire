@@ -18,6 +18,7 @@ class Categories extends Model
         'slug',
         'slug_fr',
         'image',
+        'order',
     ];
 
     protected static function boot()
