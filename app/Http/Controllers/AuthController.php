@@ -19,23 +19,35 @@ class AuthController extends Controller
     // Maneja el registro de usuarios
     public function register(Request $request)
     {
-        $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'is_student' => ['nullable', 'boolean'],
-        ]);
+        try {
+            $request->validate([
+                'name' => ['required', 'string', 'max:255'],
+                'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+                'password' => ['required', 'confirmed', Rules\Password::defaults()],
+                'is_student' => ['nullable', 'boolean'],
+            ]);
 
-        User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'is_student' => $request->is_student ?? false,
-        ]);
+            User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'is_student' => $request->is_student ?? false,
+            ]);
 
-        return redirect('/login')->with('success', app()->getLocale() == 'fr'
-            ? 'Inscription réussie. Veuillez vous connecter.'
-            : 'Registration successful. Please login.');
+            return redirect('/login')->with('success', app()->getLocale() == 'fr'
+                ? 'Inscription réussie. Veuillez vous connecter.'
+                : 'Registro exitoso. Por favor inicie sesión.');
+        } catch (\Illuminate\Database\QueryException $e) {
+            if ($e->errorInfo[1] == 1062) { // Error de duplicado en MySQL
+                return back()
+                    ->withInput()
+                    ->withErrors(['email' => 'El correo electrónico ya está registrado.']);
+            }
+
+            return back()
+                ->withInput()
+                ->withErrors(['error' => 'Ha ocurrido un error durante el registro. Por favor, inténtelo de nuevo.']);
+        }
     }
 
     // Muestra el formulario de login

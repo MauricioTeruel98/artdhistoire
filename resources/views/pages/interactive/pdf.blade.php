@@ -101,7 +101,7 @@
                     @endif
                 }
                 </script>
-                <h2 class="mb-4 italic playfair-display">{{ $archive->title }}</h2>
+                <h2 class="mb-4">{{ $archive->title }}</h2>
                 <div class="zoom-controls">
                     <p>Zoom</p>
                     <button class="zoom-btn" onclick="changeZoom(0.2)">+</button>
