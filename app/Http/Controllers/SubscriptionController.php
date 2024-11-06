@@ -37,7 +37,17 @@ class SubscriptionController extends Controller
         // Solo validar el cupón sin marcarlo como usado
         if ($couponCode = $request->input('coupon_code')) {
             $coupon = Coupon::where('code', $couponCode)
-                ->where('used', false)
+                ->where(function ($query) {
+                    $query->where(function ($q) {
+                        // Cupones de un solo uso
+                        $q->where('is_dateable', false)
+                            ->where('used', false);
+                    })->orWhere(function ($q) {
+                        // Cupones con fecha límite
+                        $q->where('is_dateable', true)
+                            ->where('limit_date', '>', now());
+                    });
+                })
                 ->first();
 
             if ($coupon) {
@@ -208,6 +218,7 @@ class SubscriptionController extends Controller
         // Marcar el cupón como usado si existe
         if ($couponCode = session('coupon_code')) {
             $coupon = Coupon::where('code', $couponCode)
+                ->where('is_dateable', false)
                 ->where('used', false)
                 ->first();
 

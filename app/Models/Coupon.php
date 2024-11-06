@@ -12,7 +12,8 @@ class Coupon extends Model
         'discount_percentage',
         'used',
         'is_dateable',
-        'limit_date'
+        'limit_date',
+        'is_active'
     ];
 
     protected $casts = [
