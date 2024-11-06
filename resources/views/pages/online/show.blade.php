@@ -272,7 +272,9 @@
                                 @endif
                             </div>
                             <div class="col-md-7 d-flex justify-content-center align-items-center texte-video futura-light">
-                                {!! $video['text'] !!}
+                                <div>
+                                    {!! $video['text'] !!}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -360,7 +362,9 @@
                             @endif
                         </div>
                         <div class="col-md-7 d-flex justify-content-center align-items-center texte-video futura-light">
-                            {!! $video['text'] !!}
+                            <div>
+                                {!! $video['text'] !!}
+                            </div>
                         </div>
                     </div>
                 </div>
