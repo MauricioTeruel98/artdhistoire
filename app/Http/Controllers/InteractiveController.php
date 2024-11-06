@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Categories;
 use App\Models\Slider;
 use App\Models\Archive;
+use App\Models\ArchivesEn;
 use App\Models\TextosFormula;
 use App\Models\TextosPiloto;
 use Illuminate\Http\Request;
@@ -66,14 +67,27 @@ class InteractiveController extends Controller
 
     public function showPdf($id, $category_id)
     {
-        $archive = Archive::findOrFail($id);
+        $isEnglish = app()->getLocale() == 'en';
+        
+        if($isEnglish){
+            $archive = ArchivesEn::findOrFail($id);
+        }else{
+            $archive = Archive::findOrFail($id);
+        }
+
         $slider = Slider::all();
         return view('pages.interactive.pdf', compact('archive', 'slider', 'category_id'));
     }
 
     public function showPdfPilote($id)
     {
-        $archive = Archive::findOrFail($id);
+        $isEnglish = app()->getLocale() == 'en';
+        
+        if($isEnglish){
+            $archive = ArchivesEn::findOrFail($id);
+        }else{
+            $archive = Archive::findOrFail($id);
+        }
         $slider = Slider::all();
         $isPilote = true;
 
