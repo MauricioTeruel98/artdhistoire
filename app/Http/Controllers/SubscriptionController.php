@@ -17,6 +17,7 @@ class SubscriptionController extends Controller
     {
         $category = Categories::findOrFail($request->input('category_id'));
         $user = auth()->user();
+        $isEnglish = app()->getLocale() != 'fr';
 
         // Verificaciones de estudiante...
         if ($user->is_student && !$user->validated_student && $user->certificate) {
@@ -28,9 +29,10 @@ class SubscriptionController extends Controller
         }
 
         $paymentMethod = $request->input('payment_method');
+
+        // Actualizar esta parte para usar los montos en dólares cuando el idioma es inglés
         $amount = $user->is_student && $user->validated_student ?
-            Voyager::setting('site.abono_estudiant') :
-            Voyager::setting('site.abono_normal');
+            ($isEnglish ? Voyager::setting('site.abono_estudiant_DOLARES') : Voyager::setting('site.abono_estudiant')) : ($isEnglish ? Voyager::setting('site.abono_normal_DOLARES') : Voyager::setting('site.abono_normal'));
 
         // Solo validar el cupón sin marcarlo como usado
         if ($couponCode = $request->input('coupon_code')) {
@@ -95,22 +97,25 @@ class SubscriptionController extends Controller
     private function createStripeCheckoutSession(Request $request, Categories $category, $amount)
     {
         Stripe::setApiKey(config('services.stripe.secret'));
+        $isEnglish = app()->getLocale() != 'fr';
 
         try {
             $session = Session::create([
                 'payment_method_types' => ['card'],
-                'line_items' => [[
-                    'price_data' => [
-                        'currency' => app()->getLocale() == 'fr' ? 'eur' : 'USD',
-                        'product_data' => [
-                            'name' => 'Suscripción anual a ' . $category->name,
-                            'description' => $request->input('coupon_code') ?
-                                'Incluye descuento por cupón' : null,
+                'line_items' => [
+                    [
+                        'price_data' => [
+                            'currency' => $isEnglish ? 'usd' : 'eur',
+                            'product_data' => [
+                                'name' => 'Suscripción anual a ' . $category->name,
+                                'description' => $request->input('coupon_code') ?
+                                    'Incluye descuento por cupón' : null,
+                            ],
+                            'unit_amount' => (int)($amount * 100),
                         ],
-                        'unit_amount' => (int)($amount * 100), // Convertir a centavos
-                    ],
-                    'quantity' => 1,
-                ]],
+                        'quantity' => 1,
+                    ]
+                ],
                 'mode' => 'payment',
                 'success_url' => route('subscription.success') . '?session_id={CHECKOUT_SESSION_ID}&category_id=' . $category->id . '&amount=' . $amount,
                 'cancel_url' => route('subscription.cancel'),
@@ -129,30 +134,18 @@ class SubscriptionController extends Controller
             $provider = PayPal::setProvider();
             $provider->setApiCredentials(config('paypal'));
             $tokenData = $provider->getAccessToken();
+            $isEnglish = app()->getLocale() != 'fr';
 
             $provider->setAccessToken([
                 'access_token' => $tokenData['access_token'],
                 'token_type' => 'Bearer'
             ]);
 
-            // Eliminamos esta sección ya que el descuento ya se aplicó en create()
-            // if ($couponCode = $request->input('coupon_code')) {
-            //     $coupon = Coupon::where('code', $couponCode)
-            //         ->where('used', false)
-            //         ->first();
-
-            //     if ($coupon) {
-            //         $discount = ($amount * $coupon->discount_percentage) / 100;
-            //         $amount = $amount - $discount;
-            //         session(['coupon_code' => $couponCode]);
-            //     }
-            // }
-
             $order = $provider->createOrder([
                 'intent' => 'CAPTURE',
                 'purchase_units' => [[
                     'amount' => [
-                        'currency_code' => 'EUR',
+                        'currency_code' => $isEnglish ? 'USD' : 'EUR',
                         'value' => number_format($amount, 2, '.', ''),
                     ],
                     'description' => 'Suscripción anual a ' . $category->name .

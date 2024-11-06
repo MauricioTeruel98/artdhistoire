@@ -271,7 +271,7 @@
                                     </div>
                                 @endif
                             </div>
-                            <div class="col-md-7 d-flex justify-content-center align-items-center texte-video futura-light">
+                            <div class="col-md-7 d-flex justify-content-center align-items-center texte-video futura-light px-4">
                                 <div>
                                     {!! $video['text'] !!}
                                 </div>
@@ -361,7 +361,7 @@
                                 </div>
                             @endif
                         </div>
-                        <div class="col-md-7 d-flex justify-content-center align-items-center texte-video futura-light">
+                        <div class="col-md-7 d-flex justify-content-center align-items-center texte-video futura-light px-4">
                             <div>
                                 {!! $video['text'] !!}
                             </div>

@@ -25,11 +25,12 @@ class InteractiveController extends Controller
         $user = Auth::user();
         $subscribedCategoryIds = [];
         $textosFormula = TextosFormula::first();
-
-        // Determinar el monto base según si el usuario es estudiante validado o no
+        $isEnglish = app()->getLocale() != 'fr';
+    
+        // Determinar el monto base según idioma y tipo de usuario
         $amount = $user && $user->is_student && $user->validated_student ?
-            Voyager::setting('site.abono_estudiant') :
-            Voyager::setting('site.abono_normal');
+            ($isEnglish ? Voyager::setting('site.abono_estudiant_DOLARES') : Voyager::setting('site.abono_estudiant')) :
+            ($isEnglish ? Voyager::setting('site.abono_normal_DOLARES') : Voyager::setting('site.abono_normal'));
 
         if ($user) {
             $subscribedCategoryIds = $user->subscriptions()

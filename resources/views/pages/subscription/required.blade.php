@@ -127,7 +127,27 @@
 
                             <div class="saga-price">
                                 <div class="display-4">
-                                    € <strong>{{ Auth::user()->is_student ?? false ? Voyager::setting('site.abono_estudiant') : Voyager::setting('site.abono_normal') }}</strong>
+                                    {{ app()->getLocale() == 'fr' ? '€' : '$' }} 
+                                    <strong>
+                                        @auth
+                                            @if (Auth::user()->is_student ?? false)
+                                                {{ app()->getLocale() == 'fr' ? 
+                                                    Voyager::setting('site.abono_estudiant') : 
+                                                    Voyager::setting('site.abono_estudiant_DOLARES') 
+                                                }}
+                                            @else
+                                                {{ app()->getLocale() == 'fr' ? 
+                                                    Voyager::setting('site.abono_normal') : 
+                                                    Voyager::setting('site.abono_normal_DOLARES') 
+                                                }}
+                                            @endif
+                                        @else
+                                            {{ app()->getLocale() == 'fr' ? 
+                                                Voyager::setting('site.abono_normal') : 
+                                                Voyager::setting('site.abono_normal_DOLARES') 
+                                            }}
+                                        @endauth
+                                    </strong>
                                 </div>
                                 <p class="mb-0">
                                     {{ app()->getLocale() == 'fr' ? 'Accès complet pour un an' : 'Full access for one year' }}

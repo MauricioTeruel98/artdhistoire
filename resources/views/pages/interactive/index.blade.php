@@ -246,7 +246,14 @@
             <div class="col-md-4 mb-4">
                 <div class="card card-plans text-center card-formula">
                     <h5>{{ app()->getLocale() == 'fr' ? 'Vous êtes un particulier ?' : 'Are you an individual?' }}</h5>
-                    <div class="price-tag">€ <span class="display-4">{{ Voyager::setting('site.abono_normal') }}</span></div>
+                    <div class="price-tag">
+                        {{ app()->getLocale() == 'fr' ? '€' : '$' }}
+                        <span class="display-4">
+                            {{ app()->getLocale() == 'fr'
+                                ? Voyager::setting('site.abono_normal')
+                                : Voyager::setting('site.abono_normal_DOLARES') }}
+                        </span>
+                    </div>
                     <p class="small">
                         {{ app()->getLocale() == 'fr' ? $textosFormula->formula_normal : $textosFormula->formula_normal_en }}
                     </p>
@@ -257,7 +264,13 @@
             <div class="col-md-4 mb-4">
                 <div class="card card-plans text-center card-formula">
                     <h5>{{ app()->getLocale() == 'fr' ? 'Vous êtes étudiant ?' : 'Are you a student?' }}</h5>
-                    <div class="price-tag">€ <span class="display-4">{{ Voyager::setting('site.abono_estudiant') }}</span>
+                    <div class="price-tag">
+                        {{ app()->getLocale() == 'fr' ? '€' : '$' }}
+                        <span class="display-4">
+                            {{ app()->getLocale() == 'fr'
+                                ? Voyager::setting('site.abono_estudiant')
+                                : Voyager::setting('site.abono_estudiant_DOLARES') }}
+                        </span>
                     </div>
                     <p class="small">
                         {{ app()->getLocale() == 'fr' ? $textosFormula->formula_estudiante : $textosFormula->formula_estudiante_en }}
@@ -308,9 +321,21 @@
 
                                 <div class="saga-price">
                                     <div class="display-4"
-                                        data-original-amount="{{ Auth::user()->is_student ?? false ? Voyager::setting('site.abono_estudiant') : Voyager::setting('site.abono_normal') }}">
-                                        €
-                                        <strong>{{ Auth::user()->is_student ?? false ? Voyager::setting('site.abono_estudiant') : Voyager::setting('site.abono_normal') }}</strong>
+                                        data-original-amount="{{ Auth::user()->is_student ?? false
+                                            ? (app()->getLocale() == 'fr'
+                                                ? Voyager::setting('site.abono_estudiant')
+                                                : Voyager::setting('site.abono_estudiant_DOLARES'))
+                                            : (app()->getLocale() == 'fr'
+                                                ? Voyager::setting('site.abono_normal')
+                                                : Voyager::setting('site.abono_normal_DOLARES')) }}">
+                                        {{ app()->getLocale() == 'fr' ? '€' : '$' }}
+                                        <strong>{{ Auth::user()->is_student ?? false
+                                            ? (app()->getLocale() == 'fr'
+                                                ? Voyager::setting('site.abono_estudiant')
+                                                : Voyager::setting('site.abono_estudiant_DOLARES'))
+                                            : (app()->getLocale() == 'fr'
+                                                ? Voyager::setting('site.abono_normal')
+                                                : Voyager::setting('site.abono_normal_DOLARES')) }}</strong>
                                     </div>
                                 </div>
 
