@@ -66,6 +66,13 @@
             font-style: normal;
         }
 
+        @font-face {
+            font-family: 'Arapey';
+            src: url('{{ asset('fonts/arapey/Arapey-Regular.ttf') }}') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
 
         /* Ahora puedes usar la fuente en tu CSS */
         body {
@@ -96,6 +103,10 @@
 
         .baskeville-italic {
             font-family: 'Baskeville Italic', sans-serif !important;
+        }
+
+        .arapey {
+            font-family: 'Arapey', sans-serif !important;
         }
 
         a {
@@ -564,9 +575,12 @@
     <script>
         function showStudentBanner() {
             const banner = document.getElementById('studentBanner');
-            if (banner && !localStorage.getItem('studentBannerClosed')) {
+            // Verificar si el banner existe y si nunca se ha mostrado antes
+            if (banner && !sessionStorage.getItem('studentBannerShown')) {
                 setTimeout(() => {
                     banner.classList.add('show');
+                    // Marcar que el banner ya se mostró en esta sesión
+                    sessionStorage.setItem('studentBannerShown', 'true');
                 }, 2000);
             }
         }
@@ -574,7 +588,8 @@
         function closeStudentBanner() {
             const banner = document.getElementById('studentBanner');
             banner.classList.remove('show');
-            localStorage.setItem('studentBannerClosed', 'true');
+            // Guardar que el usuario cerró el banner
+            sessionStorage.setItem('studentBannerShown', 'true');
         }
 
         document.addEventListener('DOMContentLoaded', showStudentBanner);

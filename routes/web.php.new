@@ -2,24 +2,24 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CertificateController;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\InteractiveController;
-use App\Http\Controllers\VideoItemController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\VideoController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\CouponController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\InteractiveController;
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\NewsletterController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SubscriptionController;
+use App\Http\Controllers\VideoController;
 use App\Http\Controllers\VideoEnItemController;
+use App\Http\Controllers\VideoItemController;
 use App\Http\Controllers\VideoUploadController;
 use App\Models\Categories;
 use App\Models\TextosFormula;
-use Illuminate\Support\Facades\Route;
-use Laravel\Socialite\Facades\Socialite;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
+use Laravel\Socialite\Facades\Socialite;
 use TCG\Voyager\Facades\Voyager;
 
 /*
@@ -33,27 +33,29 @@ use TCG\Voyager\Facades\Voyager;
 |
 */
 
+// Rutas de inicio y lenguaje
 Route::get('/', [HomeController::class, 'index'])->name('home');
-
 Route::get('language/{locale}', [LanguageController::class, 'switch'])->name('language.switch');
 
+// Rutas de interactividad
 Route::get('/interactive/index', [InteractiveController::class, 'index'])->name('interactive.index');
 Route::get('/interactive', [InteractiveController::class, 'pilote'])->name('interactive.pilote');
-//Route::get('/interactive/{id}', [InteractiveController::class, 'show'])->name('interactive.show');
+Route::get('/interactive/{id}', [InteractiveController::class, 'show'])->name('interactive.show');
+Route::get('/interactive/pdf/{id}/pilote', [InteractiveController::class, 'showPdfPilote'])->name('interactive.pdf.pilote');
+Route::get('/interactive/pdf/{id}/{category_id}', [InteractiveController::class, 'showPdf'])->name('interactive.pdf');
 
+// Rutas de videos
 Route::get('/videos-online', [VideoController::class, 'index'])->name('videos.index');
 Route::get('/video-online/{id}', [VideoController::class, 'show'])->name('video.show');
 Route::get('/video-online/{id}/ilustrations', [VideoController::class, 'showIlustrations'])->name('video.show.ilustrations');
 
+// Rutas de información
 Route::get('/about', [HomeController::class, 'contact'])->name('contact');
-
 Route::get('/tutorial', [HomeController::class, 'tutorial'])->name('tutorial');
-
-Route::post('/contact', [ContactController::class, 'submit']);
-
 Route::get('/search-pdfs', [HomeController::class, 'searchPdfs'])->name('search.pdfs');
 Route::get('/search-content', [HomeController::class, 'searchContent'])->name('search.content');
 
+// Rutas de suscripción
 Route::get('/subscription-required/{category_id}', function ($category_id) {
     $category = Categories::findOrFail($category_id);
     $user = auth()->user();
@@ -63,66 +65,52 @@ Route::get('/subscription-required/{category_id}', function ($category_id) {
         Voyager::setting('site.abono_normal');
     return view('pages.subscription.required', compact('category', 'amount', 'textosFormula'));
 })->name('subscription.required');
-
-
 Route::middleware(['auth'])->group(function () {
     Route::post('/subscription/trial', [SubscriptionController::class, 'createTrialSubscription'])->name('subscription.trial');
-    // ... otras rutas que requieran autenticación ...
-
 });
-
-Route::get('/certificate/pending', function () {
-    return view('auth.certificate.pending');
-})->name('certificate.pending');
-
-Route::post('/contact', [ContactController::class, 'submit'])->name('contact.submit');
-
-
-/**
- * RUTAS DE SUSCRIPCION
- */
-
 Route::post('/subscription/trial', [SubscriptionController::class, 'createTrialSubscription'])->name('subscription.trial');
-
 Route::post('/subscription/create', [SubscriptionController::class, 'create'])->name('subscription.create');
 Route::get('/subscription/success', [SubscriptionController::class, 'success'])->name('subscription.success');
 Route::get('/subscription/cancel', [SubscriptionController::class, 'cancel'])->name('subscription.cancel');
 Route::post('/stripe/webhook', [SubscriptionController::class, 'handleStripeWebhook']);
 
+// Rutas de autenticación
+Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
+Route::post('/register', [AuthController::class, 'register']);
+Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [AuthController::class, 'login']);
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-// Ruta protegida para usuarios autenticados
+// Rutas de perfil
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::get('/certificate/upload/{category_id}', [CertificateController::class, 'showUploadForm'])->name('certificate.upload');
-    Route::post('/certificate/store', [CertificateController::class, 'store'])->name('certificate.store');
+    Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.update.password');
     Route::delete('/profile/avatar', [ProfileController::class, 'deleteAvatar'])->name('profile.delete-avatar');
 });
 
-Route::get('/interactive/index', [InteractiveController::class, 'index'])->name('interactive.index');
-Route::get('/interactive', [InteractiveController::class, 'pilote'])->name('interactive.pilote');
-
-Route::get('/interactive/pdf/{id}/pilote', [InteractiveController::class, 'showPdfPilote'])->name('interactive.pdf.pilote');
-Route::get('/interactive/{id}', [InteractiveController::class, 'show'])->name('interactive.show');
-
-Route::middleware(['auth', 'subscriptionOrWhitelist'])->group(function () {
-    Route::get('/interactive/pdf/{id}/{category_id}', [InteractiveController::class, 'showPdf'])->name('interactive.pdf');
+// Rutas de certificado
+Route::get('/certificate/pending', function () {
+    return view('auth.certificate.pending');
+})->name('certificate.pending');
+Route::middleware('auth')->group(function () {
+    Route::get('/certificate/upload/{category_id}', [CertificateController::class, 'showUploadForm'])->name('certificate.upload');
+    Route::post('/certificate/store', [CertificateController::class, 'store'])->name('certificate.store');
 });
 
+// Rutas de contacto
+Route::post('/contact', [ContactController::class, 'submit'])->name('contact.submit');
+
+// Rutas de cupón
 Route::post('/validate-coupon', [CouponController::class, 'validateCoupon'])->name('coupon.validate');
 
-Route::fallback(function () {
-    return response()->view('404', [], 404);
-});
+// Rutas de newsletter
+Route::post('/subscribe-newsletter', [NewsletterController::class, 'subscribe']);
 
-Route::get('/google-drive/callback', [VideoUploadController::class, 'handleCallback'])->name('google.drive.callback');
-Route::post('/upload-chunk', [VideoUploadController::class, 'uploadChunk'])->name('upload.chunk');
-
+// Rutas de administración
 Route::group(['prefix' => 'admin'], function () {
     Voyager::routes();
-
-
-
+    // Rutas de video online
     Route::get('videoonline/{videoonline_id}/videos/create', [VideoItemController::class, 'create'])->name('videoonline.videos.create');
     Route::post('videoonline/{videoonline_id}/videos', [VideoItemController::class, 'store'])->name('videoonline.videos.store');
     Route::get('videos/{id}/edit/edit', [VideoItemController::class, 'edit'])->name('videoonline.videos.edit.edit');
@@ -130,7 +118,7 @@ Route::group(['prefix' => 'admin'], function () {
     Route::delete('videos/{id}/destroy', [VideoItemController::class, 'destroy'])->name('videoonline.videos.destroy');
     Route::post('video/reorder', [VideoItemController::class, 'reorder'])->name('videos.reorder');
 
-
+    // Rutas de video online en inglés
     Route::get('videoonline-en/{videoonline_id}/videos/create', [VideoEnItemController::class, 'create'])->name('videoonline.en.videos.create');
     Route::post('videoonline-en/{videoonline_id}/videos', [VideoEnItemController::class, 'store'])->name('videoonline.en.videos.store');
     Route::get('videos-en/{id}/edit/edit', [VideoEnItemController::class, 'edit'])->name('videoonline.en.videos.edit.edit');
@@ -138,7 +126,7 @@ Route::group(['prefix' => 'admin'], function () {
     Route::delete('videos-en/{id}/destroy', [VideoEnItemController::class, 'destroy'])->name('videoonline.en.videos.destroy');
     Route::post('video-en/reorder', [VideoEnItemController::class, 'reorder'])->name('videos.en.reorder');
 
-
+    // Rutas de archivos
     Route::get('archives', [App\Http\Controllers\ArchiveController::class, 'index'])->name('voyager.archives.index');
     Route::post('archives/reorder', [App\Http\Controllers\ArchiveController::class, 'reorder'])->name('archives.reorder');
     Route::post('archives', [App\Http\Controllers\ArchiveController::class, 'store'])->name('voyager.archives.store');
@@ -146,6 +134,7 @@ Route::group(['prefix' => 'admin'], function () {
     Route::post('archives/{archive}', [App\Http\Controllers\ArchiveController::class, 'update'])->name('voyager.archives.update');
     Route::delete('archives/{archive}/delete', [App\Http\Controllers\ArchiveController::class, 'destroy'])->name('voyager.archives.destroy.destroy');
 
+    // Rutas de archivos en inglés
     Route::get('archives-en', [App\Http\Controllers\ArchivesEnController::class, 'index'])->name('voyager.archives.en.index');
     Route::post('archives-en/reorder', [App\Http\Controllers\ArchivesEnController::class, 'reorder'])->name('archives.en.reorder');
     Route::post('archives-en', [App\Http\Controllers\ArchivesEnController::class, 'store'])->name('voyager.archives.en.store');
@@ -154,45 +143,23 @@ Route::group(['prefix' => 'admin'], function () {
     Route::delete('archives-en/{archive}/delete', [App\Http\Controllers\ArchivesEnController::class, 'destroy'])->name('voyager.archives.en.destroy.destroy');
 });
 
-/**
- * 
- * RUTAS DE AUTH
- */
+// Rutas de Google Drive
+Route::get('/google-drive/callback', [VideoUploadController::class, 'handleCallback'])->name('google.drive.callback');
+Route::post('/upload-chunk', [VideoUploadController::class, 'uploadChunk'])->name('upload.chunk');
 
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
-    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.update.password');
-});
-
-Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
-Route::post('/register', [AuthController::class, 'register']);
-
-Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
-Route::post('/login', [AuthController::class, 'login']);
-
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-
-Route::post('/subscribe-newsletter', [NewsletterController::class, 'subscribe']);
-
-// Redireccionar a Google
+// Rutas de autenticación social
 Route::get('login/google', function () {
     return Socialite::driver('google')->redirect();
 });
-
-// Callback de Google
 Route::get('login/google/callback', function () {
-    $googleUser = Socialite::driver('google')->stateless()->setHttpClient(new \GuzzleHttp\Client(['verify' => false]))->user();
+    $googleUser = Socialite::driver('google')->user();
 
-
-    // Lógica para crear o autenticar usuario
     $user = User::updateOrCreate([
         'email' => $googleUser->getEmail(),
     ], [
         'name' => $googleUser->getName(),
         'google_id' => $googleUser->getId(),
         'password' => bcrypt(Str::random(16)),
-        // Puedes almacenar otros datos relevantes
     ]);
 
     Auth::login($user);
@@ -200,25 +167,25 @@ Route::get('login/google/callback', function () {
     return redirect('/');
 });
 
-// Redireccionar a Facebook
 Route::get('login/facebook', function () {
     return Socialite::driver('facebook')->redirect();
 });
-
-// Callback de Facebook
 Route::get('login/facebook/callback', function () {
-    $facebookUser = Socialite::driver('facebook')->stateless()->user();
+    $facebookUser = Socialite::driver('facebook')->user();
 
-    // Lógica para crear o autenticar usuario
     $user = User::updateOrCreate([
         'email' => $facebookUser->getEmail(),
     ], [
         'name' => $facebookUser->getName(),
         'facebook_id' => $facebookUser->getId(),
-        // Otros datos relevantes
     ]);
 
     Auth::login($user);
 
     return redirect('/');
+});
+
+// Ruta de error 404
+Route::fallback(function () {
+    return response()->view('404', [], 404);
 });
