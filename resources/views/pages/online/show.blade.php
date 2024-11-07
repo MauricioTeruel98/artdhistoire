@@ -250,7 +250,7 @@
                                             <div>
                                                 <iframe src="{{ $video['video'] }}" 
                                                         width="100%" 
-                                                        height="480" 
+                                                        height="300" 
                                                         allow="autoplay" 
                                                         frameborder="0" 
                                                         allowfullscreen>
@@ -269,7 +269,7 @@
                                             </div>--}}
                                         </div>
                                     </div>
-                                    <div class="video-title">
+                                    <div class="video-title" style="margin-top: -7px;">
                                         {{ $video['title'] }}
                                     </div>
                                 @endif
@@ -343,7 +343,7 @@
                                         <div>
                                             <iframe src="{{ $video['video'] }}" 
                                                     width="100%" 
-                                                    height="480" 
+                                                    height="300" 
                                                     allow="autoplay" 
                                                     frameborder="0" 
                                                     allowfullscreen>
@@ -362,7 +362,7 @@
                                         </div>--}}
                                     </div>
                                 </div>
-                                <div class="video-title">
+                                <div class="video-title" style="margin-top: -7px;">
                                     {{ $video['title'] }}
                                 </div>
                             @endif

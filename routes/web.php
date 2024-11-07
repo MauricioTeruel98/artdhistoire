@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AccessCouponController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CertificateController;
 use App\Http\Controllers\HomeController;
@@ -77,7 +78,6 @@ Route::get('/certificate/pending', function () {
 
 Route::post('/contact', [ContactController::class, 'submit'])->name('contact.submit');
 
-
 /**
  * RUTAS DE SUSCRIPCION
  */
@@ -113,6 +113,20 @@ Route::post('/validate-coupon', [CouponController::class, 'validateCoupon'])->na
 
 Route::fallback(function () {
     return response()->view('404', [], 404);
+});
+
+// Agregar esta ruta junto con las otras rutas de cupones
+Route::middleware(['web'])->group(function () {
+    Route::get('/access-coupon', [AccessCouponController::class, 'showRedeemForm'])
+        ->name('access-coupon.form')
+        ->middleware('auth');
+        
+    Route::post('/validate-access-coupon', [AccessCouponController::class, 'validateAccessCoupon'])
+        ->name('access-coupon.validate');
+        
+    Route::post('/redeem-access-coupon', [AccessCouponController::class, 'redeemAccessCoupon'])
+        ->middleware('auth')
+        ->name('access-coupon.redeem');
 });
 
 Route::get('/google-drive/callback', [VideoUploadController::class, 'handleCallback'])->name('google.drive.callback');

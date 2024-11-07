@@ -14,7 +14,7 @@ class VideoEnItemController extends Controller
     public function create($videoonline_id)
     {
         $videoOnline = VideoOnline::findOrFail($videoonline_id);
-        return Voyager::view('voyager::videos.create', compact('videoOnline'));
+        return Voyager::view('voyager::videos-en.create', compact('videoOnline'));
     }
 
     public function store(Request $request, $videoonline_id)
@@ -86,7 +86,7 @@ class VideoEnItemController extends Controller
     {
         $video = VideoEn::findOrFail($id);
         $videoOnline = $video->videoOnline;
-        return Voyager::view('voyager::videos.edit', compact('video', 'videoOnline'));
+        return Voyager::view('voyager::videos-en.edit', compact('video', 'videoOnline'));
     }
 
     public function update(Request $request, $id)
