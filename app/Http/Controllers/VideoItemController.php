@@ -25,11 +25,11 @@ class VideoItemController extends Controller
                 'text' => 'nullable|string',
                 'iframe' => 'nullable|string',
                 'imagen' => 'nullable|image',
-                'video' => 'nullable|file|mimetypes:video/*',
+                'fileName' => 'required|string', // Asegúrate de que el nombre del archivo esté presente
             ]);
 
             $video = new Video();
-            $video->title = $request->title;    
+            $video->title = $request->title;
             $video->iframe = $request->iframe;
             $video->text = $request->text;
             $video->videoonline_id = $videoonline_id;
@@ -39,10 +39,8 @@ class VideoItemController extends Controller
                 $video->imagen = Storage::url($imagePath); // Asegúrate de que la URL sea accesible
             }
 
-            if ($request->hasFile('video')) {
-                $videoPath = $request->file('video')->store('videos/videos', 'public');
-                $video->video = Storage::url($videoPath); // Asegúrate de que la URL sea accesible
-            }
+            // Usar el nombre del archivo del video subido
+            $video->video = Storage::url('videos/' . $request->fileName);
 
             $video->save();
 
@@ -72,9 +70,8 @@ class VideoItemController extends Controller
                 'text' => 'nullable|string',
                 'iframe' => 'nullable|string',
                 'imagen' => 'nullable|image',
-                'video' => 'nullable|file|mimetypes:video/*',
+                'fileName' => 'nullable|string', // Asegúrate de que el nombre del archivo esté presente si se sube un nuevo video
             ]);
-            
 
             $video = Video::findOrFail($id);
             $video->title = $request->title;
@@ -89,12 +86,12 @@ class VideoItemController extends Controller
                 $video->imagen = Storage::url($imagePath); // Asegúrate de que la URL sea accesible
             }
 
-            if ($request->hasFile('video')) {
+            // Usar el nombre del archivo del video subido si está presente
+            if ($request->fileName) {
                 if ($video->video) {
                     Storage::disk('public')->delete(str_replace('/storage/', '', $video->video));
                 }
-                $videoPath = $request->file('video')->store('videos/videos', 'public');
-                $video->video = Storage::url($videoPath); // Asegúrate de que la URL sea accesible
+                $video->video = Storage::url('videos/' . $request->fileName);
             }
 
             $video->save();

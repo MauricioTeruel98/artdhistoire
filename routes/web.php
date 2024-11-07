@@ -13,6 +13,7 @@ use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\VideoEnItemController;
+use App\Http\Controllers\VideoUploadController;
 use App\Models\Categories;
 use Illuminate\Support\Facades\Route;
 use Laravel\Socialite\Facades\Socialite;
@@ -65,7 +66,7 @@ Route::get('/subscription-required/{category_id}', function ($category_id) {
 Route::middleware(['auth'])->group(function () {
     Route::post('/subscription/trial', [SubscriptionController::class, 'createTrialSubscription'])->name('subscription.trial');
     // ... otras rutas que requieran autenticación ...
-    
+
 });
 
 Route::get('/certificate/pending', function () {
@@ -111,9 +112,12 @@ Route::post('/validate-coupon', [CouponController::class, 'validateCoupon'])->na
 Route::fallback(function () {
     return response()->view('404', [], 404);
 });
+Route::post('/upload-chunk', [VideoUploadController::class, 'uploadChunk']);
 
 Route::group(['prefix' => 'admin'], function () {
     Voyager::routes();
+
+
 
     Route::get('videoonline/{videoonline_id}/videos/create', [VideoItemController::class, 'create'])->name('videoonline.videos.create');
     Route::post('videoonline/{videoonline_id}/videos', [VideoItemController::class, 'store'])->name('videoonline.videos.store');
