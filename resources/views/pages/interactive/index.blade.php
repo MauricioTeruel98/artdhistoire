@@ -16,7 +16,6 @@
 
         .display-4 {
             font-size: 3rem;
-            font-weight: bold;
         }
 
         .btn-primary,
@@ -64,7 +63,6 @@
 
         .price-tag .display-4 {
             font-size: 3.5rem;
-            font-weight: bold;
         }
 
         .small {
