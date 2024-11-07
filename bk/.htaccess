@@ -4,3 +4,9 @@
     # Redirige todas las solicitudes a la carpeta "public"
     RewriteRule ^(.*)$ public/$1 [L]
 </IfModule>
+
+php_value upload_max_filesize 4096M
+php_value post_max_size 4096M
+php_value memory_limit 4096M
+php_value max_execution_time 7200
+php_value max_input_time 7200
