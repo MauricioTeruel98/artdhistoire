@@ -20,12 +20,17 @@ class VideoItemController extends Controller
     public function store(Request $request, $videoonline_id)
     {
         try {
+            Log::info('Iniciando almacenamiento de video', [
+                'request_data' => $request->all(),
+                'videoonline_id' => $videoonline_id
+            ]);
+
             $request->validate([
                 'title' => 'nullable|string|max:255',
                 'text' => 'nullable|string',
                 'iframe' => 'nullable|string',
                 'imagen' => 'nullable|image',
-                'fileName' => 'required|string', // Asegúrate de que el nombre del archivo esté presente
+                'videoUrl' => 'required|string',
             ]);
 
             $video = new Video();
@@ -35,23 +40,45 @@ class VideoItemController extends Controller
             $video->videoonline_id = $videoonline_id;
 
             if ($request->hasFile('imagen')) {
+                Log::info('Procesando imagen');
                 $imagePath = $request->file('imagen')->store('videos/images', 'public');
-                $video->imagen = Storage::url($imagePath); // Asegúrate de que la URL sea accesible
+                $video->imagen = Storage::url($imagePath);
             }
 
-            // Usar el nombre del archivo del video subido
-            $video->video = Storage::url('videos/' . $request->fileName);
+            // Guardamos la URL completa del video
+            $video->video = $request->videoUrl;
+
+            Log::info('Guardando video con datos:', [
+                'title' => $video->title,
+                'video_url' => $video->video,
+                'videoonline_id' => $video->videoonline_id
+            ]);
 
             $video->save();
 
-            Log::info('Video guardado correctamente: ' . $video->id);
-            Log::info('Ruta del video: ' . $video->video);
+            Log::info('Video guardado correctamente', [
+                'video_id' => $video->id,
+                'video_url' => $video->video
+            ]);
 
             return redirect('/admin/videosonline/' . $videoonline_id . '/edit')
                 ->with('success', 'Video agregado correctamente.');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            Log::error('Error de validación:', [
+                'errors' => $e->errors(),
+            ]);
+            return back()
+                ->withErrors($e->errors())
+                ->withInput()
+                ->with('error', 'Por favor, corrija los errores en el formulario.');
         } catch (\Exception $e) {
-            Log::error('Error al guardar el video: ' . $e->getMessage());
-            return back()->with('error', 'Hubo un error al guardar el video. Por favor, inténtelo de nuevo.');
+            Log::error('Error al guardar el video:', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            return back()
+                ->with('error', 'Hubo un error al guardar el video: ' . $e->getMessage())
+                ->withInput();
         }
     }
 
@@ -70,7 +97,7 @@ class VideoItemController extends Controller
                 'text' => 'nullable|string',
                 'iframe' => 'nullable|string',
                 'imagen' => 'nullable|image',
-                'fileName' => 'nullable|string', // Asegúrate de que el nombre del archivo esté presente si se sube un nuevo video
+                'videoUrl' => 'nullable|string', // Actualizado para manejar la nueva URL
             ]);
 
             $video = Video::findOrFail($id);
@@ -83,15 +110,12 @@ class VideoItemController extends Controller
                     Storage::disk('public')->delete(str_replace('/storage/', '', $video->imagen));
                 }
                 $imagePath = $request->file('imagen')->store('videos/images', 'public');
-                $video->imagen = Storage::url($imagePath); // Asegúrate de que la URL sea accesible
+                $video->imagen = Storage::url($imagePath);
             }
 
-            // Usar el nombre del archivo del video subido si está presente
-            if ($request->fileName) {
-                if ($video->video) {
-                    Storage::disk('public')->delete(str_replace('/storage/', '', $video->video));
-                }
-                $video->video = Storage::url('videos/' . $request->fileName);
+            // Actualizar la URL del video si se proporciona una nueva
+            if ($request->videoUrl) {
+                $video->video = $request->videoUrl;
             }
 
             $video->save();

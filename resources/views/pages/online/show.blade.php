@@ -248,10 +248,13 @@
                                     <div style="overflow: hidden;">
                                         <div class="video-container">
                                             <div>
-                                                <video controls class="w-100">
-                                                    <source src="{{ $video['video'] }}" type="video/mp4">
-                                                    Tu navegador no soporta el elemento de video.
-                                                </video>
+                                                <iframe src="{{ $video['video'] }}" 
+                                                        width="100%" 
+                                                        height="480" 
+                                                        allow="autoplay" 
+                                                        frameborder="0" 
+                                                        allowfullscreen>
+                                                </iframe>
                                             </div>
                                             {{--
                                             <div class="position-absolute top-0 left-0" id="button-player-{{ $key }}">
@@ -338,10 +341,13 @@
                                 <div style="overflow: hidden;">
                                     <div class="video-container">
                                         <div>
-                                            <video controls class="w-100">
-                                                <source src="{{ $video['video'] }}" type="video/mp4">
-                                                Tu navegador no soporta el elemento de video.
-                                            </video>
+                                            <iframe src="{{ $video['video'] }}" 
+                                                    width="100%" 
+                                                    height="480" 
+                                                    allow="autoplay" 
+                                                    frameborder="0" 
+                                                    allowfullscreen>
+                                            </iframe>
                                         </div>
                                         {{--
                                         <div class="position-absolute top-0 left-0" id="button-player-{{ $key }}">

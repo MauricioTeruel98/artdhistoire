@@ -112,7 +112,9 @@ Route::post('/validate-coupon', [CouponController::class, 'validateCoupon'])->na
 Route::fallback(function () {
     return response()->view('404', [], 404);
 });
-Route::post('/upload-chunk', [VideoUploadController::class, 'uploadChunk']);
+
+Route::get('/google-drive/callback', [VideoUploadController::class, 'handleCallback'])->name('google.drive.callback');
+Route::post('/upload-chunk', [VideoUploadController::class, 'uploadChunk'])->name('upload.chunk');
 
 Route::group(['prefix' => 'admin'], function () {
     Voyager::routes();
