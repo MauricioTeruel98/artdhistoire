@@ -15,6 +15,7 @@ use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\VideoEnItemController;
 use App\Http\Controllers\VideoUploadController;
+use App\Http\Controllers\VideoUploadEnController;
 use App\Models\Categories;
 use App\Models\TextosFormula;
 use Illuminate\Support\Facades\Route;
@@ -131,6 +132,8 @@ Route::middleware(['web'])->group(function () {
 
 Route::get('/google-drive/callback', [VideoUploadController::class, 'handleCallback'])->name('google.drive.callback');
 Route::post('/upload-chunk', [VideoUploadController::class, 'uploadChunk'])->name('upload.chunk');
+
+Route::post('/upload-chunk-en', [VideoUploadEnController::class, 'uploadChunk'])->name('upload.chunk.en');
 
 Route::group(['prefix' => 'admin'], function () {
     Voyager::routes();
