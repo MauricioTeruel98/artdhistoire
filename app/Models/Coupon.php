@@ -13,10 +13,17 @@ class Coupon extends Model
         'used',
         'is_dateable',
         'limit_date',
-        'is_active'
+        'is_active',
+        'max_uses',
+        'current_uses'
     ];
 
     protected $casts = [
-        'used' => 'boolean'
+        'used' => 'boolean',
+        'is_dateable' => 'boolean',
+        'limit_date' => 'datetime',
+        'is_active' => 'boolean',
+        'max_uses' => 'integer',
+        'current_uses' => 'integer'
     ];
 }
