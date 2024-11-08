@@ -37,7 +37,7 @@ class AccessCouponController extends Controller
 
         // Obtener el nombre de la categoría
         $category = Categories::find($coupon->category_id);
-        $categoryName = $category ? $category->title : 'Unknown';
+        $categoryName = $category ? (app()->getLocale() == 'fr' ? $category->name_fr : $category->name) : 'Unknown';
 
         return response()->json([
             'valid' => true,
