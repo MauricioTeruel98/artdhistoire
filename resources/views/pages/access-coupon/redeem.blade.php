@@ -96,7 +96,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 categoryId = data.category_id;
 
                 durationText.textContent = `${currentLocale == 'fr' ? 'Durée' : 'Duration'}: ${data.duration_days} ${currentLocale == 'fr' ? 'jours' : 'days'}`;
-                categoryText.textContent = `${currentLocale == 'fr' ? 'Catégorie' : 'Category'}: ${data.category_name}`;
+                categoryText.textContent = `${currentLocale == 'fr' ? 'Saga' : 'Saga'}: ${data.category_name}`;
 
                 redemptionSection.classList.remove('d-none');
             } else {
