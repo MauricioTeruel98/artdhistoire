@@ -21,23 +21,22 @@ class CouponController extends Controller
         }
 
         // Validación para cupones con fecha límite
-        if ($coupon->is_dateable) {
-            if (now() > $coupon->limit_date) {
-                return response()->json([
-                    'valid' => false,
-                    'message' => app()->getLocale() == 'fr' ?
-                        'Ce coupon a expiré' :
-                        'This coupon has expired'
-                ]);
-            }
-        }
-        // Validación para cupones de un solo uso
-        else if ($coupon->used) {
+        if ($coupon->is_dateable && now() > $coupon->limit_date) {
             return response()->json([
                 'valid' => false,
                 'message' => app()->getLocale() == 'fr' ?
-                    'Ce coupon a déjà été utilisé' :
-                    'This coupon has already been used'
+                    'Ce coupon a expiré' :
+                    'This coupon has expired'
+            ]);
+        }
+
+        // Validación de máximo uso
+        if ($coupon->used_count >= $coupon->max_uses) {
+            return response()->json([
+                'valid' => false,
+                'message' => app()->getLocale() == 'fr' ?
+                    'Ce coupon a atteint son nombre maximum d\'utilisations' :
+                    'This coupon has reached its maximum number of uses'
             ]);
         }
 

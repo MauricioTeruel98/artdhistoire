@@ -13,7 +13,9 @@ class AccessCoupon extends Model
         'duration_days',
         'is_used',
         'used_at',
-        'used_by_user_id'
+        'used_by_user_id',
+        'max_uses',
+        'used_count'
     ];
 
     protected $casts = [

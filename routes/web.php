@@ -118,7 +118,7 @@ Route::fallback(function () {
 
 // Agregar esta ruta junto con las otras rutas de cupones
 Route::middleware(['web'])->group(function () {
-    Route::get('/access-coupon', [AccessCouponController::class, 'showRedeemForm'])
+    Route::get('/access-saga', [AccessCouponController::class, 'showRedeemForm'])
         ->name('access-coupon.form')
         ->middleware('auth');
         
