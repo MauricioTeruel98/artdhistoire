@@ -6,6 +6,7 @@ use App\Models\Categories;
 use App\Models\Coupon;
 use App\Models\Subscription;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Srmklive\PayPal\Facades\PayPal;
 use Stripe\Stripe;
 use Stripe\Checkout\Session;
@@ -218,12 +219,12 @@ class SubscriptionController extends Controller
         // Marcar el cupón como usado si existe
         if ($couponCode = session('coupon_code')) {
             $coupon = Coupon::where('code', $couponCode)
-                ->where('is_dateable', false)
-                ->where('used', false)
+                ->where('used_count', '<', DB::raw('max_uses'))
                 ->first();
 
             if ($coupon) {
-                $coupon->used = true;
+                $coupon->used_count++;
+                $coupon->used = ($coupon->used_count >= $coupon->max_uses);
                 $coupon->save();
             }
 

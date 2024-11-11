@@ -15,7 +15,7 @@ class Coupon extends Model
         'limit_date',
         'is_active',
         'max_uses',
-        'current_uses'
+        'used_count'
     ];
 
     protected $casts = [

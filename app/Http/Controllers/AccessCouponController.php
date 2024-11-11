@@ -6,6 +6,7 @@ use App\Models\AccessCoupon;
 use App\Models\Categories;
 use App\Models\Subscription;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class AccessCouponController extends Controller
 {
@@ -26,12 +27,13 @@ class AccessCouponController extends Controller
             ]);
         }
 
-        if ($coupon->is_used) {
+        // Validación de máximo uso
+        if ($coupon->used_count >= $coupon->max_uses) {
             return response()->json([
                 'valid' => false,
                 'message' => app()->getLocale() == 'fr' ?
-                    'Ce coupon a déjà été utilisé' :
-                    'This coupon has already been used'
+                    'Ce coupon a atteint son nombre maximum d\'utilisations' :
+                    'This coupon has reached its maximum number of uses'
             ]);
         }
 
@@ -54,7 +56,7 @@ class AccessCouponController extends Controller
     public function redeemAccessCoupon(Request $request)
     {
         $coupon = AccessCoupon::where('code', $request->code)
-            ->where('is_used', false)
+            ->where('used_count', '<', DB::raw('max_uses'))
             ->firstOrFail();
 
         $user = auth()->user();
@@ -70,12 +72,12 @@ class AccessCouponController extends Controller
 
         $subscription->categories()->attach($coupon->category_id);
 
-        // Marcar cupón como usado
-        $coupon->update([
-            'is_used' => true,
-            'used_at' => now(),
-            'used_by_user_id' => $user->id
-        ]);
+        // Actualizar el contador de usos y estado del cupón
+        $coupon->used_count++;
+        $coupon->is_used = ($coupon->used_count >= $coupon->max_uses);
+        $coupon->used_at = now();
+        $coupon->used_by_user_id = $user->id;
+        $coupon->save();
 
         return response()->json([
             'success' => true,
