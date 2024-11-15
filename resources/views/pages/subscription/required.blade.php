@@ -177,18 +177,20 @@
                                     </div>
                                 </form>
 
-                                <form action="{{ route('subscription.create') }}" method="POST">
-                                    @csrf
-                                    <input type="hidden" name="category_id" value="{{ $category->id }}">
-                                    <input type="hidden" name="amount" value="{{ $amount }}">
-                                    <input type="hidden" name="payment_method" value="paypal">
-                                    <input type="hidden" name="coupon_code" class="hidden_coupon_code">
-                                    
-                                    <button type="submit" class="btn btn-outline-primary w-100">
-                                        <i class="fab fa-paypal me-2"></i>
-                                        {{ app()->getLocale() == 'fr' ? 'Payer avec PayPal' : 'Pay with PayPal' }}
-                                    </button>
-                                </form>
+                                @if (app()->getLocale() == 'en')
+                                    <form action="{{ route('subscription.create') }}" method="POST">
+                                        @csrf
+                                        <input type="hidden" name="category_id" value="{{ $category->id }}">
+                                        <input type="hidden" name="amount" value="{{ $amount }}">
+                                        <input type="hidden" name="payment_method" value="paypal">
+                                        <input type="hidden" name="coupon_code" class="hidden_coupon_code">
+
+                                        <button type="submit" class="btn btn-outline-primary w-100">
+                                            <i class="fab fa-paypal me-2"></i>
+                                            {{ app()->getLocale() == 'fr' ? 'Payer avec PayPal' : 'Pay with PayPal' }}
+                                        </button>
+                                    </form>
+                                @endif
                             </div>
                             <script>
                                 document.getElementById('coupon_code').addEventListener('input', function() {
