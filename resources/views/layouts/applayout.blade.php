@@ -289,8 +289,8 @@
         #newsletter-panel {
             position: fixed;
             top: 0;
-            right: -300px;
-            width: 300px;
+            right: -400px;
+            width: 400px;
             height: 100%;
             background-color: #000;
             color: #fff;
@@ -301,6 +301,13 @@
 
         #newsletter-panel.open {
             right: 0;
+        }
+
+        @media (max-width: 760px) {
+            #newsletter-panel {
+                right: -300px;
+                width: 300px;
+            }
         }
 
         .newsletter-title {
@@ -468,6 +475,46 @@
             }
         }
     </style>
+    @if (app()->getLocale() !== 'fr')
+        <script>
+            if (!window.mootrack) {
+                ! function(t, n, e, o, a) {
+                    function d(t) {
+                        var n = ~~(Date.now() / 3e5),
+                            o = document.createElement(e);
+                        o.async = !0, o.src = t + "?ts=" + n;
+                        var a = document.getElementsByTagName(e)[0];
+                        a.parentNode.insertBefore(o, a)
+                    }
+                    t.MooTrackerObject = a, t[a] = t[a] || function() {
+                        return t[a].q ? void t[a].q.push(arguments) : void(t[a].q = [arguments])
+                    }, window.attachEvent ? window.attachEvent("onload", d.bind(this, o)) : window.addEventListener("load",
+                        d.bind(this, o), !1)
+                }(window, document, "script", "https://cdn.stat-track.com/statics/moosend-tracking.min.js", "mootrack");
+            }
+            mootrack('loadForm', 'ec762518e4aa42d9938ec527e5bab953');
+        </script>
+    @else
+        <script>
+            if (!window.mootrack) {
+                ! function(t, n, e, o, a) {
+                    function d(t) {
+                        var n = ~~(Date.now() / 3e5),
+                            o = document.createElement(e);
+                        o.async = !0, o.src = t + "?ts=" + n;
+                        var a = document.getElementsByTagName(e)[0];
+                        a.parentNode.insertBefore(o, a)
+                    }
+                    t.MooTrackerObject = a, t[a] = t[a] || function() {
+                        return t[a].q ? void t[a].q.push(arguments) : void(t[a].q = [arguments])
+                    }, window.attachEvent ? window.attachEvent("onload", d.bind(this, o)) : window.addEventListener("load",
+                        d.bind(this, o), !1)
+                }(window, document, "script", "https://cdn.stat-track.com/statics/moosend-tracking.min.js", "mootrack");
+            }
+            mootrack('loadForm', '48714145eb8e4599bdf757d3ad2baa78');
+        </script>
+    @endif
+
 </head>
 
 <body>
@@ -480,7 +527,7 @@
     <div id="overlay"></div>
 
     <div id="newsletter-panel">
-        <h2 class="newsletter-title">KEEP IN TOUCH!</h2>
+        {{-- <h2 class="newsletter-title">KEEP IN TOUCH!</h2>
         <p>{{ app()->getLocale() == 'fr' ? 'Je m\'inscris à la newsletter' : 'Subscribe to the newsletter' }}</p>
         <form class="newsletter-form" id="newsletterForm">
             @csrf
@@ -489,7 +536,14 @@
             <button type="submit">S'inscrire</button>
         </form>
         <div id="newsletterMessage"></div>
-        <button class="close-btn" onclick="toggleNewsletter()">Fermer</button>
+        <button class="close-btn" onclick="toggleNewsletter()">Fermer</button> --}}
+        <div id="moosend-form">
+            @if (app()->getLocale() !== 'fr')
+                <div data-mooform-id="ec762518-e4aa-42d9-938e-c527e5bab953"></div>
+            @else
+                <div data-mooform-id="48714145-eb8e-4599-bdf7-57d3ad2baa78"></div>
+            @endif
+        </div>
     </div>
 
     <div class="newsletter-toggle" onclick="toggleNewsletter()">Newsletter</div>
