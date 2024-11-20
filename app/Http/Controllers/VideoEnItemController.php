@@ -97,7 +97,7 @@ class VideoEnItemController extends Controller
                 'text' => 'nullable|string',
                 'iframe' => 'nullable|string',
                 'imagen' => 'nullable|image',
-                'videoUrl' => 'nullable|string', // Actualizado para manejar la nueva URL
+                'videoUrl' => 'nullable|string',
             ]);
 
             $video = VideoEn::findOrFail($id);
@@ -113,10 +113,9 @@ class VideoEnItemController extends Controller
                 $video->imagen = Storage::url($imagePath);
             }
 
-            // Actualizar la URL del video si se proporciona una nueva
-            if ($request->videoUrl) {
-                $video->video = $request->videoUrl;
-            }
+            // Actualizar la URL del video
+            // Si videoUrl está vacío, establecer el campo video como null
+            $video->video = $request->videoUrl ?: null;
 
             $video->save();
 

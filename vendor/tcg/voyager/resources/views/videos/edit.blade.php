@@ -83,14 +83,19 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="videoFile">Vidéo actuelle</label>
+                                <label for="videoFile">Vídeo actual</label>
                                 @if ($video->video)
                                     <div class="mb-3">
                                         <iframe src="{{ $video->video }}" width="100%" height="315" allow="autoplay"
                                             frameborder="0" allowfullscreen>
                                         </iframe>
+                                        <button type="button" class="btn btn-danger mt-2" onclick="removeVideo()">
+                                            Eliminar vídeo actual
+                                        </button>
                                     </div>
                                 @endif
+
+                                <input type="hidden" name="videoUrl" id="videoUrl" value="{{ $video->video }}">
 
                                 <div class="mb-3">
                                     <label for="directVideoUrl">Ou entrez directement l'URL de la vidéo (Remplacer "/view"
@@ -127,11 +132,11 @@
                                     placeholder="Titre de la vidéo en Français" value="{{ old('title', $video->title) }}">
                             </div>
 
-                            <div class="form-group">
+                            {{-- <div class="form-group">
                                 <label for="iframe">Extrait de code d'une vidéo Youtube (Laisser vide en cas de
                                     téléchargement local de la vidéo)</label>
                                 <textarea class="form-control" id="iframe" name="iframe" rows="3" placeholder="Lien vers une vidéo YouTube">{{ old('iframe', $video->iframe) }}</textarea>
-                            </div>
+                            </div> --}}
 
                             <div class="form-group">
                                 <label for="text">Texte</label>
@@ -338,7 +343,32 @@
                                         alert('Erreur d\'authentification: ' + error.message);
                                     });
                             }
+
+                            const videoUrl = document.getElementById('videoUrl').value;
+                            const iframe = document.getElementById('iframe').value;
+                            if (videoUrl || iframe) {
+                                document.getElementById('submitBtn').disabled = false;
+                            }
                         };
+
+                        function removeVideo() {
+                            if (confirm('¿Está seguro que desea eliminar el vídeo actual?')) {
+                                // Limpiar el campo oculto
+                                document.getElementById('videoUrl').value = '';
+                                
+                                // Remover el iframe
+                                const iframe = document.querySelector('iframe');
+                                if (iframe) {
+                                    iframe.parentElement.remove(); // Removemos todo el contenedor
+                                }
+                                
+                                // Habilitar el botón de guardar
+                                document.getElementById('submitBtn').disabled = false;
+                                
+                                // Mostrar mensaje al usuario
+                                alert('Por favor, guarde los cambios para confirmar la eliminación del video.');
+                            }
+                        }
                     </script>
                 </div>
             </div>
