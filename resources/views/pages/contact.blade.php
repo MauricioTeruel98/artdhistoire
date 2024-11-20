@@ -119,7 +119,7 @@
                 @endphp
                 <div class="d-flex justify-content-center">
                     <a href="/storage/{{ $downloadLink }}" target="_blank" class="btn-download">
-                        {{ app()->getLocale() == 'fr' ? 'Télécharger le livre blanc' : 'Download the white book' }}
+                        {{ app()->getLocale() == 'fr' ? 'Télécharger le livre blanc' : 'Download the white paper' }}
                     </a>
                 </div>
 
