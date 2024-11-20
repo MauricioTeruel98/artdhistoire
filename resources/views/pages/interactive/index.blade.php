@@ -319,35 +319,34 @@
                             </h3>
 
                             @auth
-                                @if (Auth::user()->is_student ?? false)
+                                @if (Auth::user()->is_student || Auth::user()->validated_student)
                                     <div class="student-badge">
                                         <i class="fas fa-graduation-cap me-2"></i>
                                         {{ app()->getLocale() == 'fr' ? 'Prix spécial pour les étudiants' : 'Special price for students' }}
                                     </div>
+
+                                    <div class="price-tag" style="color: #212529 !important;">
+                                        <span class="arapey">
+                                            {{ app()->getLocale() == 'fr' ? '€' : '$' }}
+                                        </span>
+                                        <span class="display-4 arapey">
+                                            {{ app()->getLocale() == 'fr'
+                                                ? Voyager::setting('site.abono_estudiant')
+                                                : Voyager::setting('site.abono_estudiant_DOLARES') }}
+                                        </span>
+                                    </div>
+                                @else
+                                    <div class="price-tag" style="color: #212529 !important;">
+                                        <span class="arapey">
+                                            {{ app()->getLocale() == 'fr' ? '€' : '$' }}
+                                        </span>
+                                        <span class="display-4 arapey">
+                                            {{ app()->getLocale() == 'fr'
+                                                ? Voyager::setting('site.abono_normal')
+                                                : Voyager::setting('site.abono_normal_DOLARES') }}
+                                        </span>
+                                    </div>
                                 @endif
-
-                                <div class="price-tag" style="color: #212529 !important;">
-                                    <span class="arapey">
-                                        {{ app()->getLocale() == 'fr' ? '€' : '$' }}
-                                    </span>
-                                    <span class="display-4 arapey"
-                                        data-original-amount="{{ Auth::user()->is_student ?? false
-                                            ? (app()->getLocale() == 'fr'
-                                                ? Voyager::setting('site.abono_estudiant')
-                                                : Voyager::setting('site.abono_estudiant_DOLARES'))
-                                            : (app()->getLocale() == 'fr'
-                                                ? Voyager::setting('site.abono_normal')
-                                                : Voyager::setting('site.abono_normal_DOLARES')) }}">
-
-                                        <strong>{{ Auth::user()->is_student ?? false
-                                            ? (app()->getLocale() == 'fr'
-                                                ? Voyager::setting('site.abono_estudiant')
-                                                : Voyager::setting('site.abono_estudiant_DOLARES'))
-                                            : (app()->getLocale() == 'fr'
-                                                ? Voyager::setting('site.abono_normal')
-                                                : Voyager::setting('site.abono_normal_DOLARES')) }}</strong>
-                                    </span>
-                                </div>
 
                                 <p class="saga-description">
                                     {{ app()->getLocale() == 'fr' ? $textosFormula->texto_debajo_formula : $textosFormula->texto_debajo_formula_en }}

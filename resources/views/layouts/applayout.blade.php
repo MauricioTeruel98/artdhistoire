@@ -292,7 +292,7 @@
             right: -400px;
             width: 400px;
             height: 100%;
-            background-color: #000;
+            background-color: #fff;
             color: #fff;
             transition: right 0.3s ease-in-out;
             z-index: 1001;

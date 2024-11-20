@@ -32,7 +32,7 @@ class SubscriptionController extends Controller
         $paymentMethod = $request->input('payment_method');
 
         // Actualizar esta parte para usar los montos en dólares cuando el idioma es inglés
-        $amount = $user->is_student && $user->validated_student ?
+        $amount = $user->is_student || $user->validated_student ?
             ($isEnglish ? Voyager::setting('site.abono_estudiant_DOLARES') : Voyager::setting('site.abono_estudiant')) : ($isEnglish ? Voyager::setting('site.abono_normal_DOLARES') : Voyager::setting('site.abono_normal'));
 
         // Solo validar el cupón sin marcarlo como usado

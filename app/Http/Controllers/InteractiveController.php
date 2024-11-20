@@ -27,11 +27,17 @@ class InteractiveController extends Controller
         $subscribedCategoryIds = [];
         $textosFormula = TextosFormula::first();
         $isEnglish = app()->getLocale() != 'fr';
-    
-        // Determinar el monto base según idioma y tipo de usuario
-        $amount = $user && $user->is_student && $user->validated_student ?
-            ($isEnglish ? Voyager::setting('site.abono_estudiant_DOLARES') : Voyager::setting('site.abono_estudiant')) :
-            ($isEnglish ? Voyager::setting('site.abono_normal_DOLARES') : Voyager::setting('site.abono_normal'));
+
+        $amount = null;
+        if ($user && $user->validated_student) {
+            $amount = $isEnglish ? 
+                Voyager::setting('site.abono_estudiant_DOLARES') : 
+                Voyager::setting('site.abono_estudiant');
+        } else {
+            $amount = $isEnglish ? 
+                Voyager::setting('site.abono_normal_DOLARES') : 
+                Voyager::setting('site.abono_normal');
+        }
 
         if ($user) {
             $subscribedCategoryIds = $user->subscriptions()
@@ -54,7 +60,7 @@ class InteractiveController extends Controller
             'categories',
             'slider',
             'textosFormula',
-            'amount' // Agregamos el amount al compact
+            'amount'
         ));
     }
     public function show(Request $request, $id)
@@ -68,10 +74,10 @@ class InteractiveController extends Controller
     public function showPdf($id, $category_id)
     {
         $isEnglish = app()->getLocale() == 'en';
-        
-        if($isEnglish){
+
+        if ($isEnglish) {
             $archive = ArchivesEn::findOrFail($id);
-        }else{
+        } else {
             $archive = Archive::findOrFail($id);
         }
 
@@ -82,10 +88,10 @@ class InteractiveController extends Controller
     public function showPdfPilote($id)
     {
         $isEnglish = app()->getLocale() == 'en';
-        
-        if($isEnglish){
+
+        if ($isEnglish) {
             $archive = ArchivesEn::findOrFail($id);
-        }else{
+        } else {
             $archive = Archive::findOrFail($id);
         }
         $slider = Slider::all();

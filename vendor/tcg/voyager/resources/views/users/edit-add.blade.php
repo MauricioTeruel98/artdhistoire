@@ -97,6 +97,9 @@
                                     <input type="checkbox" name="validated_student" class="toggleswitch" data-on="Sí"
                                         data-off="No" {{ $dataTypeContent->validated_student ? 'checked' : '' }}
                                         @if (!$dataTypeContent->certificate) disabled @endif>
+                                    
+                                    <input type="hidden" name="is_student" value="{{ $dataTypeContent->is_student }}">
+                                    
                                     @if ($dataTypeContent->certificate)
                                         <br />
                                         <small>El estudiante ha subido su certificado. Puede descargarlo
