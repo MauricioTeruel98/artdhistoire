@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>{{ app()->getLocale() == 'fr' ? 'Réinitialisation du mot de passe' : 'Restablecimiento de contraseña' }}</title>
+    <title>{{ app()->getLocale() == 'fr' ? 'Réinitialisation du mot de passe' : 'Password Reset' }}</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -37,30 +37,30 @@
 </head>
 <body>
     <div class="header">
-        <h2>{{ app()->getLocale() == 'fr' ? 'Réinitialisation du mot de passe' : 'Restablecimiento de contraseña' }}</h2>
+        <h2>{{ app()->getLocale() == 'fr' ? 'Réinitialisation du mot de passe' : 'Password Reset' }}</h2>
     </div>
 
     <div class="content">
         <p>
             {{ app()->getLocale() == 'fr' 
                 ? 'Vous recevez cet email car nous avons reçu une demande de réinitialisation de mot de passe pour votre compte.' 
-                : 'Estás recibiendo este correo porque recibimos una solicitud de restablecimiento de contraseña para tu cuenta.' }}
+                : 'You are receiving this email because we received a password reset request for your account.' }}
         </p>
 
         <a href="{{ $url }}" class="button">
-            {{ app()->getLocale() == 'fr' ? 'Réinitialiser le mot de passe' : 'Restablecer contraseña' }}
+            {{ app()->getLocale() == 'fr' ? 'Réinitialiser le mot de passe' : 'Reset Password' }}
         </a>
 
         <p>
             {{ app()->getLocale() == 'fr' 
                 ? 'Ce lien expirera dans 60 minutes.' 
-                : 'Este enlace expirará en 60 minutos.' }}
+                : 'This link will expire in 60 minutes.' }}
         </p>
 
         <p>
             {{ app()->getLocale() == 'fr' 
                 ? 'Si vous n\'avez pas demandé de réinitialisation, aucune action n\'est requise.' 
-                : 'Si no solicitaste un restablecimiento de contraseña, no se requiere ninguna acción.' }}
+                : 'If you did not request a password reset, no further action is required.' }}
         </p>
     </div>
 </body>

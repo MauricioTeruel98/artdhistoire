@@ -17,7 +17,7 @@
 
                             <div class="mb-3">
                                 <label for="password" class="form-label">
-                                    {{ app()->getLocale() == 'fr' ? 'Nouveau mot de passe' : 'Nueva contraseña' }}
+                                    {{ app()->getLocale() == 'fr' ? 'Nouveau mot de passe' : 'New password' }}
                                 </label>
                                 <input type="password" class="form-control @error('password') is-invalid @enderror"
                                     id="password" name="password" required>
@@ -28,14 +28,14 @@
 
                             <div class="mb-3">
                                 <label for="password_confirmation" class="form-label">
-                                    {{ app()->getLocale() == 'fr' ? 'Confirmer le nouveau mot de passe' : 'Confirmar nueva contraseña' }}
+                                    {{ app()->getLocale() == 'fr' ? 'Confirmer le nouveau mot de passe' : 'Confirm new password' }}
                                 </label>
                                 <input type="password" class="form-control" id="password_confirmation"
                                     name="password_confirmation" required>
                             </div>
 
                             <button type="submit" class="btn btn-primary w-100">
-                                {{ app()->getLocale() == 'fr' ? 'Réinitialiser le mot de passe' : 'Restablecer contraseña' }}
+                                {{ app()->getLocale() == 'fr' ? 'Réinitialiser le mot de passe' : 'Reset password' }}
                             </button>
                         </form>
                     </div>
