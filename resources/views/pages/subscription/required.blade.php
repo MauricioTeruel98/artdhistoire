@@ -168,30 +168,32 @@
                         </div>
 
                         <div class="action-buttons">
-                            <form action="{{ route('subscription.create') }}" method="POST">
-                                @csrf
-                                <input type="hidden" name="category_id" value="{{ $category->id }}">
-                                <input type="hidden" name="amount" value="{{ $amount }}">
-                                <input type="hidden" name="payment_method" value="stripe">
-                                <input type="hidden" name="coupon_code" id="hidden_coupon_code">
+                            @if (app()->getLocale() == 'fr')
+                                <form action="{{ route('subscription.create') }}" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="category_id" value="{{ $category->id }}">
+                                    <input type="hidden" name="amount" value="{{ $amount }}">
+                                    <input type="hidden" name="payment_method" value="stripe">
+                                    <input type="hidden" name="coupon_code" id="hidden_coupon_code">
 
-                                <div class="coupon-section">
-                                    <label for="coupon_code" class="d-block mb-2">
-                                        <i class="fas fa-tag me-2"></i>
-                                        {{ app()->getLocale() == 'fr' ? 'Code promo' : 'Coupon code' }}
-                                    </label>
-                                    <input type="text" class="coupon-input" id="coupon_code"
-                                        placeholder="{{ app()->getLocale() == 'fr' ? 'Entrez votre code' : 'Enter your code' }}">
-                                    <small id="coupon-message" class="form-text mt-2 d-block"></small>
-                                </div>
+                                    <div class="coupon-section">
+                                        <label for="coupon_code" class="d-block mb-2">
+                                            <i class="fas fa-tag me-2"></i>
+                                            {{ app()->getLocale() == 'fr' ? 'Code promo' : 'Coupon code' }}
+                                        </label>
+                                        <input type="text" class="coupon-input" id="coupon_code"
+                                            placeholder="{{ app()->getLocale() == 'fr' ? 'Entrez votre code' : 'Enter your code' }}">
+                                        <small id="coupon-message" class="form-text mt-2 d-block"></small>
+                                    </div>
 
-                                <div class="action-buttons">
-                                    <button type="submit" class="btn btn-outline-primary w-100">
-                                        <i class="fas fa-credit-card me-2"></i>
-                                        {{ app()->getLocale() == 'fr' ? 'Payer avec une carte de crédit' : 'Pay with credit card' }}
-                                    </button>
-                                </div>
-                            </form>
+                                    <div class="action-buttons">
+                                        <button type="submit" class="btn btn-outline-primary w-100">
+                                            <i class="fas fa-credit-card me-2"></i>
+                                            {{ app()->getLocale() == 'fr' ? 'Payer avec une carte de crédit' : 'Pay with credit card' }}
+                                        </button>
+                                    </div>
+                                </form>
+                            @endif
 
                             @if (app()->getLocale() == 'en')
                                 <form action="{{ route('subscription.create') }}" method="POST">
@@ -200,6 +202,16 @@
                                     <input type="hidden" name="amount" value="{{ $amount }}">
                                     <input type="hidden" name="payment_method" value="paypal">
                                     <input type="hidden" name="coupon_code" class="hidden_coupon_code">
+
+                                    <div class="coupon-section">
+                                        <label for="coupon_code" class="d-block mb-2">
+                                            <i class="fas fa-tag me-2"></i>
+                                            {{ app()->getLocale() == 'fr' ? 'Code promo' : 'Coupon code' }}
+                                        </label>
+                                        <input type="text" class="coupon-input" id="coupon_code"
+                                            placeholder="{{ app()->getLocale() == 'fr' ? 'Entrez votre code' : 'Enter your code' }}">
+                                        <small id="coupon-message" class="form-text mt-2 d-block"></small>
+                                    </div>
 
                                     <button type="submit" class="btn btn-outline-primary w-100">
                                         <i class="fab fa-paypal me-2"></i>
