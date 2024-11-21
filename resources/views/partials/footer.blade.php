@@ -17,7 +17,7 @@
             <button id="close-chat" class="btn-close btn-close-white"></button>
         </div>
         <div class="card-body">
-            <div class="text-muted small mb-3">{{ now()->format('g:i A') }}</div>
+            {{-- <div class="text-muted small mb-3">{{ now()->format('g:i A') }}</div> --}}
             <div id="chat-messages">
                 <p>{{ app()->getLocale() == 'fr' ? 'Comment pouvons-nous vous aider ?' : 'How can we help?' }}
                 </p>

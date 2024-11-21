@@ -19,6 +19,7 @@ class ContactController extends Controller
 
         try {
             Mail::to(Voyager::setting('site.email_contact'))->send(new ContactFormMail($validatedData));
+
             return response()->json([
                 'success' => true,
                 'message' => app()->getLocale() == 'fr' ? 
@@ -26,6 +27,13 @@ class ContactController extends Controller
                     'Your message has been sent successfully!'
             ]);
         } catch (\Exception $e) {
+            \Log::error('Error en envío de formulario de contacto', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine()
+            ]);
+
             return response()->json([
                 'success' => false,
                 'message' => app()->getLocale() == 'fr' ? 

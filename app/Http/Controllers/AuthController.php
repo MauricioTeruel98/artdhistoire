@@ -105,22 +105,18 @@ class AuthController extends Controller
                 $request->only('email')
             );
 
-            // Add debug log
-            \Log::info('Password reset email sending attempt', [
-                'email' => $request->email,
-                'status' => $status
-            ]);
-
             return $status === Password::RESET_LINK_SENT
                 ? back()->with(['status' => app()->getLocale() == 'fr' 
                     ? 'Nous vous avons envoyé votre lien de réinitialisation par e-mail.'
                     : 'We have emailed your password reset link.'])
                 : back()->withErrors(['email' => __($status)]);
         } catch (\Exception $e) {
-            // Error log
-            \Log::error('Error sending reset email', [
+            \Log::error('Error en envío de correo de restablecimiento', [
+                'email' => $request->email,
                 'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
+                'trace' => $e->getTraceAsString(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine()
             ]);
 
             return back()->withErrors(['email' => 'Error sending email. Please try again later.']);

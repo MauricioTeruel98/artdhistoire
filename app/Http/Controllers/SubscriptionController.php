@@ -204,33 +204,47 @@ class SubscriptionController extends Controller
 
     public function success(Request $request)
     {
-        $user = auth()->user();
-        $categoryId = $request->get('category_id');
-        $amount = $request->get('amount');
-        $category = Categories::findOrFail($categoryId);
-        // Registrar la venta
-        \App\Models\Sale::create([
-            'user_id' => $user->id,
-            'category_id' => $category->id,
-            'amount' => $amount,
-            'currency' => app()->getLocale() == 'fr' ? 'EUR' : 'USD',
-            'payment_method' => $request->has('session_id') ? 'stripe' : 'paypal',
-            'status' => 'completed'
-        ]);
-        // Crear la suscripción
-        $subscription = Subscription::create([
-            'user_id' => $user->id,
-            'amount' => $amount,
-            'start_date' => now(),
-            'end_date' => now()->addYear(),
-            'status' => 'active',
-        ]);
+        try {
+            $user = auth()->user();
+            $categoryId = $request->get('category_id');
+            $amount = $request->get('amount');
+            $category = Categories::findOrFail($categoryId);
 
-        $subscription->categories()->attach($category);
+            // Registrar la venta
+            \App\Models\Sale::create([
+                'user_id' => $user->id,
+                'category_id' => $category->id,
+                'amount' => $amount,
+                'currency' => app()->getLocale() == 'fr' ? 'EUR' : 'USD',
+                'payment_method' => $request->has('session_id') ? 'stripe' : 'paypal',
+                'status' => 'completed'
+            ]);
 
-        // Enviar emails de notificación
-        Mail::to(Voyager::setting('site.email_contact'))->send(new PurchaseNotificationAdmin($user, $category, $amount));
-        Mail::to($user->email)->send(new PurchaseConfirmation($user, $category, $amount));
+            // Crear la suscripción
+            $subscription = Subscription::create([
+                'user_id' => $user->id,
+                'amount' => $amount,
+                'start_date' => now(),
+                'end_date' => now()->addYear(),
+                'status' => 'active',
+            ]);
+
+            $subscription->categories()->attach($category);
+
+            // Enviar emails de notificación
+            Mail::to(Voyager::setting('site.email_contact'))->send(new PurchaseNotificationAdmin($user, $category, $amount));
+            Mail::to($user->email)->send(new PurchaseConfirmation($user, $category, $amount));
+
+        } catch (\Exception $e) {
+            \Log::error('Error en proceso de compra y envío de correos', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine()
+            ]);
+            
+            throw $e;
+        }
 
         // Marcar el cupón como usado si existe
         if ($couponCode = session('coupon_code')) {
