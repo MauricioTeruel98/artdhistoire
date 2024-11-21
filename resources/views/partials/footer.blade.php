@@ -36,7 +36,10 @@
                     <textarea class="form-control bottom-border" id="message" name="message" rows="3"
                         placeholder="{{ app()->getLocale() == 'fr' ? 'Message' : 'Message' }}" required></textarea>
                 </div>
-                <button type="submit" class="btn btn-dark w-100">OK</button>
+                <button type="submit" class="btn btn-dark w-100">
+                    <span class="button-text">OK</span>
+                    <div class="loader ms-2"></div>
+                </button>
             </form>
         </div>
     </div>
@@ -54,6 +57,21 @@
     .bottom-border:focus {
         box-shadow: none;
         border-color: black;
+    }
+
+    .loader {
+        display: none;
+        width: 20px;
+        height: 20px;
+        border: 2px solid #f3f3f3;
+        border-radius: 50%;
+        border-top: 2px solid #2d2654;
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
     }
 </style>
 
@@ -77,39 +95,46 @@
         contactForm.addEventListener('submit', function(e) {
             e.preventDefault();
 
+            const submitButton = this.querySelector('button[type="submit"]');
+            const buttonText = submitButton.querySelector('.button-text');
+            const loader = submitButton.querySelector('.loader');
+            
+            // Disable button and show loader
+            submitButton.disabled = true;
+            buttonText.style.display = 'none';
+            loader.style.display = 'inline-block';
+
             const formData = new FormData(contactForm);
 
             if (csrfToken) {
                 fetch('/contact', {
-                        method: 'POST',
-                        body: formData,
-                        headers: {
-                            'X-CSRF-TOKEN': csrfToken.getAttribute('content')
-                        }
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        const chatMessages = document.getElementById('chat-messages');
-                        if (data.success) {
-                            chatMessages.innerHTML +=
-                                '<p class="text-success">{{ app()->getLocale() == 'fr' ? 'Votre message a été envoyé avec succès!' : 'Your message has been sent successfully!' }}</p>';
-                            contactForm.reset();
-                        } else {
-                            chatMessages.innerHTML +=
-                                '<p class="text-danger">{{ app()->getLocale() == 'fr' ? 'Une erreur s\'est produite. Veuillez réessayer.' : 'An error occurred. Please try again.' }}</p>';
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        const chatMessages = document.getElementById('chat-messages');
-                        chatMessages.innerHTML +=
-                            '<p class="text-danger">{{ app()->getLocale() == 'fr' ? 'Une erreur s\'est produite. Veuillez réessayer.' : 'An error occurred. Please try again.' }}</p>';
-                    });
-            } else {
-                console.error('CSRF token not found');
-                const chatMessages = document.getElementById('chat-messages');
-                chatMessages.innerHTML +=
-                    '<p class="text-danger">{{ app()->getLocale() == 'fr' ? 'Une erreur s\'est produite. Veuillez réessayer.' : 'An error occurred. Please try again.' }}</p>';
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken.getAttribute('content')
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    const chatMessages = document.getElementById('chat-messages');
+                    if (data.success) {
+                        chatMessages.innerHTML += '<p class="text-success">{{ app()->getLocale() == 'fr' ? 'Votre message a été envoyé avec succès!' : 'Your message has been sent successfully!' }}</p>';
+                        contactForm.reset();
+                    } else {
+                        chatMessages.innerHTML += '<p class="text-danger">{{ app()->getLocale() == 'fr' ? 'Une erreur s\'est produite. Veuillez réessayer.' : 'An error occurred. Please try again.' }}</p>';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    const chatMessages = document.getElementById('chat-messages');
+                    chatMessages.innerHTML += '<p class="text-danger">{{ app()->getLocale() == 'fr' ? 'Une erreur s\'est produite. Veuillez réessayer.' : 'An error occurred. Please try again.' }}</p>';
+                })
+                .finally(() => {
+                    // Re-enable button and hide loader
+                    submitButton.disabled = false;
+                    buttonText.style.display = 'inline';
+                    loader.style.display = 'none';
+                });
             }
         });
     });

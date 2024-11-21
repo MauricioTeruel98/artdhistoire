@@ -93,6 +93,21 @@
         .text-justify p{
             text-align: justify !important;
         }
+
+        .loader {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 2px solid #2d2654;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 
 @endsection
@@ -139,7 +154,8 @@
                             placeholder="{{ app()->getLocale() == 'fr' ? 'Message' : 'Message' }}" required></textarea>
                     </div>
                     <button type="submit" class="btn btn-outline-secondary">
-                        {{ app()->getLocale() == 'fr' ? 'Envoyer' : 'Send' }}
+                        <span class="button-text">{{ app()->getLocale() == 'fr' ? 'Envoyer' : 'Send' }}</span>
+                        <div class="loader ms-2"></div>
                     </button>
                     <div id="contact-messages"></div>
                 </form>
@@ -161,6 +177,15 @@
 
             contactForm.addEventListener('submit', function(e) {
                 e.preventDefault();
+
+                const submitButton = this.querySelector('button[type="submit"]');
+                const buttonText = submitButton.querySelector('.button-text');
+                const loader = submitButton.querySelector('.loader');
+                
+                // Disable button and show loader
+                submitButton.disabled = true;
+                buttonText.style.display = 'none';
+                loader.style.display = 'inline-block';
 
                 const formData = new FormData(contactForm);
 
@@ -189,6 +214,12 @@
                             const contactMessages = document.getElementById('contact-messages');
                             contactMessages.innerHTML =
                                 '<p class="text-danger mt-3">{{ app()->getLocale() == 'fr' ? 'Une erreur s\'est produite. Veuillez réessayer.' : 'An error occurred. Please try again.' }}</p>';
+                        })
+                        .finally(() => {
+                            // Re-enable button and hide loader
+                            submitButton.disabled = false;
+                            buttonText.style.display = 'inline';
+                            loader.style.display = 'none';
                         });
                 } else {
                     console.error('CSRF token not found');
