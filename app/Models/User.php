@@ -11,10 +11,12 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Notifications\ResetPasswordNotification;
+use Illuminate\Contracts\Auth\CanResetPassword;
+use Illuminate\Auth\Passwords\CanResetPassword as CanResetPasswordTrait;
 
-class User extends \TCG\Voyager\Models\User
+class User extends \TCG\Voyager\Models\User implements CanResetPassword
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, CanResetPasswordTrait;
 
     /**
      * The attributes that are mass assignable.
@@ -75,6 +77,31 @@ class User extends \TCG\Voyager\Models\User
 
     public function sendPasswordResetNotification($token)
     {
-        $this->notify(new ResetPasswordNotification($token));
+        try {
+            \Log::info('Iniciando envío de notificación de restablecimiento', [
+                'user_id' => $this->id,
+                'email' => $this->email
+            ]);
+            
+            $url = url(route('password.reset', [
+                'token' => $token,
+                'email' => $this->getEmailForPasswordReset(),
+            ], false));
+            
+            \Mail::send('emails.reset-password', ['url' => $url], function($message) {
+                $message->to($this->email)
+                       ->subject(app()->getLocale() == 'fr' 
+                            ? 'Réinitialisation du mot de passe' 
+                            : 'Restablecimiento de contraseña');
+            });
+            
+            \Log::info('Notificación enviada correctamente');
+            
+        } catch (\Exception $e) {
+            \Log::error('Error al enviar notificación de restablecimiento', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+        }
     }
 }

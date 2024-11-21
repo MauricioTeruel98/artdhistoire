@@ -11,6 +11,9 @@ use Srmklive\PayPal\Facades\PayPal;
 use Stripe\Stripe;
 use Stripe\Checkout\Session;
 use TCG\Voyager\Facades\Voyager;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\PurchaseNotificationAdmin;
+use App\Mail\PurchaseConfirmation;
 
 class SubscriptionController extends Controller
 {
@@ -215,6 +218,10 @@ class SubscriptionController extends Controller
         ]);
 
         $subscription->categories()->attach($category);
+
+        // Enviar emails de notificación
+        Mail::to(Voyager::setting('site.email_contact'))->send(new PurchaseNotificationAdmin($user, $category, $amount));
+        Mail::to($user->email)->send(new PurchaseConfirmation($user, $category, $amount));
 
         // Marcar el cupón como usado si existe
         if ($couponCode = session('coupon_code')) {
