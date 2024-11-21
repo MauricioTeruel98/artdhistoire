@@ -26,8 +26,21 @@ class AuthController extends Controller
             $request->validate([
                 'name' => ['required', 'string', 'max:255'],
                 'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-                'password' => ['required', 'confirmed', Rules\Password::defaults()],
+                'password' => [
+                    'required',
+                    'confirmed',
+                    'min:8',
+                    'regex:/[A-Z]/',    // Al menos una mayúscula
+                    'regex:/[0-9]/',    // Al menos un número
+                ],
                 'is_student' => ['nullable', 'boolean'],
+            ], [
+                'password.min' => app()->getLocale() == 'fr' 
+                    ? 'Le mot de passe doit contenir au moins 8 caractères.'
+                    : 'La contraseña debe tener al menos 8 caracteres.',
+                'password.regex' => app()->getLocale() == 'fr'
+                    ? 'Le mot de passe doit contenir au moins une majuscule et un chiffre.'
+                    : 'La contraseña debe contener al menos una mayúscula y un número.',
             ]);
 
             User::create([
@@ -132,7 +145,20 @@ class AuthController extends Controller
     {
         $request->validate([
             'token' => 'required',
-            'password' => 'required|confirmed|min:8',
+            'password' => [
+                'required',
+                'confirmed',
+                'min:8',
+                'regex:/[A-Z]/',    // Al menos una mayúscula
+                'regex:/[0-9]/',    // Al menos un número
+            ],
+        ], [
+            'password.min' => app()->getLocale() == 'fr' 
+                ? 'Le mot de passe doit contenir au moins 8 caractères.'
+                : 'La contraseña debe tener al menos 8 caracteres.',
+            'password.regex' => app()->getLocale() == 'fr'
+                ? 'Le mot de passe doit contenir au moins une majuscule et un chiffre.'
+                : 'La contraseña debe contener al menos una mayúscula y un número.',
         ]);
 
         $status = Password::reset(
