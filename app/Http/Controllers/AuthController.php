@@ -97,7 +97,7 @@ class AuthController extends Controller
     public function sendResetLink(Request $request)
     {
         $request->validate([
-            'email' => ['required', 'email'],
+            'email' => ['required', 'email', 'exists:users'],
         ]);
 
         try {
@@ -106,20 +106,20 @@ class AuthController extends Controller
             );
 
             return $status === Password::RESET_LINK_SENT
-                ? back()->with(['status' => app()->getLocale() == 'fr' 
+                ? back()->with(['status' => app()->getLocale() == 'fr'
                     ? 'Nous vous avons envoyé votre lien de réinitialisation par e-mail.'
-                    : 'We have emailed your password reset link.'])
+                    : 'Te hemos enviado el enlace de restablecimiento por correo electrónico.'])
                 : back()->withErrors(['email' => __($status)]);
         } catch (\Exception $e) {
             \Log::error('Error en envío de correo de restablecimiento', [
                 'email' => $request->email,
                 'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-                'file' => $e->getFile(),
-                'line' => $e->getLine()
+                'trace' => $e->getTraceAsString()
             ]);
 
-            return back()->withErrors(['email' => 'Error sending email. Please try again later.']);
+            return back()->withErrors(['email' => app()->getLocale() == 'fr'
+                ? 'Erreur lors de l\'envoi de l\'e-mail. Veuillez réessayer plus tard.'
+                : 'Error al enviar el correo. Por favor intenta más tarde.']);
         }
     }
 
@@ -132,7 +132,6 @@ class AuthController extends Controller
     {
         $request->validate([
             'token' => 'required',
-            'email' => 'required|email',
             'password' => 'required|confirmed|min:8',
         ]);
 
@@ -152,7 +151,7 @@ class AuthController extends Controller
         return $status === Password::PASSWORD_RESET
             ? redirect()->route('login')->with('status', app()->getLocale() == 'fr'
                 ? 'Votre mot de passe a été réinitialisé!'
-                : 'Your password has been reset!')
+                : '¡Tu contraseña ha sido restablecida!')
             : back()->withErrors(['email' => __($status)]);
     }
 }

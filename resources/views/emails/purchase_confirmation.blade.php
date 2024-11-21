@@ -63,7 +63,7 @@
     </style>
 </head>
 <body>
-    <img src="{{ asset('storage/' . Voyager::setting('site.logo')) }}" alt="Logo" class="logo">
+    <img src="https://www.artdhistoire.com/img/logo-header.webp" alt="Logo" class="logo">
     
     <div class="header">
         <h2>{{ app()->getLocale() == 'fr' ? 'Confirmation de votre achat' : 'Purchase confirmation' }}</h2>
