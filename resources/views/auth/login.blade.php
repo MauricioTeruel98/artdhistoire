@@ -89,6 +89,11 @@
 
                             <button type="submit"
                                 class="btn btn-outline-secondary mb-3 w-100">{{ app()->getLocale() == 'fr' ? 'Se connecter' : 'Login' }}</button>
+                            <div class="text-center mt-3">
+                                <a href="{{ route('password.request') }}" class="text-decoration-none">
+                                    {{ app()->getLocale() == 'fr' ? 'Mot de passe oublié?' : '¿Olvidaste tu contraseña?' }}
+                                </a>
+                            </div>
                         </form>
 
                         <div class="text-center">

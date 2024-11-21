@@ -7,16 +7,19 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Auth\Events\PasswordReset;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
-    // Muestra el formulario de registro
+    // Shows the registration form
     public function showRegisterForm()
     {
         return view('auth.register');
     }
 
-    // Maneja el registro de usuarios
+    // Handles user registration
     public function register(Request $request)
     {
         try {
@@ -36,27 +39,27 @@ class AuthController extends Controller
 
             return redirect('/login')->with('success', app()->getLocale() == 'fr'
                 ? 'Inscription réussie. Veuillez vous connecter.'
-                : 'Registro exitoso. Por favor inicie sesión.');
+                : 'Successful registration. Please log in.');
         } catch (\Illuminate\Database\QueryException $e) {
-            if ($e->errorInfo[1] == 1062) { // Error de duplicado en MySQL
+            if ($e->errorInfo[1] == 1062) { // MySQL duplicate error
                 return back()
                     ->withInput()
-                    ->withErrors(['email' => 'El correo electrónico ya está registrado.']);
+                    ->withErrors(['email' => 'The email is already registered.']);
             }
 
             return back()
                 ->withInput()
-                ->withErrors(['error' => 'Ha ocurrido un error durante el registro. Por favor, inténtelo de nuevo.']);
+                ->withErrors(['error' => 'An error occurred during registration. Please try again.']);
         }
     }
 
-    // Muestra el formulario de login
+    // Shows the login form
     public function showLoginForm()
     {
         return view('auth.login');
     }
 
-    // Maneja el login de usuarios
+    // Handles user login
     public function login(Request $request)
     {
         $credentials = $request->validate([
@@ -75,7 +78,7 @@ class AuthController extends Controller
         ]);
     }
 
-    // Maneja el logout de usuarios
+    // Handles user logout
     public function logout(Request $request)
     {
         Auth::logout();
@@ -84,5 +87,76 @@ class AuthController extends Controller
         $request->session()->regenerateToken();
 
         return redirect('/login');
+    }
+
+    public function showForgotPasswordForm()
+    {
+        return view('auth.forgot-password');
+    }
+
+    public function sendResetLink(Request $request)
+    {
+        $request->validate([
+            'email' => ['required', 'email'],
+        ]);
+
+        try {
+            $status = Password::sendResetLink(
+                $request->only('email')
+            );
+
+            // Add debug log
+            \Log::info('Password reset email sending attempt', [
+                'email' => $request->email,
+                'status' => $status
+            ]);
+
+            return $status === Password::RESET_LINK_SENT
+                ? back()->with(['status' => app()->getLocale() == 'fr' 
+                    ? 'Nous vous avons envoyé votre lien de réinitialisation par e-mail.'
+                    : 'We have emailed your password reset link.'])
+                : back()->withErrors(['email' => __($status)]);
+        } catch (\Exception $e) {
+            // Error log
+            \Log::error('Error sending reset email', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            return back()->withErrors(['email' => 'Error sending email. Please try again later.']);
+        }
+    }
+
+    public function showResetPasswordForm($token)
+    {
+        return view('auth.reset-password', ['token' => $token]);
+    }
+
+    public function resetPassword(Request $request)
+    {
+        $request->validate([
+            'token' => 'required',
+            'email' => 'required|email',
+            'password' => 'required|confirmed|min:8',
+        ]);
+
+        $status = Password::reset(
+            $request->only('email', 'password', 'password_confirmation', 'token'),
+            function ($user, $password) {
+                $user->forceFill([
+                    'password' => Hash::make($password)
+                ])->setRememberToken(Str::random(60));
+
+                $user->save();
+
+                event(new PasswordReset($user));
+            }
+        );
+
+        return $status === Password::PASSWORD_RESET
+            ? redirect()->route('login')->with('status', app()->getLocale() == 'fr'
+                ? 'Votre mot de passe a été réinitialisé!'
+                : 'Your password has been reset!')
+            : back()->withErrors(['email' => __($status)]);
     }
 }
