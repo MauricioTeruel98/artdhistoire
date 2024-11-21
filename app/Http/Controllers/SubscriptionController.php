@@ -14,6 +14,7 @@ use TCG\Voyager\Facades\Voyager;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\PurchaseNotificationAdmin;
 use App\Mail\PurchaseConfirmation;
+use PayPal\Api\Sale;
 
 class SubscriptionController extends Controller
 {
@@ -207,7 +208,15 @@ class SubscriptionController extends Controller
         $categoryId = $request->get('category_id');
         $amount = $request->get('amount');
         $category = Categories::findOrFail($categoryId);
-
+        // Registrar la venta
+        \App\Models\Sale::create([
+            'user_id' => $user->id,
+            'category_id' => $category->id,
+            'amount' => $amount,
+            'currency' => app()->getLocale() == 'fr' ? 'EUR' : 'USD',
+            'payment_method' => $request->has('session_id') ? 'stripe' : 'paypal',
+            'status' => 'completed'
+        ]);
         // Crear la suscripción
         $subscription = Subscription::create([
             'user_id' => $user->id,
