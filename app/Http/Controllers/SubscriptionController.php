@@ -118,9 +118,9 @@ class SubscriptionController extends Controller
                         'price_data' => [
                             'currency' => $isEnglish ? 'usd' : 'eur',
                             'product_data' => [
-                                'name' => 'Suscripción anual a ' . $category->name,
+                                'name' => app()->getLocale() == 'fr' ? 'Abonnement annuel à ' . $category->name : 'Annual subscription to ' . $category->name,
                                 'description' => $request->input('coupon_code') ?
-                                    'Incluye descuento por cupón' : null,
+                                    app()->getLocale() == 'fr' ? "Inclut la remise sur les bons d'achat" : 'Includes coupon discount' : null,
                             ],
                             'unit_amount' => (int)($amount * 100),
                         ],
@@ -232,7 +232,13 @@ class SubscriptionController extends Controller
             session()->forget('coupon_code');
         }
 
-        return redirect()->route('home')->with('success', '¡Suscripción exitosa a ' . $category->name . '!');
+        // Redirigir a la página de la saga con mensaje de éxito
+        return redirect()->route('interactive.show', ['id' => $categoryId])->with(
+            'success',
+            app()->getLocale() == 'fr' ?
+                'Votre abonnement à ' . $category->name . ' a été activé avec succès!' :
+                'Your subscription to ' . $category->name . ' has been successfully activated!'
+        );
     }
 
     public function cancel()

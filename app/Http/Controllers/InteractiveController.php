@@ -67,8 +67,11 @@ class InteractiveController extends Controller
     {
         $interactive = Categories::where('id', $id)->with('posts')->firstOrFail();
         $slider = Slider::all();
-
-        return view('pages.interactive.show', compact('interactive', 'slider'));
+        
+        // Obtener el mensaje flash de la sesión
+        $message = session('success');
+        
+        return view('pages.interactive.show', compact('interactive', 'slider', 'message'));
     }
 
     public function showPdf($id, $category_id)

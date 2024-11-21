@@ -135,11 +135,11 @@
                                     </span>
                                 </div>
                             @elseif (Auth::user()->is_student || !Auth::user()->validated_student)
-                                <div class="alert alert-warning">
+                                {{-- <div class="alert alert-warning">
                                     {{ app()->getLocale() == 'fr'
                                         ? 'Votre statut d\'étudiant est en attente de validation'
                                         : 'Your student status is pending validation' }}
-                                </div>
+                                </div> --}}
                                 <div class="price-tag">
                                     <span class="arapey">
                                         {{ app()->getLocale() == 'fr' ? '€' : '$' }}

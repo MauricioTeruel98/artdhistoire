@@ -118,11 +118,20 @@
 @endsection
 
 @section('content')
+
+    <!-- Resto del contenido de la vista -->
     @include('partials.slider')
     <div class="mx-auto mt-4 container-special">
         <h1 class="futura-light mb-4" style="font-size: 30px !important;">
             {{ app()->getLocale() == 'fr' ? $interactive->name_fr : $interactive->name }}
         </h1>
+
+        @if (session('success'))
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
 
         @foreach ($interactive->posts as $index => $post)
             <section class="my-5 archive-section">
@@ -413,4 +422,19 @@
             </section>
         @endforeach
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Buscar alertas de éxito
+            const successAlert = document.querySelector('.alert-success');
+
+            if (successAlert) {
+                // Hacer que la alerta desaparezca después de 5 segundos
+                setTimeout(function() {
+                    const alert = bootstrap.Alert.getOrCreateInstance(successAlert);
+                    alert.close();
+                }, 5000);
+            }
+        });
+    </script>
 @endsection
