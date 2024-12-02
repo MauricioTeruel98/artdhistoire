@@ -10,6 +10,10 @@ use Illuminate\Validation\Rules;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Support\Str;
+use App\Mail\NewUserNotificationAdmin;
+use App\Mail\WelcomeUser;
+use Illuminate\Support\Facades\Mail;
+use TCG\Voyager\Facades\Voyager;
 
 class AuthController extends Controller
 {
@@ -25,16 +29,34 @@ class AuthController extends Controller
         try {
             $request->validate([
                 'name' => ['required', 'string', 'max:255'],
-                'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+                'email' => [
+                    'required', 
+                    'string', 
+                    'email', 
+                    'max:255', 
+                    'unique:users',
+                    function ($attribute, $value, $fail) {
+                        // Verificar si el dominio del correo existe
+                        $domain = substr(strrchr($value, "@"), 1);
+                        if (!checkdnsrr($domain, "MX")) {
+                            $fail(app()->getLocale() == 'fr' 
+                                ? 'L\'adresse email fournie n\'est pas valide ou n\'existe pas.' 
+                                : 'The provided email is not valid or does not exist.');
+                        }
+                    },
+                ],
                 'password' => [
                     'required',
                     'confirmed',
                     'min:8',
-                    'regex:/[A-Z]/',    // Al menos una mayúscula
-                    'regex:/[0-9]/',    // Al menos un número
+                    'regex:/[A-Z]/',    
+                    'regex:/[0-9]/',    
                 ],
                 'is_student' => ['nullable', 'boolean'],
             ], [
+                'email.unique' => app()->getLocale() == 'fr'
+                    ? 'Cette adresse email est déjà utilisée.'
+                    : 'Este correo electrónico ya está registrado.',
                 'password.min' => app()->getLocale() == 'fr' 
                     ? 'Le mot de passe doit contenir au moins 8 caractères.'
                     : 'La contraseña debe tener al menos 8 caracteres.',
@@ -43,12 +65,16 @@ class AuthController extends Controller
                     : 'La contraseña debe contener al menos una mayúscula y un número.',
             ]);
 
-            User::create([
+            $user = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
                 'is_student' => $request->is_student ?? false,
             ]);
+
+            // Enviar emails
+            Mail::to(Voyager::setting('site.email_contact'))->send(new NewUserNotificationAdmin($user));
+            Mail::to($user->email)->send(new WelcomeUser($user));
 
             return redirect('/login')->with('success', app()->getLocale() == 'fr'
                 ? 'Inscription réussie. Veuillez vous connecter.'
